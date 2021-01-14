@@ -1,0 +1,138 @@
+.allTickets {
+    width: 90%;
+    height: 100vh;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchContainer {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    height: fit-content;
+    margin-top: 20px;
+    input {
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: rgba(255, 255, 255, 0.075);
+        box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        height: 17px;
+        border: gray solid 1px;
+        font-size: 16px;
+        padding: 15px;
+        border-radius: 5px;
+        outline: none;
+    }
+}
+
+.ticketList {
+    height: calc(100vh - 170px);
+    background-color: rgb(26, 26, 26);
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.eachTicket {
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    width: 95%;
+    height: fit-content;
+    margin-left: auto;
+    border: rgb(53, 53, 53) solid 1px;
+    flex-wrap: wrap;
+    padding: 5px;
+    transition: ease-in all 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    &:hover {
+        transform: scale(1.02);
+    }
+}
+
+.ticketListUpper {
+    display: flex;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 50%;
+}
+
+.ticketListLower {
+    display: flex;
+    width: 95%;    
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px;
+    height: 50%;
+}
+
+.ticketHeading {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    h4 {
+        background-color: darkgray;
+        padding: 3px;
+        color: white;
+        border-radius: 5px;
+    }
+    h3 {
+        color: white;
+        font-weight: 600;
+    }
+}
+
+
+.ticketTags {
+    width: fit-content;
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 10px;
+    align-items: center;
+    h5 {
+        color:black;
+        padding: 3px;
+        padding-left: 5px;
+        background-color: greenyellow;
+        padding-right: 5px;
+        margin-left: 10px;
+        font-weight: 400;
+        border-radius: 10px;
+    }
+}
+.ticketId {
+    margin-right: 10px;
+    h5 {
+        color: rgb(199, 199, 199);
+        font-weight: 400;
+    }
+}
+
+.red {
+    background-color: red;
+}
+.orange {
+    background-color: orange;
+}
+.darkred {
+    background-color: rgb(180, 0, 0);
+}
+
+.reportDate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h5 {
+        color: rgb(255, 255, 255);
+        font-weight: 400;
+    }
+}

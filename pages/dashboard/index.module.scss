@@ -1,0 +1,443 @@
+@mixin ticketCountsBox {
+    height: 100px;
+    width: 200px;
+    display: flex;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+}
+
+
+.dashboard {
+    font-family: 'Karla', sans-serif;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.newTicketContainer {
+    width: 95%;
+    height: 40px;
+    margin-top: 20px;
+    display: flex;
+    border-radius: 5px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.newTicketBtn {
+    width: fit-content;
+    margin-right: 20px;
+    height: fit-content;
+    button {
+        width: fit-content;
+        padding: 10px;
+        cursor: pointer;
+        height: 50px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        border-radius: 5px;
+        color: white;
+        font-size: 20px;
+        background-color: rgba(15, 0, 226, 0.527);
+        box-shadow: 0 8px rgba(0, 13, 199, 0.075);
+        outline: none;
+        border: none;
+    }
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.purple {
+    background-color: purple;
+    width: 5%;
+    margin-right: 10px;
+}
+
+.green {
+    background-color: green;
+    width: 5%;
+    margin-right: 10px;
+}
+
+.blue {
+    background-color: blue;
+    width: 5%;
+    margin-right: 10px;
+}
+
+.red {
+    background-color: red;
+    width: 5%;
+    margin-right: 10px;
+}
+
+
+.ticketAnalyse {
+    display: flex;
+    margin-top: 20px;
+    width: 95%;
+    background-color: rgb(27, 27, 27);
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-evenly;
+}
+
+.newTickets, .resolvedTickets, .unresolvedTickets, .openTickets {
+    @include ticketCountsBox()
+}
+
+.newTicketsContent, .resolvedTicketsContent, .unresolvedTicketsContent, .openTicketsContent {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.ticketGraphs {
+    width: 95%;
+    margin-top:50px;
+    margin-right: auto;
+    justify-content: space-between;
+    padding: 10px;
+    margin-left: auto;
+    border-radius: 5px;
+    background-color: rgb(27, 27, 27);
+    display: flex;
+}
+
+.overallTicketTypes {
+    width: 55%;
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    display: flex;
+    flex-direction: column;
+    border-radius:  5px;
+    color: white;
+    height: 400px;
+}
+
+.issuesReceived {
+    width: 40%;
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    border-radius:  5px;
+}
+
+.overallTicketTypesHeading {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    h3 {
+        margin-left: 10px;
+        color: white;
+    }
+}
+
+.overallTicketTypesRatings {
+    width: fit-content;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.roundgreen {
+    height: 9px;
+    width: 9px;
+    margin-right: 5px;
+    border-radius: 50%;
+    background-color: green;
+}
+
+.roundred {
+    height: 9px;
+    width: 9px;
+    margin-right: 5px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+
+.roundorange {
+    height: 9px;
+    width: 9px;
+    margin-right: 5px;
+    border-radius: 50%;
+    background-color: orange;
+}
+
+
+.excellent {
+    display: flex;
+    justify-content: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    align-items: center;
+    width: fit-content;
+}
+
+.good {
+    display: flex;
+    margin-left: 5px;
+    margin-right: 5px;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+}
+
+.fair {
+    display: flex;
+    margin-left: 5px;
+    margin-right: 10px;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+}
+
+.issuesReceivedHeading, .issuesReceivedCount {
+    height: 10%;
+    display: flex;
+    align-items: center;
+    h3 {
+        padding: 20px;
+    }
+    h1 {
+        padding: 20px;
+    }
+}
+
+.issuesReceivedGraph {
+    height: 80%;
+}
+
+.newProjectModal {
+    width: 40%;
+    margin-left: auto;
+    margin-top: 150px;
+    background-color: rgb(22, 22, 22);
+    margin-right: auto;
+    height: 60%;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+.editor  {
+    width: 97%;
+    outline: none;
+    margin-top: 2px;
+    border: none;
+    border-radius: 5px;
+    height: 200px;
+    font-size: 16px;
+    padding: 8px;
+}
+
+.ticketTitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    justify-content: center;
+    input {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 10px;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+}
+
+.newProjectInfo {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+}
+
+.projectTitle {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    .projectTitleLabel {
+        width: 100%;
+        display: flex;
+        margin-left: 3px;
+        justify-content: flex-start;
+        color: white;
+    }
+    input {
+        width: 90%;
+        padding: 8px;
+        outline: none;
+        margin-top: 2px;
+        border: none;
+        font-size: 15px;
+        border-radius: 5px;
+    }
+}
+
+.projectDesc {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    .projectDescLabel {
+        width: 100%;
+        margin-top: 10px;
+        display: flex;
+        margin-left: 3px;
+        justify-content: flex-start;
+        color: white;
+    }
+}
+
+.participantSelect {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: fit-content;
+    .participantLabel {
+        width: 100%;
+        margin-top: 10px;
+        display: flex;
+        margin-left: 3px;
+        justify-content: flex-start;
+        color: white;
+    }
+    input {
+        width: 100%;
+        padding: 8px;
+        outline: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2px;
+        border: none;
+        font-size: 15px;
+        border-radius: 5px;
+    }
+    button {
+        padding-right: 20px;
+        padding-left: 20px;
+        height: 32px;
+        margin-left: 20px;
+        width: fit-content;
+        cursor: pointer;
+        color: white;
+        background-color: blue;
+        font-size: 16px;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}
+
+
+.chipContainer {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    height: fit-content;
+    margin-top: 10px;
+    .chip {
+        font-size: 15px !important;
+        background-color: rgb(92, 92, 92);
+        color: white !important;
+        margin-right: 5px;
+    }
+}
+
+.participantsContainer {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    .participantLabel {
+        color: white;
+        margin-top: 10px;
+        margin-bottom: 2px;
+    }
+}
+
+.newProjectCreateButton {
+    width: 95%;
+    margin-top: 30px;
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: auto;
+    button {
+        width: fit-content;
+        height: fit-content;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+        outline: none;
+        border: none;
+        background-color: rgb(0, 0, 204);
+        color: white;
+        &:hover {
+            opacity: 0.7;
+        }
+    }  
+}
+
+.modalCloseIconContainer {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+
+.writeTabActive {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+    width: 50px;
+    justify-content: center;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-weight: 400;
+    height: 100%;
+    background-color: rgb(0, 0, 204);
+    border-radius: 5px;
+}
+
+.modalCloseIcon {
+    margin-right: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.modalCloseIcon > * {
+    color: white !important;
+    font-size: 30px !important;
+}

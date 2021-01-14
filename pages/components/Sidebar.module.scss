@@ -1,0 +1,190 @@
+.sidebar {
+    width: 25%;
+    background-color: rgb(22, 22, 22);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.userGreet {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.navOptions {
+    margin-top: 60px;
+    .dashboard {
+        cursor: pointer;
+        height: 50px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.075);
+            box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        }
+        h3 {
+            margin-left: 10px;
+        }
+    }
+    .assignments {
+        cursor: pointer;
+        color: white;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.075);
+            box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        }
+        h3 {
+            margin-left: 10px;
+        }
+    }
+    .alltickets {
+        cursor: pointer;
+        height: 50px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.075);
+            box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        }
+        h3 {
+            margin-left: 10px;
+        }
+    }
+}
+
+.avatar {
+    height: 200px;
+    width: 200px;
+    color: white;
+
+    background-color: orange;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    h1 {
+        display: flex;
+        align-items: center;
+        color: white;
+        justify-content: center;
+        font-size: 160px;
+    }
+}
+
+.userGreet {
+    h4, h2 {
+        color: white;
+    }
+}
+
+.closedNavBtnGroup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    height: fit-content;
+}
+
+.closedNavActive {
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);   
+     cursor: pointer;
+        height: 70px;
+        border-radius: 5px;
+        width: 90%;
+        margin-bottom: 50px;
+        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+}
+
+.closedNavIcon {
+    color: white !important;
+    font-size: 40px !important;
+    transition: ease-in all 0.2s;
+    cursor: pointer;
+    &:hover {
+        transform: scale(1.04);
+    }
+}
+
+.active {
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);   
+     cursor: pointer;
+     color: white;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        h3 {
+            margin-left: 10px;
+        }
+}
+
+.navIcon {
+    font-size: 30px !important;
+}
+
+.expandBtnContainer {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.expandBtn {
+    background-color: rgb(29, 29, 29);
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 20px;
+    padding: 5px;
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.expandBtn > * {
+    font-size: 30px !important;
+    color: white;
+}
+
+.logout {
+    margin-top: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+        height: 35px;
+        width: 110px;
+        font-size: 15px;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        background-color: rgb(219, 16, 16);
+        color: white;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}
+
+.closedNav {
+    width: 100px;
+    height: 100vh;
+    background-color: rgb(12, 12, 12);
+}

@@ -1,0 +1,57 @@
+.projectsContainer {
+    width: 95%;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    height: calc(100% - 100px);
+    background-color: rgb(26, 26, 26);
+    border-radius: 5pxrgb(2, 2, 2)
+}
+
+.eachProject {
+    color: white;
+    width: 95%;
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    border: rgb(53, 53, 53) solid 1px;    
+    height: fit-content;
+    height: 50px;
+    padding-left: 15px;
+    transition: ease-in all 0.2s;
+    display: flex;
+    padding-right: 15px;
+    margin-left: auto;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-right: auto;
+    h3 {
+        width: 30%;
+    }
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.005);
+    }
+}
+
+.descPart {
+    width: 75%;
+    height: fit-content;
+    border-radius: 5px;
+    h4 {
+        font-weight: 400;
+    }
+    h5 {
+            font-weight: 400;
+    }
+}
+
+.projectParticAvatar {
+    height: 50px;
+    border-radius: 50%;
+    width: 50px;
+    background-color: orange;
+    h4 {
+        font-size: 10px;
+    }
+}

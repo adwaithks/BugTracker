@@ -1,0 +1,455 @@
+.projectDetailsContainer {
+    width: 95%;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: black;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+}
+
+.projectHead {
+    color: white;
+    width: 95%;
+    font-size: larger;
+    margin-left: auto;
+    margin-right: auto;
+    height: fit-content;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.projectDesc {
+    color: white;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    h3 {
+        font-weight: 400;
+    }
+}
+
+.projectParts {
+    width: 95%;
+    display: flex;
+    margin-top: 10px;
+    color: white;
+    font-weight: 400;
+    margin-bottom: 20px;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    .partAvatar {
+        height: fit-content;
+        margin-left: 10px;
+        width: fit-content;
+        border-radius: 20px;
+        background-color: orange;
+        h4 {
+            font-weight: 400;
+        }
+        h3 {
+            display: flex;
+            color: black;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-size: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+.createNewTicketContainer {
+    width: 95%;
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 5px;
+    .createButton {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        button {
+            height: 90%;
+            cursor: pointer;
+            background-color: blue;
+            border-radius: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            outline: none;
+            color: white;
+            font-size: 17px;
+            border:none;
+            &:hover {
+                opacity: 0.7;
+            }
+        }
+    }
+}
+
+.projectTicketContainer {
+    width: 95%;
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: black;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+}
+
+.openpendingclosedContainer {
+    color: white;
+    background-color: rgb(26, 26, 26);
+    width: 95%;
+    font-size: larger;
+    border-radius: 5px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    .openpendingClosedInnerContainer {
+        width: 30%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+}
+
+.ticketcateg {
+    cursor: pointer;
+    height: 90%;
+    width: fit-content;
+    padding-left: 10px;
+    border-radius: 5px;
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    &:hover {
+        background-color: white;
+        color: black;
+    }
+}
+
+.newTicketModal {
+    width: 40%;
+    height: fit-content;
+    background-color: black;
+    border: none;
+    outline: none;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 20%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modalCloseIconContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.modalCloseIcon {
+    color: white;
+    margin-right: 10px;
+    * {
+        font-size: 30px !important;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}
+
+.description {
+    width: 100%;
+    margin-left: auto;
+    margin-bottom: 40px;
+    margin-right: auto;
+    height: fit-content;
+    div {
+        width: 90%;
+        margin-left: auto;
+        margin-top: 20px;
+        margin-right: auto;
+        margin-bottom: 5px;
+        label {
+            color: white;
+        }
+    }
+    textarea {
+        width: 87%;
+        border:none;
+        outline: none;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        height: 200px;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+    }
+}
+
+.createTicketButton {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+    button {
+        width: fit-content;
+        height: 40px;
+        font-size: 15px;
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: blue;
+        border-radius: 5px;
+        color: white;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}
+
+.previewTabContainer {
+    width: fit-content;
+    margin-top: 5px;
+    height: 30px;
+    border: solid 1px ;
+    align-items: center;
+    display: flex;
+    margin-left: 35px;
+    .writeTab {
+        display: flex;
+        align-items: center;
+        color: white;
+        width: 50px;
+        justify-content: center;
+        cursor: pointer;
+        font-weight: 400;
+        padding-left: 10px;
+        padding-right: 10px;
+        height: 100%;
+    }
+    .previewTab {
+        display: flex;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+        font-weight: 400;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 50px;
+        height: 100%;
+    }
+}
+
+.previewTabActive {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    color: white;
+    width: 50px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-weight: 400;
+    height: 100%;
+    background-color: blue;
+    border-radius: 5px;
+
+}
+
+.ticketTitle {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    div {
+        width: fit-content;
+
+        margin-bottom: 5px;
+
+        label {
+            color: white;
+        }
+    }
+    input {
+        width: 90%;
+        height: 20px;
+        padding: 7px;
+        font-size: 16px;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+    }
+}
+
+.writeTabActive {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    color: white;
+    width: 50px;
+    justify-content: center;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-weight: 400;
+    height: 100%;
+    background-color: blue;
+    border-radius: 5px;
+
+}
+
+.previewSection {
+    width: 95%;
+    height: 410px;
+    word-break: break-all;
+    margin-left: auto;
+    margin-bottom: 15px;
+    overflow-y: scroll;
+    margin-right: auto;
+    border-radius: 5px;
+    background-color: rgb(24, 24, 24);
+
+    p,pre {
+        margin-bottom: 5px;
+        width: 95%;
+        word-break: break-all;
+    }
+
+    p > code {
+        background-color: rgb(41, 41, 41);
+        border-radius: 5px;
+
+    }   
+    pre {
+        background-color: rgb(41, 41, 41);
+        border-radius: 5px;
+        padding: 10px;
+    }
+    * {
+        color: white;
+        padding: 5px;
+
+    }
+}
+
+
+.ticketList {
+    height: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.eachTicket {
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    width: 95%;
+    height: fit-content;
+    margin-left: auto;
+    border: rgb(53, 53, 53) solid 1px;
+    flex-wrap: wrap;
+    padding: 5px;
+    transition: ease-in all 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    &:hover {
+        transform: scale(1.02);
+    }
+}
+
+.ticketListUpper {
+    display: flex;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 50%;
+}
+
+.ticketListLower {
+    display: flex;
+    width: 95%;    
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px;
+    height: 50%;
+}
+
+.ticketHeading {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    h4 {
+        background-color: darkgray;
+        padding: 3px;
+        color: white;
+        border-radius: 5px;
+    }
+    h3 {
+        color: white;
+        font-weight: 600;
+    }
+}
+
+
+.ticketTags {
+    width: fit-content;
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 10px;
+    align-items: center;
+    h5 {
+        color:black;
+        padding: 3px;
+        padding-left: 5px;
+        background-color: greenyellow;
+
+        padding-right: 5px;
+        margin-left: 10px;
+        font-weight: 400;
+        border-radius: 10px;
+    }
+}
+
+.ticketId {
+    margin-right: 10px;
+    h5 {
+        color: rgb(199, 199, 199);
+        font-weight: 400;
+    }
+}
+
+.reportDate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h5 {
+        color: rgb(255, 255, 255);
+        font-weight: 400;
+    }
+}
