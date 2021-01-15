@@ -4,16 +4,15 @@ import mongoose from 'mongoose';
 
 initDB();
 export default async (req, res) => {
-    const id = mongoose.Types.ObjectId(req.body.projectId);
-    const ticket = new Ticket({
-        title: req.body.title,
-        projectId: id,
-        description: req.body.description,
-        participants: req.body.participants,
-        author: req.body.author,
-        project: req.body.project
+    const id = mongoose.Types.ObjectId(req.body.id);
+    const reply = {
+        user: req.body.name,
+        reply: req.body.reply
+    };
+    const ticket = await Ticket.findOne({
+        _id: id
     });
-    console.log('ticket: ' + ticket);
+    await ticket.replies.push(reply);
     await ticket.save().then((doc) => {
         res.status = 200;
         res.header = 'Content-Type: application/json';

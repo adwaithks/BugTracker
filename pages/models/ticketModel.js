@@ -28,6 +28,10 @@ const ticketSchema = mongoose.Schema({
     issueType: {
         type: String
     },
+    replies: [{
+        user: String,
+        reply: String
+    }],
     currentStatus: {
         type: String,
         default: 'New'

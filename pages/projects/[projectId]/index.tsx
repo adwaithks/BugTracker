@@ -15,7 +15,7 @@ function index({ data, tickets, projectId }) {
     const [ticketCatActive, setTicketcatactive] = React.useState('open');
 
 
-    const router = useRouter();
+    var router = useRouter();
 
     const refreshData = () => {
         router.replace(router.asPath);
@@ -187,7 +187,9 @@ function index({ data, tickets, projectId }) {
                                     {
                                         tickets.map((each: any, id: number) => (
                                             each.currentStatus == 'New' ? (
-                                                <div key={id} className={styles.eachTicket}>
+                                                <div onClick={() => {
+                                                    router.push(`/projects/${projectId}/ticket/${each._id}`);
+                                                }} key={id} className={styles.eachTicket}>
                                                     <div className={styles.ticketListUpper}>
                                                         <div className={styles.ticketHeading}>
                                                             <h3>{each.title}</h3>
@@ -218,7 +220,9 @@ function index({ data, tickets, projectId }) {
                                     {
                                         tickets.map((each: any, id: number) => (
                                             each.currentStatus == 'Closed' ? (
-                                                <div key={id} className={styles.eachTicket}>
+                                                <div onClick={() => {
+                                                    router.push(`/projects/${projectId}/ticket/${each._id}`);
+                                                }} key={id} className={styles.eachTicket}>
                                                     <div className={styles.ticketListUpper}>
                                                         <div className={styles.ticketHeading}>
                                                             <h3>{each.title}</h3>
@@ -249,7 +253,9 @@ function index({ data, tickets, projectId }) {
                                             {
                                                 tickets.map((each: any, id: number) => (
                                                     each.currentStatus == 'Pending' ? (
-                                                        <div key={id} className={styles.eachTicket}>
+                                                        <div onClick={() => {
+                                                            router.push(`/projects/${projectId}/ticket/${each._id}`);
+                                                        }} key={id} className={styles.eachTicket}>
                                                             <div className={styles.ticketListUpper}>
                                                                 <div className={styles.ticketHeading}>
                                                                     <h3>{each.title}</h3>

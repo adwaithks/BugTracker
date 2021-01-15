@@ -9,8 +9,22 @@ const projectSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    participants: [String]
-});
+    participants: [String],
+    openTickets: {
+        type: Number
+    },
+    closedTickets: {
+        type: Number
+    },
+    resolvedTickets: {
+        type: Number
+    },
+    unresolvedTickets: {
+        type: Number
+    }
+},{ timestamps: {
+    createdAt: 'created_at' 
+}});
 
 
 export default mongoose.models.Project || mongoose.model('Project', projectSchema);

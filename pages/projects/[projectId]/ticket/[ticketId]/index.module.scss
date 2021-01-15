@@ -1,0 +1,141 @@
+.ticketConversationList {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+    height: calc(100vh - 100px);
+    margin-top: 20px;
+    background-color: rgb(0, 0, 0);
+}
+
+.ticketConversation {
+    width: 90%;
+    margin-left: auto;
+    align-items: center;
+    background-color: rgb(22, 22, 22);
+    padding: 5px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-right: auto;
+    height: fit-content;
+    border-radius: 5px;
+    display: flex;
+}
+
+.avatarContainer {
+    width: 6%;
+    height: 100%;
+}
+
+.heading {
+    width: fit-content;
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    border: rgb(116, 116, 116);
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    margin-top: 10px;
+    h2 {
+        margin-left: 10px;
+        margin-right: 10px;
+        color: white;
+    }
+    h4 {
+        font-weight: 400;
+        color: white;
+    }
+    h5 {
+        color: rgb(143, 143, 143);
+    }
+}
+
+.ticketContent {
+    width: 93%;
+    background-color: rgba(182, 182, 182, 0.26);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    border-radius: 5px;
+    border: rgb(99, 99, 99);
+    padding: 15px;
+    h4 {
+        font-weight: 400;
+        color: white;
+    }
+}
+
+.avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: orange;
+    h4 {
+        font-size: 30px;
+        color: white;
+    }
+}
+
+.replyArea {
+    margin-top: 50px;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-bottom: 25px;
+    margin-right: auto;
+    height: 200px;
+}
+
+.projectDesc {
+    width: 85%;
+    margin-left: auto;
+    background-color: rgb(17, 17, 17);
+    margin-right: auto;
+    height: 95%;
+    border-radius: 5px;
+    textarea {
+        width: 100%;
+        background-color: rgb(43, 43, 43);
+        padding: 10px;
+        color: white;
+        height: 90%;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+        font-size: 16px;
+        &:focus {
+            border: rgb(102, 102, 102) solid 1px;
+        }
+    }
+}
+
+.buttonContainer {
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    button {
+        height: 30px;
+        background-color: blue;
+        color: white;
+        cursor: pointer;
+        font-size: 15px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}
