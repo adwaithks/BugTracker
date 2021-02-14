@@ -34,10 +34,27 @@
     }
 }
 
+.participants {
+    display: flex;
+    width: fit-content;
+    margin-top: 5px;
+    height: fit-content;
+    h5 {
+        margin-right: 5px;
+        background-color: orange;
+        padding: 2px;
+        color: black;
+        border-radius: 5px;
+    }
+}
+
+
+
 .descPart {
     width: 75%;
     height: fit-content;
-    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
     h4 {
         font-weight: 400;
     }

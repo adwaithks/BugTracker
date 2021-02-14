@@ -30,7 +30,10 @@ const ticketSchema = mongoose.Schema({
     },
     replies: [{
         user: String,
-        reply: String
+        label: Boolean,
+        tags: [String],
+        reply: String,
+        date: String
     }],
     currentStatus: {
         type: String,

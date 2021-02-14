@@ -16,7 +16,6 @@ export default async (req, res) => {
     console.log('ticket: ' + ticket);
     await ticket.save().then((doc) => {
         res.status = 200;
-        res.header = 'Content-Type: application/json';
         res.json(doc);
     }).catch(err => {
         console.log('err');

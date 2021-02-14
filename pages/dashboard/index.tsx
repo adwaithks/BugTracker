@@ -3,6 +3,7 @@ import styles from './index.module.scss';
 import Modal from 'react-modal';
 import LayoutFrame from '../components/LayoutFrame';
 import Chip from '@material-ui/core/Chip';
+import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
 import fetch from 'isomorphic-unfetch';
 
@@ -13,6 +14,7 @@ const index = () => {
     const [projectTitle, setProjectTitle] = React.useState('');
     const [chipData, setChipData] = React.useState(['adwaith']);
     const [participantName, setParticipantName] = React.useState('');
+    const [issuesReceivedGraphData, setIssuesReceivedGraphData] = React.useState();
 
     const handleDelete = (deleteName: any) => () => {
         setChipData(chipData.filter((eachName) => {
@@ -175,7 +177,7 @@ const index = () => {
                 <div className={styles.overallTicketTypes}>
                     <div className={styles.overallTicketTypesHeading}>
                         <h3>Overall Ticket Type</h3>
-                        <div className={styles.overallTicketTypesRatings}>
+                        {/*<div className={styles.overallTicketTypesRatings}>
                             <div className={styles.excellent}>
                                 <div className={styles.roundgreen}></div>
                                 <h4>Excellent</h4>
@@ -188,21 +190,64 @@ const index = () => {
                                 <div className={styles.roundred}></div>
                                 <h4>Fair</h4>
                             </div>
-                        </div>
+            </div>*/}
                     </div>
                     <div className={styles.overallTicketTypesGraph}>
+                        <Bar data={{
+                            labels: ['New', 'Open', 'Resolved', 'Unresolved'],
+                            datasets: [{
+                                label: 'overall issues',
+                                data: [12, 23, 34, 1],
+                                backgroundColor: [
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
 
+                                ],
+                                borderColor: [
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 99, 132, 1)',
+
+                                ],
+                                borderWidth: 2
+                            }]
+                        }}
+                        />
                     </div>
                 </div>
                 <div className={styles.issuesReceived}>
                     <div className={styles.issuesReceivedHeading}>
-                        <h3>Issue Received</h3>
+                        <h3>Issues Received</h3>
                     </div>
                     <div className={styles.issuesReceivedCount}>
                         <h1>163</h1>
                     </div>
                     <div className={styles.issuesReceivedGraph}>
-
+                        <Doughnut data={{
+                            labels: ['Critical', 'High', 'Medium', 'Low', 'Spam'],
+                            datasets: [{
+                                label: 'issues received',
+                                data: [12, 19, 3, 5, 1],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                ],
+                                borderWidth: 2
+                            }]
+                        }} />
                     </div>
                 </div>
             </div>

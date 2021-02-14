@@ -216,11 +216,15 @@
     }
     h1 {
         padding: 20px;
+        font-size: 45px;
     }
 }
 
 .issuesReceivedGraph {
     height: 80%;
+    * {
+        margin-top: 25px;
+    }
 }
 
 .newProjectModal {

@@ -26,7 +26,13 @@ function index({ data }) {
                                         <h5>{each.description.slice(0, 115) + "..."}</h5> :
                                         <h4>{each.description}</h4>
                                 }
-                                <h5>{each.participants}</h5>
+                                <div className={styles.participants}>
+                                    {
+                                        each.participants.map((element, id) => (
+                                            <h5 key={id}>{element}</h5>
+                                        ))
+                                    }
+                                </div>
                             </div>
                         </div>
                     ))

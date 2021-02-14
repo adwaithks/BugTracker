@@ -21,13 +21,25 @@ function index({ data, tickets, projectId }) {
         router.replace(router.asPath);
     }
 
+    var colors = {
+        'new': ['greenyellow', 'black'],
+        'open': ['green', 'white'],
+        'discussion': ['gray', 'white'],
+        'bug': ['red', 'white'],
+        'critical': ['darkred', 'white'],
+        'help wanted': ['lightgreen', 'black'],
+        'needs example': ['yellow', 'black'],
+        'documentation': ['dark gray', 'white'],
+        'default': ['orange', 'black']
+    }
+
     const createNewTicket = async () => {
         const bodyData = {
             title: ticketTitle,
             description: editorContent,
             project: dataState.title,
             author: 'adwaith',
-            participants: ['adwaith'],
+            participants: data.participants,
             projectId: projectId
         }
         const res = await fetch('http://localhost:3000/api/createNewTicket', {
@@ -38,7 +50,6 @@ function index({ data, tickets, projectId }) {
             body: JSON.stringify(bodyData)
         });
         const finalData = await res.json();
-        console.log(finalData);
         setIsOpen(false);
         refreshData();
     }
@@ -78,9 +89,9 @@ function index({ data, tickets, projectId }) {
                     onRequestClose={() => {
                         setIsOpen(!modalIsOpen)
                     }}
-                    styles={{
+                    style={{
                         overlay: {
-                            background: 'rgb(0, 0, 0)'
+                            background: 'rgba(27, 27, 27, 0.8)'
                         }
                     }
                     }
@@ -194,7 +205,30 @@ function index({ data, tickets, projectId }) {
                                                         <div className={styles.ticketHeading}>
                                                             <h3>{each.title}</h3>
                                                             <div className={styles.ticketTags}>
-                                                                <h5>{each.currentStatus}</h5>
+                                                                <h5 style={{
+                                                                    paddingLeft: '10px',
+                                                                    paddingRight: '10px',
+                                                                    padding: '2px',
+                                                                    marginRight: '5px',
+                                                                    marginLeft: '5px',
+                                                                    borderRadius: '5px',
+                                                                    backgroundColor: 'orange',
+                                                                    color: 'white'
+                                                                }}>{each.currentStatus}</h5>
+                                                                {
+                                                                    each.tags.map((tag, id) => (
+                                                                        <h5 style={{
+                                                                            paddingLeft: '10px',
+                                                                            paddingRight: '10px',
+                                                                            padding: '2px',
+                                                                            borderRadius: '5px',
+                                                                            marginRight: '5px',
+                                                                            marginLeft: '5px',
+                                                                            backgroundColor: 'orange',
+                                                                            color: 'white'
+                                                                        }} key={id}>{tag}</h5>
+                                                                    ))
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>
