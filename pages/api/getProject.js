@@ -1,4 +1,3 @@
-import { Mongoose } from 'mongoose';
 import Project from '../models/projectModel';
 import initDB from '../utils/connectDB';
 import mongoose from 'mongoose';

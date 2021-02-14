@@ -2,17 +2,22 @@ import React from 'react';
 import LayoutFrame from '../../components/LayoutFrame';
 import styles from './index.module.scss';
 import Modal from 'react-modal';
+import Chip from '@material-ui/core/Chip';
+import GroupIcon from '@material-ui/icons/Group';
 import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
 import CloseIcon from '@material-ui/icons/Close';
 
-function index({ data, tickets, projectId }) {
+function index({ data, participants, tickets, projectId }) {
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [ticketTitle, setTicketTitle] = React.useState('');
     const [previewTabActive, setPreviewTabActive] = React.useState(false);
     const [dataState, setDataState] = React.useState(data);
     const [ticketCatActive, setTicketcatactive] = React.useState('open');
+    const [addParticipantModal, setAddParticipantModal] = React.useState(false);
+    const [chipData, setChipData] = React.useState(participants);
+    const [participantName, setParticipantName] = React.useState('');
 
 
     var router = useRouter();
@@ -31,6 +36,31 @@ function index({ data, tickets, projectId }) {
         'needs example': ['yellow', 'black'],
         'documentation': ['dark gray', 'white'],
         'default': ['orange', 'black']
+    }
+
+    const editParticipants = async () => {
+        setAddParticipantModal(false);
+        const bodyData = {
+            id: projectId,
+            participants: chipData
+        }
+        const res = await fetch('http://localhost:3000/api/editParticipants', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyData)
+
+        });
+        console.log('res: ', res);
+
+        refreshData();
+    }
+
+    const handleDelete = async (deleteName: any) => {
+        setChipData(chipData.filter((eachName) => {
+            return eachName != deleteName;
+        }));
     }
 
     const createNewTicket = async () => {
@@ -64,6 +94,12 @@ function index({ data, tickets, projectId }) {
                             setIsOpen(!modalIsOpen);
                         }}>Create New Ticket</button>
                     </div>
+                    <div className={styles.createButton}>
+                        <button onClick={(e) => {
+                            e.preventDefault();
+                            setAddParticipantModal(!addParticipantModal);
+                        }}>Add Participants</button>
+                    </div>
                 </div>
                 <div className={styles.projectDetailsContainer}>
                     <div className={styles.projectHead}>
@@ -83,6 +119,79 @@ function index({ data, tickets, projectId }) {
                         }
                     </div>
                 </div>
+                <Modal
+                    className={styles.editParticipantModal}
+                    isOpen={addParticipantModal}
+                    onRequestClose={() => {
+                        setAddParticipantModal(!addParticipantModal)
+                    }}
+                    styles={{
+                        overlay: {
+                            background: 'rgb(0, 0, 0)'
+                        }
+                    }
+                    }
+                >
+                    {
+
+                        <>
+                            <div className={styles.modalCloseIconContainer}>
+                                <div className={styles.modalCloseIcon} onClick={() => {
+                                    setAddParticipantModal(!addParticipantModal);
+                                }}>
+                                    <CloseIcon />
+                                </div>
+                            </div>
+                            <div>
+                                <div className={styles.chipContainer}>
+                                    <div className={styles.participantHeading}>
+                                        <GroupIcon />
+                                        <h5>Participants</h5>
+                                    </div>
+                                    <div className={styles.participantsContainer}>
+                                        <div className={styles.participantLabel}>
+                                            <label htmlFor="">Project Participants</label>
+                                        </div>
+                                        <div className={styles.participantSelect}>
+
+
+                                            <input type="text" placeholder="Enter name" value={participantName} onChange={(e) => {
+                                                setParticipantName(e.target.value);
+                                            }} />
+
+                                            <button onClick={(e) => {
+                                                e.preventDefault();
+                                                setChipData(() => [...chipData, participantName]);
+                                                setParticipantName('');
+                                            }}>Add</button>
+                                        </div>
+                                        {
+                                            chipData.map((each, key) => (
+                                                <Chip
+                                                    key={key}
+                                                    label={each}
+                                                    onDelete={() => {
+                                                        handleDelete(each)
+                                                    }}
+                                                    className={styles.chip}
+                                                />
+                                            ))
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={styles.editParticipantButton}>
+                                <button onClick={editParticipants}>Save</button>
+                            </div>
+
+
+                        </>
+
+                    }
+
+                </Modal>
+
                 <Modal
                     className={styles.newTicketModal}
                     isOpen={modalIsOpen}
@@ -349,10 +458,12 @@ export async function getServerSideProps(context) {
         })
     });
     const data2 = await response2.json();
+    const participants = data.participants;
 
     return {
         props: {
             data: data,
+            participants: participants,
             tickets: data2,
             projectId: projectId
         }

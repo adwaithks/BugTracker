@@ -1,7 +1,8 @@
 import React from 'react';
 import LayoutFrame from '../components/LayoutFrame';
 import styles from './index.module.scss';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import GroupIcon from '@material-ui/icons/Group';
 
 
 function index({ data }) {
@@ -27,6 +28,7 @@ function index({ data }) {
                                         <h4>{each.description}</h4>
                                 }
                                 <div className={styles.participants}>
+                                    <GroupIcon className={styles.participantsIcon} />
                                     {
                                         each.participants.map((element, id) => (
                                             <h5 key={id}>{element}</h5>

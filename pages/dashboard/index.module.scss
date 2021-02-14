@@ -83,7 +83,7 @@
     display: flex;
     margin-top: 20px;
     width: 95%;
-    background-color: rgb(27, 27, 27);
+    background-color: rgb(24, 24, 24);
     padding: 10px;
     border-radius: 5px;
     margin-left: auto;
@@ -92,7 +92,11 @@
 }
 
 .newTickets, .resolvedTickets, .unresolvedTickets, .openTickets {
-    @include ticketCountsBox()
+    @include ticketCountsBox();
+    box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
+    backdrop-filter: blur( 5.5px );
+    -webkit-backdrop-filter: blur( 5.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .newTicketsContent, .resolvedTicketsContent, .unresolvedTicketsContent, .openTicketsContent {
@@ -110,29 +114,38 @@
     padding: 10px;
     margin-left: auto;
     border-radius: 5px;
-    background-color: rgb(27, 27, 27);
+    background-color: rgb(24, 24, 24);
     display: flex;
 }
 
 .overallTicketTypes {
     width: 55%;
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 5.5px );
+    -webkit-backdrop-filter: blur( 5.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
     display: flex;
     flex-direction: column;
     border-radius:  5px;
     color: white;
-    height: 400px;
+    height: fit-content;
 }
 
 .issuesReceived {
     width: 40%;
+    background: rgba( 255, 255, 255, 0.20 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 5.5px );
+    -webkit-backdrop-filter: blur( 5.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
     color: white;
     display: flex;
     flex-direction: column;
-    height: 400px;
+    height: fit-content;
     border-radius:  5px;
 }
 
@@ -212,10 +225,12 @@
     display: flex;
     align-items: center;
     h3 {
-        padding: 20px;
+        padding: 10px;
+        font-size: 20px;
     }
     h1 {
-        padding: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
         font-size: 45px;
     }
 }
@@ -224,6 +239,7 @@
     height: 80%;
     * {
         margin-top: 25px;
+        margin-bottom: 25px;
     }
 }
 
@@ -340,6 +356,10 @@
         padding-right: 20px;
         padding-left: 20px;
         height: 32px;
+        box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
+        backdrop-filter: blur( 5.5px );
+        -webkit-backdrop-filter: blur( 5.5px );
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
         margin-left: 20px;
         width: fit-content;
         cursor: pointer;
@@ -394,11 +414,14 @@
         width: fit-content;
         height: fit-content;
         padding: 10px;
+        box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
+        backdrop-filter: blur( 5.5px );
+        -webkit-backdrop-filter: blur( 5.5px );
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
         cursor: pointer;
         border-radius: 5px;
         font-size: 16px;
         outline: none;
-        border: none;
         background-color: rgb(0, 0, 204);
         color: white;
         &:hover {
