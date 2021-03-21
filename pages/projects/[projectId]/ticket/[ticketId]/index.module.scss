@@ -77,6 +77,21 @@
     margin-bottom: 10px;
 }
 
+.ticketcloseButton {
+    width: fit-content;
+    background-color: red !important;
+    padding-left: 10px;
+    margin-right: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    height: 25px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
 .ticket {
     display: flex;
     width: 100%;

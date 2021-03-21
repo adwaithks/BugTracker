@@ -13,7 +13,6 @@ function index({ data }) {
     const [chipData, setChipData] = React.useState(data.tags);
     const [ticketId, setTicketId] = React.useState(data._id);
     const [label, setLabel] = React.useState('');
-    const [myLabels, setMyLabels] = React.useState([]);
 
     const addLabel = (event: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpen(!modalIsOpen);
@@ -28,8 +27,26 @@ function index({ data }) {
         'critical': ['darkred', 'white'],
         'help wanted': ['lightgreen', 'black'],
         'needs example': ['yellow', 'black'],
-        'documentation': ['dark gray', 'white']
+        'documentation': ['dark gray', 'white'],
+        'triaged': ['orange', 'black'],
+        'closed': ['red', 'black'],
+        'default': ['white', 'black']
     }
+
+    const closeTicket = async () => {
+        const bodyData = {
+            id: ticketId
+        }
+        await fetch('http://localhost:3000/api/closeTicket', {
+            method: 'POST',
+            body: JSON.stringify(bodyData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        refreshData();
+    }
+
     const refreshData = () => {
         router.replace(router.asPath);
     }
@@ -43,7 +60,7 @@ function index({ data }) {
             id: ticketId,
             labelBool: true,
             user: 'Adwaith',
-            reply: `Adwaith added label ${chipData}`,
+            reply: `Adwaith added labels` + chipData,
             tagData: chipData,
             name: 'Adwaith'
         }
@@ -61,8 +78,6 @@ function index({ data }) {
             },
             body: JSON.stringify(data2)
         })
-        const response = await res.json();
-        const response2 = await res2.json();
         setIsOpen(false);
         refreshData();
     }
@@ -108,34 +123,39 @@ function index({ data }) {
                     <h4>Opened on {data.created_at} by {data.author}</h4>
                 </div>
 
-                {
-                    /*
-                    <div className={styles.labelsInHead}>
+
+
+                <div className={styles.labelsInHead}>
                     <h5 style={{
-                        paddingLeft: '10px',
-                        paddingRight: '10px',
-                        padding: '2px',
-                        borderRadius: '5px',
+                        paddingLeft: '20px',
+                        paddingRight: '20px',
+                        padding: '3px',
+                        border: 'black solid 1px',
+                        borderRadius: '10px',
                         backgroundColor: colors[data.currentStatus ? data.currentStatus.toLowerCase() : 'default'][0] || 'orange',
                         color: colors[data.currentStatus ? data.currentStatus.toLowerCase() : 'default'][1] || 'white'
                     }}>{data.currentStatus}</h5>
                     {
+                        console.log(colors['discussion'][0])
+
+                    }
+                    {
                         data.tags.map((each, keyId) => (
                             <h5 key={keyId} style={{
-                                paddingLeft: '10px',
-                                paddingRight: '10px',
+                                paddingLeft: '15px',
+                                paddingRight: '15px',
                                 padding: '2px',
-                                borderRadius: '5px',
+                                borderRadius: '10px',
                                 marginRight: '5px',
                                 marginLeft: '5px',
-                                backgroundColor: colors[data ? each.toLowerCase() : 'default'][0] || 'orange',
-                                color: colors[data ? each.toLowerCase() : 'default'][1] || 'white'
+                                backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
+                                color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
                             }}>{each}</h5>
                         ))
                     }
                 </div>
-                    */
-                }
+
+
 
             </div>
             <div className={styles.ticketConversationList}>
@@ -163,20 +183,20 @@ function index({ data }) {
 
                             </div>
                         ) : (
-                                <div key={each._id} className={styles.ticketConversation}>
-                                    <div className={styles.ticketConversationHead}>
-                                        <h4>{each.user} commented on {each.date}</h4>
+                            <div key={each._id} className={styles.ticketConversation}>
+                                <div className={styles.ticketConversationHead}>
+                                    <h4>{each.user} commented on {each.date}</h4>
+                                </div>
+                                <div className={styles.ticket}>
+                                    <div className={styles.avatarContainer}>
+                                        <div className={styles.avatar}><h4>{each.user.slice(0, 1).toUpperCase()}</h4></div>
                                     </div>
-                                    <div className={styles.ticket}>
-                                        <div className={styles.avatarContainer}>
-                                            <div className={styles.avatar}><h4>{each.user.slice(0, 1).toUpperCase()}</h4></div>
-                                        </div>
-                                        <div className={styles.ticketContent}>
-                                            <h4>{each.reply}</h4>
-                                        </div>
+                                    <div className={styles.ticketContent}>
+                                        <h4>{each.reply}</h4>
                                     </div>
                                 </div>
-                            )
+                            </div>
+                        )
 
 
                     ))
@@ -234,17 +254,33 @@ function index({ data }) {
 
                 </Modal>
                 <div className={styles.replyArea}>
-                    <div className={styles.projectDesc}>
-                        <textarea placeholder="Description (Markdown supported)" className={styles.editor} value={editorContent} onChange={(e) => {
-                            setEditorContent(e.target.value);
-                        }}>
-                        </textarea>
-                    </div>
-                    <div className={styles.buttonContainer}>
-                        <button className={styles.labelButton} onClick={addLabel}>Add Labels</button>
+                    {
+                        (data.currentStatus != 'closed') ? (
+                            <div className={styles.projectDesc}>
+                                <textarea placeholder="Description (Markdown supported)" className={styles.editor} value={editorContent} onChange={(e) => {
+                                    setEditorContent(e.target.value);
+                                }}>
+                                </textarea>
+                            </div>
+                        ) : null
+                    }
 
-                        <button onClick={() => { submitReply(data._id, false) }}>Comment</button>
-                    </div>
+
+                    {
+                        (data.currentStatus != 'closed') ? (
+                            <div className={styles.buttonContainer}>
+                                <button className={styles.labelButton} onClick={addLabel}>Add Labels</button>
+                                <button onClick={() => { submitReply(data._id, false) }}>Comment</button>
+                                <button className={styles.ticketcloseButton} onClick={() => { closeTicket() }}>Close Ticket</button>
+                            </div>
+                        ) : (
+                            null
+
+                        )
+
+                    }
+
+
                 </div>
             </div>
         </LayoutFrame>

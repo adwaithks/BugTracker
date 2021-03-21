@@ -35,7 +35,8 @@ function index({ data, participants, tickets, projectId }) {
         'help wanted': ['lightgreen', 'black'],
         'needs example': ['yellow', 'black'],
         'documentation': ['dark gray', 'white'],
-        'default': ['orange', 'black']
+        'default': ['orange', 'black'],
+        'closed': ['red', 'white']
     }
 
     const editParticipants = async () => {
@@ -219,13 +220,13 @@ function index({ data, participants, tickets, projectId }) {
                                                 <div className={styles.previewTabActive}><h4>Preview</h4></div>
                                             </>
                                         ) : (
-                                                <>
-                                                    <div className={styles.writeTabActive}><h4>Write</h4></div>
-                                                    <div className={styles.previewTab} onClick={() => {
-                                                        setPreviewTabActive(!previewTabActive)
-                                                    }}><h4>Preview</h4></div>
-                                                </>
-                                            )
+                                            <>
+                                                <div className={styles.writeTabActive}><h4>Write</h4></div>
+                                                <div className={styles.previewTab} onClick={() => {
+                                                    setPreviewTabActive(!previewTabActive)
+                                                }}><h4>Preview</h4></div>
+                                            </>
+                                        )
                                     }
 
                                 </div>
@@ -247,37 +248,37 @@ function index({ data, participants, tickets, projectId }) {
                                                     </Markdown>
                                                 </>
                                             ) : (
-                                                    <h2>Nothing to preview!</h2>
-                                                )
+                                                <h2>Nothing to preview!</h2>
+                                            )
                                         }
                                     </div>
                                 ) : (
-                                        <div className={styles.newTicketInfo}>
-                                            <div className={styles.ticketTitle}>
-                                                <div>
-                                                    <label htmlFor="">Title</label>
-                                                </div>
-                                                <input placeholder="Title" value={ticketTitle} type="text" onChange={(e) => {
-                                                    setTicketTitle(e.target.value);
-                                                }} />
+                                    <div className={styles.newTicketInfo}>
+                                        <div className={styles.ticketTitle}>
+                                            <div>
+                                                <label htmlFor="">Title</label>
                                             </div>
-                                            <div className={styles.description}>
-                                                <div>
-                                                    <label htmlFor="">Description</label>
-                                                </div>
-                                                <textarea placeholder="Description (Markdown supported)" className={styles.editor} value={editorContent} onChange={(e) => {
-                                                    console.log(e.target.value);
-
-                                                    setEditorContent(e.target.value);
-                                                }}>
-                                                </textarea>
-                                            </div>
-                                            <div className={styles.createTicketButton}>
-                                                <button onClick={createNewTicket}>Create a new ticket</button>
-                                            </div>
-
+                                            <input placeholder="Title" value={ticketTitle} type="text" onChange={(e) => {
+                                                setTicketTitle(e.target.value);
+                                            }} />
                                         </div>
-                                    )
+                                        <div className={styles.description}>
+                                            <div>
+                                                <label htmlFor="">Description</label>
+                                            </div>
+                                            <textarea placeholder="Description (Markdown supported)" className={styles.editor} value={editorContent} onChange={(e) => {
+                                                console.log(e.target.value);
+
+                                                setEditorContent(e.target.value);
+                                            }}>
+                                            </textarea>
+                                        </div>
+                                        <div className={styles.createTicketButton}>
+                                            <button onClick={createNewTicket}>Create a new ticket</button>
+                                        </div>
+
+                                    </div>
+                                )
                             }
 
                         </>
@@ -294,9 +295,7 @@ function index({ data, participants, tickets, projectId }) {
                             <div className={styles.ticketcateg} onClick={(e) => {
                                 setTicketcatactive('closed');
                             }}><h4>Closed</h4></div>
-                            <div className={styles.ticketcateg} onClick={(e) => {
-                                setTicketcatactive('pending');
-                            }}><h4>Pending</h4></div>
+
                         </div>
 
                     </div>
@@ -321,8 +320,8 @@ function index({ data, participants, tickets, projectId }) {
                                                                     marginRight: '5px',
                                                                     marginLeft: '5px',
                                                                     borderRadius: '5px',
-                                                                    backgroundColor: 'orange',
-                                                                    color: 'white'
+                                                                    backgroundColor: colors[dataState.currentStatus ? dataState.currentStatus.toLowerCase() : 'default'][0] || 'orange',
+                                                                    color: colors[dataState.currentStatus ? data.currentStatus.toLowerCase() : 'default'][1] || 'white'
                                                                 }}>{each.currentStatus}</h5>
                                                                 {
                                                                     each.tags.map((tag, id) => (
@@ -333,8 +332,8 @@ function index({ data, participants, tickets, projectId }) {
                                                                             borderRadius: '5px',
                                                                             marginRight: '5px',
                                                                             marginLeft: '5px',
-                                                                            backgroundColor: 'orange',
-                                                                            color: 'white'
+                                                                            backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
+                                                                            color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
                                                                         }} key={id}>{tag}</h5>
                                                                     ))
                                                                 }
@@ -351,10 +350,8 @@ function index({ data, participants, tickets, projectId }) {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                    null
-                                                )
-
-
+                                                null
+                                            )
                                         ))
                                     }
                                 </div>
@@ -362,7 +359,49 @@ function index({ data, participants, tickets, projectId }) {
                                 <div className={styles.ticketList}>
                                     {
                                         tickets.map((each: any, id: number) => (
-                                            each.currentStatus == 'Closed' ? (
+                                            each.currentStatus == 'closed' ? (
+                                                <div onClick={() => {
+                                                    router.push(`/projects/${projectId}/ticket/${each._id}`);
+                                                }} key={id} className={styles.eachTicket}>
+                                                    <div className={styles.ticketListUpper}>
+                                                        <div className={styles.ticketHeading}>
+                                                            <h3>{each.title}</h3>
+                                                            <div className={styles.ticketTags}>
+                                                                <h5 style={{
+                                                                    paddingLeft: '10px',
+                                                                    paddingRight: '10px',
+                                                                    padding: '2px',
+                                                                    marginRight: '5px',
+                                                                    marginLeft: '5px',
+                                                                    borderRadius: '5px',
+                                                                    backgroundColor: 'red',
+                                                                    color: 'white'
+                                                                }}>{each.currentStatus}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className={styles.ticketListLower}>
+                                                        <div className={styles.ticketId}>
+                                                            <h5>#{each._id}</h5>
+                                                        </div>
+                                                        <div className={styles.reportDate}>
+                                                            <h5>Opened On {each.created_at} by {each.author}</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                null
+                                            )
+
+
+                                        ))
+                                    }
+                                </div>
+                            ) : (
+                                <div className={styles.ticketList}>
+                                    {
+                                        tickets.map((each: any, id: number) => (
+                                            each.currentStatus == 'Pending' ? (
                                                 <div onClick={() => {
                                                     router.push(`/projects/${projectId}/ticket/${each._id}`);
                                                 }} key={id} className={styles.eachTicket}>
@@ -384,47 +423,14 @@ function index({ data, participants, tickets, projectId }) {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                    null
-                                                )
+                                                null
+                                            )
 
 
                                         ))
                                     }
                                 </div>
-                            ) : (
-                                        <div className={styles.ticketList}>
-                                            {
-                                                tickets.map((each: any, id: number) => (
-                                                    each.currentStatus == 'Pending' ? (
-                                                        <div onClick={() => {
-                                                            router.push(`/projects/${projectId}/ticket/${each._id}`);
-                                                        }} key={id} className={styles.eachTicket}>
-                                                            <div className={styles.ticketListUpper}>
-                                                                <div className={styles.ticketHeading}>
-                                                                    <h3>{each.title}</h3>
-                                                                    <div className={styles.ticketTags}>
-                                                                        <h5>{each.currentStatus}</h5>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className={styles.ticketListLower}>
-                                                                <div className={styles.ticketId}>
-                                                                    <h5>#{each._id}</h5>
-                                                                </div>
-                                                                <div className={styles.reportDate}>
-                                                                    <h5>Opened On {each.created_at} by {each.author}</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                            null
-                                                        )
-
-
-                                                ))
-                                            }
-                                        </div>
-                                    )
+                            )
                         }
 
                     </div>
