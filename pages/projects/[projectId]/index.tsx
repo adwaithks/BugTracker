@@ -289,16 +289,16 @@ function index({ data, participants, tickets, projectId }) {
                 <div className={styles.projectTicketContainer}>
                     <div className={styles.openpendingclosedContainer}>
                         <div className={styles.openpendingClosedInnerContainer}>
-                            <div className={styles.ticketcateg} onClick={(e) => {
+                            <div className={ticketCatActive=='open' ? styles.ticketcategActive : styles.ticketcateg} onClick={(e) => {
                                 setTicketcatactive('open');
                             }}><h4>Open</h4></div>
-                            <div className={styles.ticketcateg} onClick={(e) => {
+                            <div className={ticketCatActive=='closed' ? styles.ticketcategActive : styles.ticketcateg} onClick={(e) => {
                                 setTicketcatactive('closed');
                             }}><h4>Closed</h4></div>
 
                         </div>
-
                     </div>
+                    
                     <div className={styles.ticketDetails}>
                         {
                             ticketCatActive === 'open' ? (

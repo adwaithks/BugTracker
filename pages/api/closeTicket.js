@@ -10,6 +10,7 @@ export default async(req, res) => {
     })
     if (ticket) {
         ticket.currentStatus = 'closed';
+        ticket.tags.push('resolved');
     }
     await ticket.save().then().catch(err => {
         console.log('Ticket closing error');

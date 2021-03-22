@@ -4,6 +4,9 @@ import LayoutFrame from '../../../../components/LayoutFrame';
 import styles from './index.module.scss';
 import Modal from 'react-modal';
 import Chip from '@material-ui/core/Chip';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import CloseIcon from '@material-ui/icons/Close';
 
 function index({ data }) {
@@ -12,12 +15,16 @@ function index({ data }) {
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [chipData, setChipData] = React.useState(data.tags);
     const [ticketId, setTicketId] = React.useState(data._id);
+    const [selectValue, setSelectValue] = React.useState(data.currentStatus);
+    const [selectOpen, setSelectOpen] = React.useState(false);
     const [label, setLabel] = React.useState('');
+    const [temp, setTemp] = React.useState('');
+    const [reportSelectionModal, setReportSelectionModal] = React.useState(false);
 
     const addLabel = (event: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpen(!modalIsOpen);
     };
-
+    console.log(selectValue)
     var router = useRouter();
     var colors = {
         'new': ['greenyellow', 'black'],
@@ -30,8 +37,49 @@ function index({ data }) {
         'documentation': ['dark gray', 'white'],
         'triaged': ['orange', 'black'],
         'closed': ['red', 'black'],
-        'default': ['white', 'black']
+        'triage': ['orange', 'black'],
+        'close': ['red', 'black'],
+        'default': ['white', 'black'],
+        'resolved': ['greenyellow', 'black'],
+        'unresolved': ['darkred', 'black'],
+        'pending': ['purple', 'white'],
+        'accepted': ['green', 'white']
     }
+    
+    const setCurrentState = async () => {
+        console.log(selectValue)
+        if (temp !== 'closed') {
+            await fetch('http://localhost:3000/api/reportCurrentState', {
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                    id: ticketId,
+                    currentState: temp
+                })
+            });
+            refreshData();
+        } else {
+            closeTicket();
+            refreshData();
+        }
+        
+    }
+
+    const selectOnChange = (e) => {
+        setReportSelectionModal(true);
+        setTemp(e.target.value);
+    }
+
+    const selectOnClose = () => {
+        setSelectOpen(false)
+    }   
+
+    const selectOnOpen = () => {
+        setSelectOpen(true)
+    }
+
 
     const closeTicket = async () => {
         const bodyData = {
@@ -127,24 +175,24 @@ function index({ data }) {
 
                 <div className={styles.labelsInHead}>
                     <h5 style={{
-                        paddingLeft: '20px',
-                        paddingRight: '20px',
-                        padding: '3px',
+                        paddingLeft: '25px',
+                        paddingRight: '25px',
+                        display:'flex',
+                        alignItems: 'center',
+                        padding: '4px',
                         border: 'black solid 1px',
                         borderRadius: '10px',
                         backgroundColor: colors[data.currentStatus ? data.currentStatus.toLowerCase() : 'default'][0] || 'orange',
                         color: colors[data.currentStatus ? data.currentStatus.toLowerCase() : 'default'][1] || 'white'
                     }}>{data.currentStatus}</h5>
                     {
-                        console.log(colors['discussion'][0])
-
-                    }
-                    {
                         data.tags.map((each, keyId) => (
                             <h5 key={keyId} style={{
-                                paddingLeft: '15px',
-                                paddingRight: '15px',
-                                padding: '2px',
+                                paddingLeft: '25px',
+                                display:'flex',
+                                alignItems: 'center',
+                                paddingRight: '25px',
+                                padding: '3px',
                                 borderRadius: '10px',
                                 marginRight: '5px',
                                 marginLeft: '5px',
@@ -154,10 +202,46 @@ function index({ data }) {
                         ))
                     }
                 </div>
-
-
-
             </div>
+
+
+            <Modal
+                    className={styles.reportSelectModal}
+                    isOpen={reportSelectionModal}
+                    onRequestClose={() => {
+                        setReportSelectionModal(!reportSelectionModal)
+                    }}
+                    styles={{
+                        overlay: {
+                            background: 'rgb(0, 0, 0)'
+                        }
+                    }}
+                >
+                    <>
+                        <div className={styles.modalCloseIconContainer}>
+                            <div className={styles.modalCloseIcon} onClick={() => {
+                                setReportSelectionModal(!reportSelectionModal)
+                            }}>
+                                <CloseIcon />
+                            </div>
+                        </div>
+                        <div className={styles.reportModalInfo}>
+                            <div className={styles.reportSelectHeading}>
+                                <h3>Do you want to change the current state of report to {temp}?</h3>
+                            </div>
+                            <div className={styles.reportSelectBtnGroup}>
+                                <button onClick={()=>{
+                                    setSelectValue(temp);
+                                    setReportSelectionModal(!reportSelectionModal)
+                                    setCurrentState();
+                                    }} className={styles.proceed}>Proceed</button>
+                                <button onClick={()=>{setReportSelectionModal(!reportSelectionModal)}} className={styles.cancel}>Cancel</button>
+                            </div>
+                        </div>
+                        
+                    </>
+                </Modal>
+
             <div className={styles.ticketConversationList}>
                 <div key={data._id} className={styles.ticketConversation}>
                     <div className={styles.ticketConversationHead}>
@@ -213,8 +297,6 @@ function index({ data }) {
                         }
                     }}
                 >
-
-
                     <>
                         <div className={styles.modalCloseIconContainer}>
                             <div className={styles.modalCloseIcon} onClick={() => {
@@ -257,6 +339,32 @@ function index({ data }) {
                     {
                         (data.currentStatus != 'closed') ? (
                             <div className={styles.projectDesc}>
+                                <div className={styles.reportStateContainer}>
+                                    <div>
+                                        
+                                    </div>
+                                    <div>
+                                    <FormControl className={styles.reportStateFormControl}>
+                                        <Select
+                                        placeholder="Change TicketState"
+                                        className={styles.reportStateSelect}
+                                        open={selectOpen}
+                                        onClose={selectOnClose}
+                                        onOpen={selectOnOpen}
+                                        value={selectValue}
+                                        onChange={selectOnChange}>
+                                            <MenuItem value="">{selectValue}</MenuItem>
+                                            {
+                                                ['New', 'Triaged', 'Closed', 'Accepted', 'Pending', 'Unresolved'].map(each => (
+                                                    (each !== selectValue.toLowerCase()) ? (
+                                                        <MenuItem value={each}>{each}</MenuItem>
+                                                    ) : (null)
+                                                ))
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                    </div>
+                                </div>
                                 <textarea placeholder="Description (Markdown supported)" className={styles.editor} value={editorContent} onChange={(e) => {
                                     setEditorContent(e.target.value);
                                 }}>
