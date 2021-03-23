@@ -16,7 +16,7 @@
     "chart.js": "^2.9.4",
     "isomorphic-unfetch": "^3.1.0",
     "markdown-to-jsx": "^7.1.1",
-    "mongoose": "^5.11.11",
+    "mongoose": "^5.12.2",
     "next": "^10.0.5",
     "react": "^17.0.1",
     "react-chartjs-2": "^2.11.1",

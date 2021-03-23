@@ -34,9 +34,21 @@ function index({ data, participants, tickets, projectId }) {
         'critical': ['darkred', 'white'],
         'help wanted': ['lightgreen', 'black'],
         'needs example': ['yellow', 'black'],
-        'documentation': ['dark gray', 'white'],
-        'default': ['orange', 'black'],
-        'closed': ['red', 'white']
+        'documentation': ['blue', 'white'],
+        'Documentation': ['blue', 'white'],
+        'triaged': ['orange', 'black'],
+        'closed': ['red', 'black'],
+        'triage': ['orange', 'black'],
+        'close': ['red', 'black'],
+        'default': ['white', 'black'],
+        'resolved': ['greenyellow', 'black'],
+        'Resolved': ['greenyellow', 'black'],
+        'unresolved': ['darkred', 'black'],
+        'Unresolved': ['darkred', 'black'],
+        'pending': ['purple', 'white'],
+        'Pending': ['purple', 'white'],
+        'accepted': ['green', 'white'],
+        'Accepted': ['green', 'white']
     }
 
     const editParticipants = async () => {
@@ -305,7 +317,7 @@ function index({ data, participants, tickets, projectId }) {
                                 <div className={styles.ticketList}>
                                     {
                                         tickets.map((each: any, id: number) => (
-                                            each.currentStatus == 'New' ? (
+                                            each.currentStatus != 'closed' ? (
                                                 <div onClick={() => {
                                                     router.push(`/projects/${projectId}/ticket/${each._id}`);
                                                 }} key={id} className={styles.eachTicket}>
@@ -320,8 +332,8 @@ function index({ data, participants, tickets, projectId }) {
                                                                     marginRight: '5px',
                                                                     marginLeft: '5px',
                                                                     borderRadius: '5px',
-                                                                    backgroundColor: colors[dataState.currentStatus ? dataState.currentStatus.toLowerCase() : 'default'][0] || 'orange',
-                                                                    color: colors[dataState.currentStatus ? data.currentStatus.toLowerCase() : 'default'][1] || 'white'
+                                                                    backgroundColor: colors[data.currentStatus ? data.currentStatus.toLowerCase() : 'default'][0] || 'orange',
+                                                                    color: colors[data.currentStatus ? data.currentStatus.toLowerCase() : 'default'][1] || 'white'
                                                                 }}>{each.currentStatus}</h5>
                                                                 {
                                                                     each.tags.map((tag, id) => (
@@ -332,8 +344,8 @@ function index({ data, participants, tickets, projectId }) {
                                                                             borderRadius: '5px',
                                                                             marginRight: '5px',
                                                                             marginLeft: '5px',
-                                                                            backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
-                                                                            color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
+                                                                            backgroundColor: colors[tag.toLowerCase()] ? colors[tag.toLowerCase()][0] : 'orange',
+                                                                            color: colors[tag.toLowerCase()] ? colors[tag.toLowerCase()][1] : 'black'
                                                                         }} key={id}>{tag}</h5>
                                                                     ))
                                                                 }

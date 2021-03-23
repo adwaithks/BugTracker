@@ -26,18 +26,24 @@ export default async (req, res) => {
     var name = req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1)
     
         const reply = {
-            label: req.body.labelBool,
+            label: req.body.labelBool || 'closed',
             user: name,
             reply: req.body.reply,
             date: finalDate
         };
-        if (req.body.labelBool) {
-            reply['tags'] = req.body.tagData;
+        try {
+            if (req.body.labelBool) {
+                reply['tags'] = req.body.tagData;
+            }
+        }catch(err){
+            console.log('errrr');
         }
+        
         const ticket = await Ticket.findOne({
             _id: id
         });
         await ticket.replies.push(reply);
+        console.log('ticket this one: ' + ticket);
         await ticket.save().then((doc) => {
             res.status = 200;
             res.json(doc);

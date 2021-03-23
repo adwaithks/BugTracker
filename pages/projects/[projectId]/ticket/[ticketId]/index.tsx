@@ -8,6 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CloseIcon from '@material-ui/icons/Close';
+import Markdown from 'markdown-to-jsx';
 
 function index({ data }) {
 
@@ -19,12 +20,14 @@ function index({ data }) {
     const [selectOpen, setSelectOpen] = React.useState(false);
     const [label, setLabel] = React.useState('');
     const [temp, setTemp] = React.useState('');
+    const [reportCloseModal, setReportCloseModal] = React.useState(false);
     const [reportSelectionModal, setReportSelectionModal] = React.useState(false);
 
     const addLabel = (event: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpen(!modalIsOpen);
     };
-    console.log(selectValue)
+
+
     var router = useRouter();
     var colors = {
         'new': ['greenyellow', 'black'],
@@ -34,7 +37,8 @@ function index({ data }) {
         'critical': ['darkred', 'white'],
         'help wanted': ['lightgreen', 'black'],
         'needs example': ['yellow', 'black'],
-        'documentation': ['dark gray', 'white'],
+        'documentation': ['blue', 'white'],
+        'Documentation': ['blue', 'white'],
         'triaged': ['orange', 'black'],
         'closed': ['red', 'black'],
         'triage': ['orange', 'black'],
@@ -46,6 +50,7 @@ function index({ data }) {
         'accepted': ['green', 'white']
     }
     
+
     const setCurrentState = async () => {
         console.log(selectValue)
         if (temp !== 'closed') {
@@ -62,7 +67,6 @@ function index({ data }) {
             refreshData();
         } else {
             closeTicket();
-            refreshData();
         }
         
     }
@@ -92,7 +96,22 @@ function index({ data }) {
                 'Content-Type': 'application/json'
             }
         });
+
+        const data = {
+            reply: 'Adwaith closed the report',
+            name: 'Adwaith',
+            id: ticketId
+        }
+
+        const res = await fetch('http://localhost:3000/api/submitReply', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
         refreshData();
+
     }
 
     const refreshData = () => {
@@ -242,6 +261,43 @@ function index({ data }) {
                     </>
                 </Modal>
 
+
+                <Modal
+                    className={styles.reportSelectModal}
+                    isOpen={reportCloseModal}
+                    onRequestClose={() => {
+                        setReportCloseModal(!reportCloseModal)
+                    }}
+                    styles={{
+                        overlay: {
+                            background: 'rgb(0, 0, 0)'
+                        }
+                    }}
+                >
+                    <>
+                        <div className={styles.modalCloseIconContainer}>
+                            <div className={styles.modalCloseIcon} onClick={() => {
+                                setReportCloseModal(!reportCloseModal)
+                            }}>
+                                <CloseIcon />
+                            </div>
+                        </div>
+                        <div className={styles.reportModalInfo}>
+                            <div className={styles.reportSelectHeading}>
+                                <h3>Are you sure you want to close the ticket and mark it as resolved?</h3>
+                            </div>
+                            <div className={styles.reportSelectBtnGroup}>
+                                <button onClick={()=>{
+                                    setReportCloseModal(!reportCloseModal)
+                                    closeTicket()
+                                    }} className={styles.proceed}>Proceed</button>
+                                <button onClick={()=>{setReportCloseModal(!reportCloseModal)}} className={styles.cancel}>Cancel</button>
+                            </div>
+                        </div>
+                        
+                    </>
+                </Modal>
+
             <div className={styles.ticketConversationList}>
                 <div key={data._id} className={styles.ticketConversation}>
                     <div className={styles.ticketConversationHead}>
@@ -252,7 +308,7 @@ function index({ data }) {
                             <div className={styles.avatar}><h4>{data.author.slice(0, 1).toUpperCase()}</h4></div>
                         </div>
                         <div className={styles.ticketContent}>
-                            <h4>{data.description}</h4>
+                            <Markdown>{data.description}</Markdown>
                         </div>
                     </div>
                 </div>
@@ -276,7 +332,7 @@ function index({ data }) {
                                         <div className={styles.avatar}><h4>{each.user.slice(0, 1).toUpperCase()}</h4></div>
                                     </div>
                                     <div className={styles.ticketContent}>
-                                        <h4>{each.reply}</h4>
+                                        <Markdown>{each.reply}</Markdown>
                                     </div>
                                 </div>
                             </div>
@@ -379,7 +435,9 @@ function index({ data }) {
                             <div className={styles.buttonContainer}>
                                 <button className={styles.labelButton} onClick={addLabel}>Add Labels</button>
                                 <button onClick={() => { submitReply(data._id, false) }}>Comment</button>
-                                <button className={styles.ticketcloseButton} onClick={() => { closeTicket() }}>Close Ticket</button>
+                                <button className={styles.ticketcloseButton} onClick={() => { 
+                                    setReportCloseModal(true);
+                                 }}>Close Ticket</button>
                             </div>
                         ) : (
                             null

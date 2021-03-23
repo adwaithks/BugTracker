@@ -249,7 +249,7 @@
     margin-top: 150px;
     background-color: rgb(22, 22, 22);
     margin-right: auto;
-    height: 60%;
+    height: fit-content;
     border-radius: 5px;
     border: none;
     outline: none;
@@ -404,7 +404,7 @@
 
 .newProjectCreateButton {
     width: 95%;
-    margin-top: 30px;
+    margin-top: 10px;
     margin-left: auto;
     display: flex;
     justify-content: center;
@@ -413,6 +413,8 @@
     button {
         width: fit-content;
         height: fit-content;
+        margin-bottom: 30px;
+
         padding: 10px;
         box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
         backdrop-filter: blur( 5.5px );

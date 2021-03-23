@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 initDB();
 export default async(req, res) => {
     const id = mongoose.Types.ObjectId(req.body.id);
-    console.log('idddd: ' + id);
     await Ticket.find({
         projectId: id
     }).then((doc) => {

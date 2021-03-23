@@ -5,12 +5,10 @@ import mongoose from 'mongoose';
 initDB();
 export default async(req, res) => {
     const id = mongoose.Types.ObjectId(req.body.id);
-    console.log('ticketid: ' + id);
     
     const ticket = await Ticket.findOne({
         _id: id
     });
-    console.log(req.body.tagData);
     ticket.tags = req.body.tagData;
     await ticket.save().then((doc) => {
         res.json(doc)

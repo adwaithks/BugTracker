@@ -9,7 +9,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 
 function Sidebar() {
     const [activeTab, setActiveTab] = useState('');
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true);
 
     const router = useRouter();
     const pageRoute = (page) => {
