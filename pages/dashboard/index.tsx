@@ -1,20 +1,48 @@
 import React from 'react';
 import styles from './index.module.scss';
+import {useRouter} from 'next/router';
 import Modal from 'react-modal';
 import LayoutFrame from '../components/LayoutFrame';
 import Chip from '@material-ui/core/Chip';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
-import fetch from 'isomorphic-unfetch';
 
 const index = () => {
 
+
+    const [username, setUsername] = React.useState('')
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [editorContent, setEditorContent] = React.useState('');
     const [projectTitle, setProjectTitle] = React.useState('');
-    const [chipData, setChipData] = React.useState(['adwaith']);
+    const [chipData, setChipData] = React.useState([]);
     const [participantName, setParticipantName] = React.useState('');
-    const [issuesReceivedGraphData, setIssuesReceivedGraphData] = React.useState();
+    //const [issuesReceivedGraphData, setIssuesReceivedGraphData] = React.useState();
+
+    const router = useRouter();
+    React.useEffect(() => {
+        const main = async () => {
+            const token = window.localStorage.getItem('accessToken');
+            const response = await fetch('http://localhost:3000/api/me', {
+                method: 'GET',
+                headers: {
+                    'accessToken': token
+                }
+            });
+            if (response.status !== 200) {
+                router.push('/login');
+            }
+            
+            const res = await response.json();
+            
+            
+            setUsername(res.username);
+            setChipData([res.username])
+        }
+        main();
+    }, []);
+
+
+
 
     const handleDelete = (deleteName: any) => () => {
         setChipData(chipData.filter((eachName) => {
@@ -26,8 +54,10 @@ const index = () => {
         const data = {
             title: projectTitle,
             description: editorContent,
-            participants: chipData
+            participants: chipData,
+            author: username
         }
+        
         setIsOpen(false);
         await fetch('http://localhost:3000/api/createNewProject', {
             method: 'POST',
@@ -43,7 +73,7 @@ const index = () => {
             .catch(err => {
                 console.log(err);
             });
-    }
+        }
 
     return (
         <LayoutFrame>
@@ -121,7 +151,7 @@ const index = () => {
                                             <Chip
                                                 key={key}
                                                 label={each}
-                                                onDelete={each === 'adwaith' ? undefined : handleDelete(each)}
+                                                onDelete={each === username ? undefined : handleDelete(each)}
                                                 className={styles.chip}
                                             />
                                         ))

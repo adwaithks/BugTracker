@@ -10,6 +10,9 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 function Sidebar() {
     const [activeTab, setActiveTab] = useState('');
     const [expanded, setExpanded] = useState(true);
+    const [username, setUsername] = React.useState('');
+    const [letter, setLetter] = React.useState('')
+
 
     const router = useRouter();
     const pageRoute = (page) => {
@@ -17,8 +20,35 @@ function Sidebar() {
         router.push(`/${page}`);
     }
 
+    const logout = () => {
+        window.localStorage.removeItem('accessToken');
+        window.localStorage.removeItem('letter');
+        window.localStorage.removeItem('username')
+        router.push('/login');
+    }
+
     useEffect(() => {
+        const main = async () => {
         setActiveTab(window.location.href.split("/")[3]);
+        if (!window.localStorage.getItem("username") || !window.localStorage.getItem("letter")) {
+            const token = window.localStorage.getItem('accessToken');
+            const response = await fetch('http://localhost:3000/api/me', {
+                method: 'GET',
+                headers: {
+                    'accessToken': token
+                }
+            });
+            const res = await response.json();
+            window.localStorage.setItem("username", res.username);
+            window.localStorage.setItem("letter", res.username[0].toUpperCase());
+            setUsername(res.username);
+            setLetter(res.username[0].toUpperCase());
+        } else {
+            setUsername(window.localStorage.getItem("username"))
+            setLetter(window.localStorage.getItem("letter"))
+        }
+        }
+        main();
     }, []);
 
     return (
@@ -51,9 +81,9 @@ function Sidebar() {
                 </div>
                 <div className={styles.userGreet}>
                     <div className={styles.avatar}>
-                        <h1>A</h1>
+                        <h1>{letter}</h1>
                     </div>
-                    <h2>Adwaith KS</h2>
+                    <h2>{username}</h2>
                 </div>
                 <div className={styles.navOptions}>
                     {
@@ -106,7 +136,7 @@ function Sidebar() {
                     }
                 </div>
                 <div className={styles.logout}>
-                    <button>Logout</button>
+                    <button onClick={logout}>Logout</button>
                 </div>
             </div>
         ) : (

@@ -9,6 +9,9 @@ import { useRouter } from 'next/router';
 import CloseIcon from '@material-ui/icons/Close';
 
 function index({ data, participants, tickets, projectId }) {
+
+    
+
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [ticketTitle, setTicketTitle] = React.useState('');
@@ -16,16 +19,36 @@ function index({ data, participants, tickets, projectId }) {
     const [dataState, setDataState] = React.useState(data);
     const [ticketCatActive, setTicketcatactive] = React.useState('open');
     const [addParticipantModal, setAddParticipantModal] = React.useState(false);
-    const [chipData, setChipData] = React.useState(participants);
+    const [chipData, setChipData] = React.useState([]);
     const [participantName, setParticipantName] = React.useState('');
+    const [username, setUsername] = React.useState('');
 
+
+    React.useEffect(() => {
+        const main = async() => {
+            const token = window.localStorage.getItem('accessToken');
+            const response3 = await fetch('http://localhost:3000/api/me', {
+                method: 'GET',
+                headers: {
+                    'accessToken': token
+                }
+            });
+            const res = await response3.json();
+            setUsername(res.username);
+            setChipData(participants);
+            
+        }
+        main();
+    }, [modalIsOpen]);
 
     var router = useRouter();
 
     const refreshData = () => {
         router.replace(router.asPath);
     }
+  
 
+    
     var colors = {
         'new': ['greenyellow', 'black'],
         'open': ['green', 'white'],
@@ -51,12 +74,14 @@ function index({ data, participants, tickets, projectId }) {
         'Accepted': ['green', 'white']
     }
 
-    const editParticipants = async () => {
+     const editParticipants = async () => {
         setAddParticipantModal(false);
-        const bodyData = {
+        /**const bodyData = {
             id: projectId,
             participants: chipData
         }
+        console.log(bodyData);
+        
         const res = await fetch('http://localhost:3000/api/editParticipants', {
             method: 'POST',
             headers: {
@@ -64,16 +89,48 @@ function index({ data, participants, tickets, projectId }) {
             },
             body: JSON.stringify(bodyData)
 
-        });
-        console.log('res: ', res);
+        });**/
 
         refreshData();
     }
 
+   const addParticipant = async (particName) => {
+        const bodyData = {
+            name: particName,
+            projectId: projectId
+        }
+
+        const res = await fetch('http://localhost:3000/api/addParticipant', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyData)
+        });
+    }
+
     const handleDelete = async (deleteName: any) => {
-        setChipData(chipData.filter((eachName) => {
-            return eachName != deleteName;
-        }));
+
+        const bodyData = {
+            projectId: projectId,
+            removed: deleteName
+        }
+
+        const res = await fetch('http://localhost:3000/api/removeParticipant', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyData)
+
+        });
+        if (res.status == 200) {
+            setChipData(chipData.filter((eachName) => {
+                return eachName != deleteName;
+            }));
+        } else {
+            return;
+        }
     }
 
     const createNewTicket = async () => {
@@ -81,10 +138,12 @@ function index({ data, participants, tickets, projectId }) {
             title: ticketTitle,
             description: editorContent,
             project: dataState.title,
-            author: 'adwaith',
+            author: username,
             participants: data.participants,
             projectId: projectId
         }
+
+        
         const res = await fetch('http://localhost:3000/api/createNewTicket', {
             method: 'POST',
             headers: {
@@ -99,7 +158,7 @@ function index({ data, participants, tickets, projectId }) {
 
     return (
         <LayoutFrame>
-            <>
+            <div className={styles.currentProject}>
                 <div className={styles.createNewTicketContainer}>
                     <div className={styles.createButton}>
                         <button onClick={(e) => {
@@ -119,12 +178,12 @@ function index({ data, participants, tickets, projectId }) {
                         <h1>{data.title}</h1>
                     </div>
                     <div className={styles.projectDesc}>
-                        <h3>{data.description}</h3>
+                        <Markdown>{data.description}</Markdown>
                     </div>
                     <div className={styles.projectParts}>
                         <h4>Participants:</h4>
                         {
-                            data.participants.map((each, id) => (
+                            participants.map((each, id) => (
                                 <div key={id} className={styles.partAvatar}>
                                     <h3>{each}</h3>
                                 </div>
@@ -136,20 +195,21 @@ function index({ data, participants, tickets, projectId }) {
                     className={styles.editParticipantModal}
                     isOpen={addParticipantModal}
                     onRequestClose={() => {
+                        setChipData(participants);
                         setAddParticipantModal(!addParticipantModal)
                     }}
                     styles={{
                         overlay: {
                             background: 'rgb(0, 0, 0)'
                         }
-                    }
-                    }
+                    }}
                 >
                     {
 
                         <>
                             <div className={styles.modalCloseIconContainer}>
                                 <div className={styles.modalCloseIcon} onClick={() => {
+                                    setChipData(participants);
                                     setAddParticipantModal(!addParticipantModal);
                                 }}>
                                     <CloseIcon />
@@ -174,22 +234,27 @@ function index({ data, participants, tickets, projectId }) {
 
                                             <button onClick={(e) => {
                                                 e.preventDefault();
+                                               addParticipant(participantName);
                                                 setChipData(() => [...chipData, participantName]);
                                                 setParticipantName('');
                                             }}>Add</button>
                                         </div>
-                                        {
-                                            chipData.map((each, key) => (
-                                                <Chip
-                                                    key={key}
-                                                    label={each}
-                                                    onDelete={() => {
-                                                        handleDelete(each)
-                                                    }}
-                                                    className={styles.chip}
-                                                />
-                                            ))
-                                        }
+
+                                         <div className={styles.chipContainer}>
+                                                {
+                                                    chipData.map((each, key) => (
+                                                        <Chip
+                                                            key={key}
+                                                            label={each}
+                                                            onDelete={() => {
+                                                                each == username ? undefined : handleDelete(each)
+                                                                
+                                                            }}
+                                                            className={styles.chip}
+                                                        />
+                                                    ))
+                                                }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -447,7 +512,7 @@ function index({ data, participants, tickets, projectId }) {
 
                     </div>
                 </div>
-            </>
+            </div>
         </LayoutFrame>
     )
 }
@@ -465,6 +530,7 @@ export async function getServerSideProps(context) {
         })
     });
     const data = await response.json();
+    const participants = data.participants;
 
     const response2 = await fetch('http://localhost:3000/api/getProjectTickets', {
         method: 'POST',
@@ -475,15 +541,18 @@ export async function getServerSideProps(context) {
             id: projectId
         })
     });
+
     const data2 = await response2.json();
-    const participants = data.participants;
+
+    
+    
 
     return {
         props: {
             data: data,
             participants: participants,
             tickets: data2,
-            projectId: projectId
+            projectId: projectId,
         }
     }
 }

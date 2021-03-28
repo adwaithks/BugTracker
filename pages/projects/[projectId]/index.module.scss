@@ -1,13 +1,27 @@
 .projectDetailsContainer {
     width: 95%;
+    overflow-y: scroll;
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     background-color: black;
-    height: fit-content;
+    height: 350px;
     display: flex;
     flex-direction: column;
     border-radius: 5px;
+}
+
+.projectDetailsContainer::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+.projectDetailsContainer::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
+.currentProject {
+    height: 100%;
 }
 
 .projectHead {
@@ -59,8 +73,9 @@
     .partAvatar {
         height: fit-content;
         margin-left: 10px;
+        padding: 2px;
         width: fit-content;
-        border-radius: 20px;
+        border-radius: 10px;
         background-color: orange;
         h4 {
             font-weight: 400;
@@ -117,7 +132,7 @@
     margin-left: auto;
     margin-right: auto;
     background-color: black;
-    height: 400px;
+    height: calc(100% - 490px);
     display: flex;
     flex-direction: column;
     border-radius: 5px;
@@ -448,6 +463,15 @@
 
 }
 
+.previewSection::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+.previewSection::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
 .previewSection {
     width: 95%;
     height: 410px;
@@ -468,6 +492,7 @@
     p > code {
         background-color: rgb(41, 41, 41);
         border-radius: 5px;
+        padding: 1px;
 
     }   
     pre {
@@ -484,6 +509,15 @@
 
 .ticketDetails {
     overflow-y: scroll;
+}
+
+.ticketDetails::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+.ticketDetails::-webkit-scrollbar-thumb {
+    background: #FF0000;
 }
 
 .ticketList {

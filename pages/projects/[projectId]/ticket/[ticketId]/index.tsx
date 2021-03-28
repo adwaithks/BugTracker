@@ -16,6 +16,7 @@ function index({ data }) {
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [chipData, setChipData] = React.useState(data.tags);
     const [ticketId, setTicketId] = React.useState(data._id);
+    const [username, setUsername] = React.useState('');
     const [selectValue, setSelectValue] = React.useState(data.currentStatus);
     const [selectOpen, setSelectOpen] = React.useState(false);
     const [label, setLabel] = React.useState('');
@@ -26,6 +27,21 @@ function index({ data }) {
     const addLabel = (event: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpen(!modalIsOpen);
     };
+
+    React.useEffect(() => {
+        const main = async () => {
+            const token = window.localStorage.getItem('accessToken');
+            const response = await fetch('http://localhost:3000/api/me', {
+                method: 'GET',
+                headers: {
+                    'accessToken': token
+                }
+            });
+            const res = await response.json();
+            setUsername(res.username);
+        }
+        main();
+    }, []);
 
 
     var router = useRouter();
@@ -52,7 +68,6 @@ function index({ data }) {
     
 
     const setCurrentState = async () => {
-        console.log(selectValue)
         if (temp !== 'closed') {
             await fetch('http://localhost:3000/api/reportCurrentState', {
                 method: 'POST',
@@ -98,12 +113,13 @@ function index({ data }) {
         });
 
         const data = {
-            reply: 'Adwaith closed the report',
-            name: 'Adwaith',
-            id: ticketId
+            reply: `${username} closed the ticket`,
+            name: username,
+            id: ticketId,
+            action: 2
         }
 
-        const res = await fetch('http://localhost:3000/api/submitReply', {
+        await fetch('http://localhost:3000/api/submitReply', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -123,22 +139,27 @@ function index({ data }) {
             id: ticketId,
             tagData: chipData
         }
+        let tempString = '';
+        chipData.forEach((each) => {
+            tempString  = tempString + `<strong>${each}</strong>`
+        });
+        console.log('TempString:' + tempString);
+        
         const data2 = {
             id: ticketId,
-            labelBool: true,
-            user: 'Adwaith',
-            reply: `Adwaith added labels` + chipData,
+            action: 1,
+            name: username,
+            reply: `${username} added label ` + tempString,
             tagData: chipData,
-            name: 'Adwaith'
         }
-        const res = await fetch('http://localhost:3000/api/setLabels', {
+        await fetch('http://localhost:3000/api/setLabels', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bodyData)
         });
-        const res2 = await fetch('http://localhost:3000/api/submitReply', {
+        await fetch('http://localhost:3000/api/submitReply', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -156,26 +177,24 @@ function index({ data }) {
         }));
     }
 
-    const submitReply = async (id, labelBool) => {
+    const submitReply = async (id, action) => {
         if (!editorContent) {
             return;
         }
         const data = {
-            labelBool: labelBool,
+            action: action,
             reply: editorContent,
-            name: 'adwaith',
+            name: username,
             id: id
         }
-        console.log(data);
 
-        const res = await fetch('http://localhost:3000/api/submitReply', {
+        await fetch('http://localhost:3000/api/submitReply', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
-        const p = await res.json();
         setEditorContent('');
         setIsOpen(false);
         refreshData();
@@ -318,7 +337,7 @@ function index({ data }) {
                         each.label ? (
                             <div key={each._id} className={styles.ticketConversation}>
                                 <div className={styles.ticketConversationHead}>
-                                    <h4>{each.user} added a label on {each.date}</h4>
+                                    <h4>{each.user} added label on {each.date}</h4>
                                 </div>
 
                             </div>
@@ -378,7 +397,7 @@ function index({ data }) {
                                             variant="outlined"
                                             key={key}
                                             label={each}
-                                            onDelete={each === 'adwaith' ? undefined : handleDelete(each)}
+                                            onDelete={each === username ? undefined : handleDelete(each)}
                                             className={styles.chip}
                                         />
                                     ))
@@ -399,7 +418,8 @@ function index({ data }) {
                                     <div>
                                         
                                     </div>
-                                    <div>
+                                    <div className={styles.currentStatus}>
+                                        <h4>Current Status</h4>
                                     <FormControl className={styles.reportStateFormControl}>
                                         <Select
                                         placeholder="Change TicketState"
@@ -411,7 +431,7 @@ function index({ data }) {
                                         onChange={selectOnChange}>
                                             <MenuItem value="">{selectValue}</MenuItem>
                                             {
-                                                ['New', 'Triaged', 'Closed', 'Accepted', 'Pending', 'Unresolved'].map(each => (
+                                                ['New', 'Triaged', 'Accepted', 'Pending', 'Unresolved'].map(each => (
                                                     (each !== selectValue.toLowerCase()) ? (
                                                         <MenuItem value={each}>{each}</MenuItem>
                                                     ) : (null)
@@ -434,7 +454,7 @@ function index({ data }) {
                         (data.currentStatus != 'closed') ? (
                             <div className={styles.buttonContainer}>
                                 <button className={styles.labelButton} onClick={addLabel}>Add Labels</button>
-                                <button onClick={() => { submitReply(data._id, false) }}>Comment</button>
+                                <button onClick={() => { submitReply(data._id, 0) }}>Comment</button>
                                 <button className={styles.ticketcloseButton} onClick={() => { 
                                     setReportCloseModal(true);
                                  }}>Close Ticket</button>

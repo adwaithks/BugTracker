@@ -8,7 +8,6 @@ export default async(req, res) => {
     await Ticket.find({
         projectId: id
     }).then((doc) => {
-        console.log(doc);
         res.status = 200;
         res.header = 'Content-Type: application/json';
         res.json(doc);

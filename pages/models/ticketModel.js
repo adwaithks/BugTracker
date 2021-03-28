@@ -22,15 +22,9 @@ const ticketSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    severity: {
-        type: String
-    },
-    issueType: {
-        type: String
-    },
     replies: [{
         user: String,
-        label: Boolean,
+        action: Number,
         tags: [String],
         reply: String,
         date: String

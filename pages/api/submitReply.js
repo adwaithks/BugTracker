@@ -26,13 +26,13 @@ export default async (req, res) => {
     var name = req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1)
     
         const reply = {
-            label: req.body.labelBool || 'closed',
+            action: req.body.action,
             user: name,
             reply: req.body.reply,
             date: finalDate
         };
         try {
-            if (req.body.labelBool) {
+            if (req.body.action == 1) {
                 reply['tags'] = req.body.tagData;
             }
         }catch(err){
@@ -43,7 +43,6 @@ export default async (req, res) => {
             _id: id
         });
         await ticket.replies.push(reply);
-        console.log('ticket this one: ' + ticket);
         await ticket.save().then((doc) => {
             res.status = 200;
             res.json(doc);
