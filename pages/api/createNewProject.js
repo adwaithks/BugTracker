@@ -14,7 +14,8 @@ export default async (req, res) => {
         acceptedTickets: 0,
         pendingTickets: 0,
         triagedTickets: 0,
-        resolvedTickets: 0
+        resolvedTickets: 0,
+        unresolvedTickets: 0,
     });
 
     const user = await User.findOne({

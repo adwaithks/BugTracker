@@ -1,4 +1,3 @@
-import Analytics from '../models/analyticsModel';
 import initDB from '../utils/connectDB';
 import Project from '../models/projectModel';
 
@@ -29,9 +28,9 @@ export default async (req, res) => {
     }); 
     // 'New', 'Triaged', 'Accepted', 'Pending', 'Resolved', 'Unresolved'],
 
-
     projects.forEach(each => {
-        analyticsMatch.issuesReceivedNum = analyticsMatch.issuesReceivedNum  + each.newTickets + each.triagedTickets + each.acceptedTickets + each.pendingTickets + each.unresolvedTickets + each.resolvedTickets
+        var temp = each.newTickets + each.triagedTickets + each.acceptedTickets + each.pendingTickets + each.unresolvedTickets + each.resolvedTickets;
+        analyticsMatch.issuesReceivedNum += temp;
     });
     analyticsMatch.issuesReceivedChart = [analyticsMatch.newTickets, analyticsMatch.triagedTickets, analyticsMatch.acceptedTickets, analyticsMatch.pendingTickets, analyticsMatch.resolvedTickets, analyticsMatch.unresolvedTickets]
     analyticsMatch.overallTickettypeChart = [analyticsMatch.newTickets, analyticsMatch.triagedTickets, analyticsMatch.acceptedTickets, analyticsMatch.pendingTickets, analyticsMatch.resolvedTickets, analyticsMatch.unresolvedTickets]

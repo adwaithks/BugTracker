@@ -31,7 +31,6 @@ function index() {
     const [data, setData] = React.useState([]);
 
 
-
     var colors = {
         'new': ['greenyellow', 'black'],
         'open': ['green', 'white'],
@@ -53,67 +52,78 @@ function index() {
         'accepted': ['green', 'white']
     }
 
+    const searchHandler = (e) => {
+        console.log(e.target.value);
+        
+        setData(data.filter(function(each) {
+            return each.title.toLowerCase().match(e.target.value.toLowerCase());
+        }));
+    }
+
 
     return (
         <LayoutFrame>
             <div className={styles.allTickets}>
                 <div className={styles.searchContainer}>
-                    <input placeholder="Search" type="text" />
+                    <input placeholder="Search" type="text" onChange={searchHandler} />
                 </div>
 
                 <div className={styles.ticketList}>
-                    {
-                        data.map((each: any, id: number) => (
-                            
-                            (me) ? (
-                                <div onClick={() => {
-                                    router.push(`/projects/${each.projectId}/ticket/${each._id}`)
-                                }} key={id} className={styles.eachTicket}>
-                                    <div className={styles.ticketListUpper}>
-                                        <div className={styles.ticketHeading}>
-                                            <h3>{each.title}</h3>
-                                            <div className={styles.ticketTags}>
-                                            <h5 style={{
-                                                paddingLeft: '25px',
-                                                paddingRight: '25px',
-                                                display:'flex',
-                                                alignItems: 'center',
-                                                padding: '4px',
-                                                border: 'black solid 1px',
-                                                borderRadius: '10px',
-                                                backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
-                                                color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
-                                            }}>{each.currentStatus}</h5>
-                                                {
-                                                    each.tags.map((each, keyId) => (
-                                                        <h5 key={keyId} style={{
-                                                            paddingLeft: '25px',
-                                                            display:'flex',
-                                                            alignItems: 'center',
-                                                            paddingRight: '25px',
-                                                            padding: '3px',
-                                                            borderRadius: '10px',
-                                                            marginRight: '5px',
-                                                            marginLeft: '5px',
-                                                            backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
-                                                            color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
-                                                        }}>{each}</h5>
-                                                    ))
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className={styles.ticketListLower}>
-                                        <div className={styles.ticketId}>
-                                            <h5>#{each._id}</h5>
-                                        </div>
-                                        <div className={styles.reportDate}>
-                                            <h5>Opened On {each.created_at} by adwaith</h5>
+                {
+                        data.map((each, id) => (
+                            me.in_projects == undefined ? null : me.in_projects.includes(each.projectId) ? (
+<div onClick={() => {
+                                router.push(`/projects/${each.projectId}/ticket/${each._id}`)
+                            }} key={id} className={styles.eachTicket}>
+                                <div className={styles.ticketListUpper}>
+                                    <div className={styles.ticketHeading}>
+                                        <h3>{each.title}</h3>
+                                        <div className={styles.ticketTags}>
+                                        <h5 style={{
+                                            paddingLeft: '25px',
+                                            paddingRight: '25px',
+                                            display:'flex',
+                                            alignItems: 'center',
+                                            padding: '4px',
+                                            border: 'black solid 1px',
+                                            borderRadius: '10px',
+                                            backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
+                                            color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
+                                        }}>{each.currentStatus}</h5>
+                                            {
+                                                each.tags.map((each, keyId) => (
+                                                    <h5 key={keyId} style={{
+                                                        paddingLeft: '25px',
+                                                        display:'flex',
+                                                        alignItems: 'center',
+                                                        paddingRight: '25px',
+                                                        padding: '3px',
+                                                        borderRadius: '10px',
+                                                        marginRight: '5px',
+                                                        marginLeft: '5px',
+                                                        backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
+                                                        color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
+                                                    }}>{each}</h5>
+                                                ))
+                                            }
                                         </div>
                                     </div>
                                 </div>
-                            ) : null
+                                <div className={styles.ticketListLower}>
+                                    <div className={styles.ticketId}>
+                                        <h5>#{each._id}</h5>
+                                    </div>
+                                    <div className={styles.reportDate}>
+                                        <h5>Opened On {each.created_at} by adwaith</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            ) : null 
                             
+                            
+                            
+                            
+                            /**/
                         ))
                     }
 

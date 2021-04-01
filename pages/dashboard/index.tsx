@@ -16,8 +16,8 @@ const index = ({data}) => {
     const [projectTitle, setProjectTitle] = React.useState('');
     const [chipData, setChipData] = React.useState([]);
     const [participantName, setParticipantName] = React.useState('');
-    //const [issuesReceivedGraphData, setIssuesReceivedGraphData] = React.useState();
     const [analytics, setAnalytics] = React.useState({});
+    const [me, setMe] = React.useState({});
 
     const router = useRouter();
     React.useEffect(() => {
@@ -34,6 +34,7 @@ const index = ({data}) => {
             }
             
             const res = await response.json();
+            setMe(res);
 
             const res2 = await fetch('http://localhost:3000/api/getAnalytics', {
                 method: 'POST',
@@ -43,7 +44,6 @@ const index = ({data}) => {
                 })
             });
             const response2 = await res2.json();
-            console.log(response2);
             
             setAnalytics(response2)            
             setUsername(res.username);
@@ -52,6 +52,7 @@ const index = ({data}) => {
         main();
     }, []);
 
+    
 
     var colors = {
         'new': ['greenyellow', 'black'],
@@ -153,7 +154,6 @@ const index = ({data}) => {
                                     <label htmlFor="">Description</label>
                                 </div>
                                 <textarea placeholder="Description (Markdown supported)" className={styles.editor} value={editorContent} onChange={(e) => {
-                                    console.log(e.target.value);
                                     setEditorContent(e.target.value);
                                 }}>
                                 </textarea>
@@ -315,7 +315,8 @@ const index = ({data}) => {
                 <div className={styles.latestTicketsContainer}>
                     {
                         data.map((each, id) => (
-                            <div onClick={() => {
+                            me.in_projects == undefined ? null : me.in_projects.includes(each.projectId) ? (
+<div onClick={() => {
                                 router.push(`/projects/${each.projectId}/ticket/${each._id}`)
                             }} key={id} className={styles.eachTicket}>
                                 <div className={styles.ticketListUpper}>
@@ -361,14 +362,15 @@ const index = ({data}) => {
                                     </div>
                                 </div>
                             </div>
+                            ) : null 
                         ))
                     }
                 
                 </div>
                 </div>
                 
-                                            </div>
-        </LayoutFrame>
+                </div>
+                </LayoutFrame>
     )
 }
 

@@ -16,7 +16,6 @@ export default async(req, res) => {
     const user = await User.findOne({
         username: req.body.name
     });
-    console.log('project: ' + project);
 
     user.in_projects.push(req.body.projectId);
     await user.save().then().catch(err => {

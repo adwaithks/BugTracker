@@ -31,7 +31,6 @@ export default async (req, res) => {
             reply: req.body.reply,
             date: finalDate
         };
-        console.log('reply: ' + reply);
         if (req.body.action == 1) {
             reply['tags'] = req.body.tagData;
         }

@@ -15,7 +15,6 @@ export default async(req, res) => {
         username: req.body.removed
     });
 
-    console.log(user);
 
     user.in_projects.pull(req.body.projectId);
     await user.save().then().catch(err => {

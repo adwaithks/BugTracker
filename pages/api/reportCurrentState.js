@@ -49,7 +49,6 @@ export default async(req, res) => {
     await project.save().then().catch();
     
     await ticket.save().then((doc) => {
-        console.log(doc);
         res.json(doc);
     }).catch(err => {
         console.log('err');

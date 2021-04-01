@@ -7,7 +7,6 @@ initDB();
 export default async (req, res) => {
     const id = mongoose.Types.ObjectId(req.body.id);
     const participants = req.body.participants;
-    console.log(participants);
     const project = await Project.findOne({
         _id: id
     });
@@ -21,7 +20,6 @@ export default async (req, res) => {
         await each.save().then().catch();
     });
     project.participants = participants;
-    console.log('project', project);
     await project.save().then(doc => {
         return res.json(doc);
     }).catch(err => {

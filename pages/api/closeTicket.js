@@ -11,7 +11,6 @@ export default async(req, res) => {
         _id: id
     });
 
-    console.log(ticket);
     if (ticket) {
         ticket.currentStatus = 'closed';
         ticket.tags.push('resolved');

@@ -1,5 +1,4 @@
 import User from '../models/userModel';
-import Analytics from '../models/analyticsModel';
 import initDB from '../utils/connectDB';
 
 initDB();
