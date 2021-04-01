@@ -51,6 +51,7 @@ function index({ data, participants, tickets, projectId }) {
     
     var colors = {
         'new': ['greenyellow', 'black'],
+        'New': ['greenyellow', 'black'],
         'open': ['green', 'white'],
         'discussion': ['gray', 'white'],
         'bug': ['red', 'white'],
@@ -73,6 +74,9 @@ function index({ data, participants, tickets, projectId }) {
         'accepted': ['green', 'white'],
         'Accepted': ['green', 'white']
     }
+
+
+
 
      const editParticipants = async () => {
         setAddParticipantModal(false);
@@ -384,34 +388,37 @@ function index({ data, participants, tickets, projectId }) {
                                         tickets.map((each: any, id: number) => (
                                             each.currentStatus != 'closed' ? (
                                                 <div onClick={() => {
-                                                    router.push(`/projects/${projectId}/ticket/${each._id}`);
+                                                    router.push(`/projects/${each.projectId}/ticket/${each._id}`)
                                                 }} key={id} className={styles.eachTicket}>
                                                     <div className={styles.ticketListUpper}>
                                                         <div className={styles.ticketHeading}>
                                                             <h3>{each.title}</h3>
                                                             <div className={styles.ticketTags}>
-                                                                <h5 style={{
-                                                                    paddingLeft: '10px',
-                                                                    paddingRight: '10px',
-                                                                    padding: '2px',
-                                                                    marginRight: '5px',
-                                                                    marginLeft: '5px',
-                                                                    borderRadius: '5px',
-                                                                    backgroundColor: colors[data.currentStatus ? data.currentStatus.toLowerCase() : 'default'][0] || 'orange',
-                                                                    color: colors[data.currentStatus ? data.currentStatus.toLowerCase() : 'default'][1] || 'white'
-                                                                }}>{each.currentStatus}</h5>
+                                                            <h5 style={{
+                                                                paddingLeft: '25px',
+                                                                paddingRight: '25px',
+                                                                display:'flex',
+                                                                alignItems: 'center',
+                                                                padding: '4px',
+                                                                border: 'black solid 1px',
+                                                                borderRadius: '10px',
+                                                                backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
+                                                                color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
+                                                            }}>{each.currentStatus}</h5>
                                                                 {
-                                                                    each.tags.map((tag, id) => (
-                                                                        <h5 style={{
-                                                                            paddingLeft: '10px',
-                                                                            paddingRight: '10px',
-                                                                            padding: '2px',
-                                                                            borderRadius: '5px',
+                                                                    each.tags.map((each, keyId) => (
+                                                                        <h5 key={keyId} style={{
+                                                                            paddingLeft: '25px',
+                                                                            display:'flex',
+                                                                            alignItems: 'center',
+                                                                            paddingRight: '25px',
+                                                                            padding: '3px',
+                                                                            borderRadius: '10px',
                                                                             marginRight: '5px',
                                                                             marginLeft: '5px',
-                                                                            backgroundColor: colors[tag.toLowerCase()] ? colors[tag.toLowerCase()][0] : 'orange',
-                                                                            color: colors[tag.toLowerCase()] ? colors[tag.toLowerCase()][1] : 'black'
-                                                                        }} key={id}>{tag}</h5>
+                                                                            backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
+                                                                            color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
+                                                                        }}>{each}</h5>
                                                                     ))
                                                                 }
                                                             </div>

@@ -14,16 +14,22 @@ const projectSchema = mongoose.Schema({
         required: true
     },
     participants: [String],
-    openTickets: {
-        type: Number
-    },
-    closedTickets: {
+    newTickets: {
         type: Number
     },
     resolvedTickets: {
         type: Number
     },
+    triagedTickets: {
+        type: Number
+    },
+    pendingTickets: {
+        type: Number
+    },
     unresolvedTickets: {
+        type: Number
+    },
+    acceptedTickets: {
         type: Number
     }
 },{ timestamps: {

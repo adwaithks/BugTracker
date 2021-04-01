@@ -31,12 +31,9 @@ export default async (req, res) => {
             reply: req.body.reply,
             date: finalDate
         };
-        try {
-            if (req.body.action == 1) {
-                reply['tags'] = req.body.tagData;
-            }
-        }catch(err){
-            console.log('errrr');
+        console.log('reply: ' + reply);
+        if (req.body.action == 1) {
+            reply['tags'] = req.body.tagData;
         }
         
         const ticket = await Ticket.findOne({

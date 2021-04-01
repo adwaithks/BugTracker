@@ -55,15 +55,6 @@ function Sidebar() {
 
         (expanded === true) ? (
             <div className={styles.sidebar} >
-                <style jsx global>
-                    {`
-                    * {
-                        margin: 0px;
-                        padding: 0px;
-                        font-family: 'Karla';
-                    }
-                `}
-                </style>
                 <div className={styles.expandBtnContainer}>
                     <div className={styles.expandBtn}>
                         {

@@ -108,7 +108,7 @@
 
 .ticketGraphs {
     width: 95%;
-    margin-top:50px;
+    margin-top: 20px;
     margin-right: auto;
     justify-content: space-between;
     padding: 10px;
@@ -118,12 +118,28 @@
     display: flex;
 }
 
+.latestTicketsContainer {
+    height: 180px;
+    overflow-y: scroll;    
+}
+
+.latestTicketsContainer::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+.latestTicketsContainer::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
 .overallTicketTypes {
     width: 55%;
+    height: 400px !important;
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 5.5px );
-    -webkit-backdrop-filter: blur( 5.5px );
     border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+    -webkit-backdrop-filter: blur( 5.5px );
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
     display: flex;
@@ -133,11 +149,23 @@
     height: fit-content;
 }
 
+
+.overallTicketTypesGraph {
+    *{
+        margin-bottom: 5px;
+        margin-top: 0px;
+        height: 365px !important;
+    }
+    
+}
+
 .issuesReceived {
-    width: 40%;
+    width: 43%;
+    height: 400px !important; 
     background: rgba( 255, 255, 255, 0.20 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 5.5px );
+    height: fit-content;
     -webkit-backdrop-filter: blur( 5.5px );
     border: 1px solid rgba( 255, 255, 255, 0.18 );
     background-color: rgba(255, 255, 255, 0.075);
@@ -152,6 +180,7 @@
 .overallTicketTypesHeading {
     display: flex;
     height: 40px;
+    margin-top: 10px;
     align-items: center;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -236,7 +265,6 @@
 }
 
 .issuesReceivedGraph {
-    height: 80%;
     * {
         margin-top: 25px;
         margin-bottom: 25px;
@@ -414,7 +442,6 @@
         width: fit-content;
         height: fit-content;
         margin-bottom: 30px;
-
         padding: 10px;
         box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
         backdrop-filter: blur( 5.5px );
@@ -469,4 +496,129 @@
 .modalCloseIcon > * {
     color: white !important;
     font-size: 30px !important;
+}
+
+.latestTickets {
+    width: 96%;
+    height: 270px;
+    margin-top: 20px;
+    border-radius: 5px;
+    background-color: rgb(20, 20, 20);
+    margin-left: auto;
+    margin-right: auto;
+    .latestTicketsHead {
+        height: 30px;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        h3 {
+            color: white;
+            font-size: 20px;
+        }
+    }
+}
+
+.latestTicketsGlass {
+    width: 98%;
+    border-radius: 5px;
+    height: 92%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    backdrop-filter: blur( 5.5px );
+    -webkit-backdrop-filter: blur( 5.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+
+
+.eachTicket {
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    width: 95%;
+    height: fit-content;
+    border: rgb(167, 167, 167) solid 1px;
+    margin-left: auto;
+    flex-wrap: wrap;
+    padding: 5px;
+    transition: ease-in all 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    &:hover {
+        transform: scale(1.02);
+    }
+}
+
+.ticketListUpper {
+    display: flex;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 50%;
+}
+
+.ticketListLower {
+    display: flex;
+    width: 95%;    
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px;
+    height: 50%;
+}
+
+.ticketHeading {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    h4 {
+        background-color: darkgray;
+        padding: 3px;
+        color: white;
+        border-radius: 5px;
+    }
+    h3 {
+        color: white;
+        font-weight: 600;
+    }
+}
+
+
+.ticketTags {
+    width: fit-content;
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 10px;
+    align-items: center;
+    h5 {
+        color:black;
+        padding: 3px;
+        padding-left: 5px;
+        background-color: greenyellow;
+        padding-right: 5px;
+        margin-left: 10px;
+        font-weight: 400;
+        border-radius: 10px;
+    }
+}
+.ticketId {
+    margin-right: 10px;
+    h5 {
+        color: rgb(199, 199, 199);
+        font-weight: 400;
+    }
+}
+
+.reportDate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h5 {
+        color: rgb(255, 255, 255);
+        font-weight: 400;
+    }
 }

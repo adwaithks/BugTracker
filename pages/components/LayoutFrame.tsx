@@ -9,6 +9,18 @@ function LayoutFrame(props) {
         <div className={styles.layout}>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet" />
+            <style jsx global>
+                    {`
+                    * {
+                        margin: 0px;
+                        padding: 0px;
+                        font-family: 'Karla';
+                    }
+                    html { 
+                        background-color: rgb(41, 41, 41);
+                    }
+                `}
+                </style>
             <Sidebar />
             <div className={styles.bodyContent}>
                 <Navbar />

@@ -4,12 +4,17 @@ import User from '../models/userModel';
 
 initDB();
 export default async (req, res) => {
-
     const project = new Project({
         title: req.body.title,
         description: req.body.description,
         participants: req.body.participants,
-        author: req.body.author
+        author: req.body.author,
+        newTickets: 0,
+        triagedTickets: 0,
+        acceptedTickets: 0,
+        pendingTickets: 0,
+        triagedTickets: 0,
+        resolvedTickets: 0
     });
 
     const user = await User.findOne({
@@ -26,10 +31,9 @@ export default async (req, res) => {
 
     user.leading_projects.push(project._id);
 
-
     await user.save().then().catch(err => {
         console.log('err');
-    })
+    });
 
     await project.save().then((doc) => {
         res.status = 200;

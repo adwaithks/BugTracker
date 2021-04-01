@@ -7,7 +7,7 @@ import Chip from '@material-ui/core/Chip';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
 
-const index = () => {
+const index = ({data}) => {
 
 
     const [username, setUsername] = React.useState('')
@@ -17,6 +17,7 @@ const index = () => {
     const [chipData, setChipData] = React.useState([]);
     const [participantName, setParticipantName] = React.useState('');
     //const [issuesReceivedGraphData, setIssuesReceivedGraphData] = React.useState();
+    const [analytics, setAnalytics] = React.useState({});
 
     const router = useRouter();
     React.useEffect(() => {
@@ -33,8 +34,18 @@ const index = () => {
             }
             
             const res = await response.json();
+
+            const res2 = await fetch('http://localhost:3000/api/getAnalytics', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user: res.username
+                })
+            });
+            const response2 = await res2.json();
+            console.log(response2);
             
-            
+            setAnalytics(response2)            
             setUsername(res.username);
             setChipData([res.username])
         }
@@ -42,7 +53,26 @@ const index = () => {
     }, []);
 
 
-
+    var colors = {
+        'new': ['greenyellow', 'black'],
+        'open': ['green', 'white'],
+        'discussion': ['gray', 'white'],
+        'bug': ['red', 'white'],
+        'critical': ['darkred', 'white'],
+        'help wanted': ['lightgreen', 'black'],
+        'needs example': ['yellow', 'black'],
+        'documentation': ['blue', 'white'],
+        'Documentation': ['blue', 'white'],
+        'triaged': ['orange', 'black'],
+        'closed': ['red', 'black'],
+        'triage': ['orange', 'black'],
+        'close': ['red', 'black'],
+        'default': ['white', 'black'],
+        'resolved': ['greenyellow', 'black'],
+        'unresolved': ['darkred', 'black'],
+        'pending': ['purple', 'white'],
+        'accepted': ['green', 'white']
+    }
 
     const handleDelete = (deleteName: any) => () => {
         setChipData(chipData.filter((eachName) => {
@@ -55,9 +85,10 @@ const index = () => {
             title: projectTitle,
             description: editorContent,
             participants: chipData,
-            author: username
+            author: username,
+            analytics: [0, 0, 0, 0, 0, 0]
         }
-        
+
         setIsOpen(false);
         await fetch('http://localhost:3000/api/createNewProject', {
             method: 'POST',
@@ -170,26 +201,26 @@ const index = () => {
 
             </Modal>
             <div className={styles.ticketAnalyse}>
-                <div className={styles.newTickets}>
-                    <div className={styles.blue}></div>
-                    <div className={styles.newTicketsContent}>
-                        <h1>50</h1>
+
+            <div className={styles.openTickets}>
+                    <div className={styles.purple}></div>
+                    <div className={styles.openTicketsContent}>
+                        <h1>{analytics.newTickets ? analytics.newTickets : 0}</h1>
                         <h3>New Tickets</h3>
                     </div>
                 </div>
-
-                <div className={styles.openTickets}>
-                    <div className={styles.purple}></div>
-                    <div className={styles.openTicketsContent}>
-                        <h1>50</h1>
-                        <h3>Open Tickets</h3>
+                <div className={styles.newTickets}>
+                    <div className={styles.blue}></div>
+                    <div className={styles.newTicketsContent}>
+                        <h1>{analytics.triagedTickets ? analytics.triagedTickets : 0}</h1>
+                        <h3>Triaged Tickets</h3>
                     </div>
                 </div>
 
                 <div className={styles.resolvedTickets}>
                     <div className={styles.green}></div>
                     <div className={styles.resolvedTicketsContent}>
-                        <h1>50</h1>
+                        <h1>{analytics.resolvedTickets ? analytics.resolvedTickets : 0}</h1>
                         <h3>Resolved Tickets</h3>
                     </div>
                 </div>
@@ -197,7 +228,7 @@ const index = () => {
                 <div className={styles.unresolvedTickets}>
                     <div className={styles.red}></div>
                     <div className={styles.unresolvedTicketsContent}>
-                        <h1>50</h1>
+                        <h1>{analytics.unresolvedTickets ? analytics.unresolvedTickets : 0}</h1>
                         <h3>UnResolved Tickets</h3>
                     </div>
                 </div>
@@ -207,32 +238,20 @@ const index = () => {
                 <div className={styles.overallTicketTypes}>
                     <div className={styles.overallTicketTypesHeading}>
                         <h3>Overall Ticket Type</h3>
-                        {/*<div className={styles.overallTicketTypesRatings}>
-                            <div className={styles.excellent}>
-                                <div className={styles.roundgreen}></div>
-                                <h4>Excellent</h4>
-                            </div>
-                            <div className={styles.good}>
-                                <div className={styles.roundorange}></div>
-                                <h4>Good</h4>
-                            </div>
-                            <div className={styles.fair}>
-                                <div className={styles.roundred}></div>
-                                <h4>Fair</h4>
-                            </div>
-            </div>*/}
                     </div>
                     <div className={styles.overallTicketTypesGraph}>
                         <Bar data={{
-                            labels: ['New', 'Open', 'Resolved', 'Unresolved'],
+                            labels: ['New', 'Triaged', 'Accepted', 'Pending', 'Resolved', 'Unresolved'],
                             datasets: [{
                                 label: 'overall issues',
-                                data: [12, 23, 34, 1],
+                                data: analytics.overallTickettypeChart ? analytics.overallTickettypeChart : 0,
                                 backgroundColor: [
                                     'rgba(54, 162, 235, 0.2)',
                                     'rgba(255, 206, 86, 0.2)',
                                     'rgba(153, 102, 255, 0.2)',
                                     'rgba(255, 99, 132, 0.2)',
+                                    'rgba(183, 255, 40, 0.2)',
+                                    'rgba(241, 0, 0, 0.2)'
 
                                 ],
                                 borderColor: [
@@ -240,6 +259,8 @@ const index = () => {
                                     'rgba(255, 206, 86, 1)',
                                     'rgba(153, 102, 255, 1)',
                                     'rgba(255, 99, 132, 1)',
+                                    'rgba(183, 255, 4, 1)',
+                                    'rgba(241, 0, 0, 1)'
 
                                 ],
                                 borderWidth: 2
@@ -253,36 +274,117 @@ const index = () => {
                         <h3>Issues Received</h3>
                     </div>
                     <div className={styles.issuesReceivedCount}>
-                        <h1>163</h1>
+                        <h1>{analytics.issuesReceivedNum ? analytics.issuesReceivedNum : 0}</h1>
                     </div>
                     <div className={styles.issuesReceivedGraph}>
                         <Doughnut data={{
-                            labels: ['Critical', 'High', 'Medium', 'Low', 'Spam'],
+                            labels: ['New', 'Triaged', 'Accepted', 'Pending', 'Resolved', 'Unresolved'],
                             datasets: [{
                                 label: 'issues received',
-                                data: [12, 19, 3, 5, 1],
+                                data: analytics.issuesReceivedChart ? analytics.issuesReceivedChart : 0,
                                 backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
                                     'rgba(54, 162, 235, 0.2)',
                                     'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
                                     'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(183, 255, 40, 0.2)',
+                                    'rgba(241, 0, 0, 0.2)'
+
                                 ],
                                 borderColor: [
-                                    'rgba(255, 99, 132, 1)',
                                     'rgba(54, 162, 235, 1)',
                                     'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
                                     'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(183, 255, 4, 1)',
+                                    'rgba(241, 0, 0, 1)'
+
                                 ],
                                 borderWidth: 2
                             }]
                         }} />
                     </div>
                 </div>
+               
             </div>
+            <div className={styles.latestTickets}>
+                <div className={styles.latestTicketsGlass}>
+                <div className={styles.latestTicketsHead}>
+                <h3>Latest Tickets</h3>
+                </div>
+                <div className={styles.latestTicketsContainer}>
+                    {
+                        data.map((each, id) => (
+                            <div onClick={() => {
+                                router.push(`/projects/${each.projectId}/ticket/${each._id}`)
+                            }} key={id} className={styles.eachTicket}>
+                                <div className={styles.ticketListUpper}>
+                                    <div className={styles.ticketHeading}>
+                                        <h3>{each.title}</h3>
+                                        <div className={styles.ticketTags}>
+                                        <h5 style={{
+                                            paddingLeft: '25px',
+                                            paddingRight: '25px',
+                                            display:'flex',
+                                            alignItems: 'center',
+                                            padding: '4px',
+                                            border: 'black solid 1px',
+                                            borderRadius: '10px',
+                                            backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
+                                            color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
+                                        }}>{each.currentStatus}</h5>
+                                            {
+                                                each.tags.map((each, keyId) => (
+                                                    <h5 key={keyId} style={{
+                                                        paddingLeft: '25px',
+                                                        display:'flex',
+                                                        alignItems: 'center',
+                                                        paddingRight: '25px',
+                                                        padding: '3px',
+                                                        borderRadius: '10px',
+                                                        marginRight: '5px',
+                                                        marginLeft: '5px',
+                                                        backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
+                                                        color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
+                                                    }}>{each}</h5>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={styles.ticketListLower}>
+                                    <div className={styles.ticketId}>
+                                        <h5>#{each._id}</h5>
+                                    </div>
+                                    <div className={styles.reportDate}>
+                                        <h5>Opened On {each.created_at} by adwaith</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
+                
+                </div>
+                </div>
+                
+                                            </div>
         </LayoutFrame>
     )
+}
+
+
+export async function getServerSideProps(context) {
+    const res = await fetch('http://localhost:3000/api/latestTickets', {
+        method: 'GET'
+    });
+    const response = await res.json();
+
+    
+    return { 
+        props: {
+            data: response,
+        }
+    }
 }
 
 export default index;

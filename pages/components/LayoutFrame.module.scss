@@ -1,6 +1,7 @@
 .bodyContent {
     height: 100vh;
     display: flex;
+    overflow-y: scroll;
     flex-direction: column;
     width: 100%;
     background-color: rgb(41, 41, 41);
@@ -8,4 +9,13 @@
 
 .layout {
     display: flex;
+}
+
+.bodyContent::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+.bodyContent::-webkit-scrollbar-thumb {
+    background: #FF0000;
 }

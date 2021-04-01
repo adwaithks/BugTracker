@@ -21,6 +21,7 @@ function index({ data }) {
     const [selectOpen, setSelectOpen] = React.useState(false);
     const [label, setLabel] = React.useState('');
     const [temp, setTemp] = React.useState('');
+    const [prevState, setPrevState] = React.useState('');
     const [reportCloseModal, setReportCloseModal] = React.useState(false);
     const [reportSelectionModal, setReportSelectionModal] = React.useState(false);
 
@@ -69,6 +70,7 @@ function index({ data }) {
 
     const setCurrentState = async () => {
         if (temp !== 'closed') {
+        
             await fetch('http://localhost:3000/api/reportCurrentState', {
                 method: 'POST',
                 headers: {
@@ -76,7 +78,8 @@ function index({ data }) {
                 },
                 body: JSON.stringify({
                     id: ticketId,
-                    currentState: temp
+                    currentState: temp,
+                    prevState: selectValue
                 })
             });
             refreshData();
@@ -102,8 +105,13 @@ function index({ data }) {
 
     const closeTicket = async () => {
         const bodyData = {
-            id: ticketId
+            id: ticketId,
+            currentState: 'closed',
+            prevState: selectValue
         }
+        console.log(bodyData);
+        
+        
         await fetch('http://localhost:3000/api/closeTicket', {
             method: 'POST',
             body: JSON.stringify(bodyData),
@@ -269,8 +277,9 @@ function index({ data }) {
                             </div>
                             <div className={styles.reportSelectBtnGroup}>
                                 <button onClick={()=>{
+                                    setPrevState(selectValue);
                                     setSelectValue(temp);
-                                    setReportSelectionModal(!reportSelectionModal)
+                                    setReportSelectionModal(!reportSelectionModal);
                                     setCurrentState();
                                     }} className={styles.proceed}>Proceed</button>
                                 <button onClick={()=>{setReportSelectionModal(!reportSelectionModal)}} className={styles.cancel}>Cancel</button>
