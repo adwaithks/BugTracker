@@ -41,8 +41,8 @@ function index({ data }) {
                                 <h3>{each.title}</h3>
                                 <div className={styles.descPart}>
                                     {
-                                        (each.description.length > 115) ?
-                                            <h5>{each.description.slice(0, 115) + "..."}</h5> :
+                                        (each.description.length > 100) ?
+                                            <h5>{each.description.slice(0, 110) + "..."}</h5> :
                                             <h4>{each.description}</h4>
                                     }
                                     <div className={styles.participants}>
