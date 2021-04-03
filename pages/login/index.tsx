@@ -17,9 +17,10 @@ function index() {
             },
             body: JSON.stringify({
                 email: email,
-                password: password
+                password: password,
             })
         });
+
 
         const res = await response.json();
         const accessToken = res.tokenType + " " + res.accessToken;

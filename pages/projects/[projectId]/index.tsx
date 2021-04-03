@@ -4,6 +4,12 @@ import styles from './index.module.scss';
 import Modal from 'react-modal';
 import Chip from '@material-ui/core/Chip';
 import GroupIcon from '@material-ui/icons/Group';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+//import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
 import CloseIcon from '@material-ui/icons/Close';
@@ -22,6 +28,9 @@ function index({ data, participants, tickets, projectId }) {
     const [chipData, setChipData] = React.useState([]);
     const [participantName, setParticipantName] = React.useState('');
     const [username, setUsername] = React.useState('');
+    const [usernameList, setusernameList] = React.useState([]);
+    const [me, setMe] = React.useState({});
+    const [permission, setPermission] = React.useState('Viewer');
 
 
     React.useEffect(() => {
@@ -36,6 +45,19 @@ function index({ data, participants, tickets, projectId }) {
             const res = await response3.json();
             setUsername(res.username);
             setChipData(participants);
+            setMe(res);
+
+            const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
+                method: 'POST',
+                headers: {
+                    'accessToken': token
+                },
+                body: JSON.stringify({
+                    projectId: projectId
+                })
+            });
+            const res2 = await response2.json();
+            setusernameList(res2);
             
         }
         main();
@@ -101,7 +123,8 @@ function index({ data, participants, tickets, projectId }) {
    const addParticipant = async (particName) => {
         const bodyData = {
             name: particName,
-            projectId: projectId
+            projectId: projectId,
+            permission: permission
         }
 
         const res = await fetch('http://localhost:3000/api/addParticipant', {
@@ -113,28 +136,31 @@ function index({ data, participants, tickets, projectId }) {
         });
     }
 
-    const handleDelete = async (deleteName: any) => {
-
-        const bodyData = {
-            projectId: projectId,
-            removed: deleteName
-        }
-
-        const res = await fetch('http://localhost:3000/api/removeParticipant', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bodyData)
-
-        });
-        if (res.status == 200) {
+    const handleDelete = async (deleteName: any) => {      
+        if  (me.in_projects == undefined ? null : me.in_projects.includes(projectId)) {
             setChipData(chipData.filter((eachName) => {
                 return eachName != deleteName;
             }));
+            const bodyData = {
+                projectId: projectId,
+                removed: deleteName
+            }
+    
+            const res = await fetch('http://localhost:3000/api/removeParticipant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bodyData)
+    
+            });
+            
         } else {
+            console.log('not removable')
             return;
         }
+
+        
     }
 
     const createNewTicket = async () => {
@@ -230,18 +256,63 @@ function index({ data, participants, tickets, projectId }) {
                                             <label htmlFor="">Project Participants</label>
                                         </div>
                                         <div className={styles.participantSelect}>
-
-
                                             <input type="text" placeholder="Enter name" value={participantName} onChange={(e) => {
                                                 setParticipantName(e.target.value);
                                             }} />
 
                                             <button onClick={(e) => {
                                                 e.preventDefault();
-                                               addParticipant(participantName);
+                                                addParticipant(participantName);
                                                 setChipData(() => [...chipData, participantName]);
                                                 setParticipantName('');
                                             }}>Add</button>
+                                            {/*<FormControl className={styles.formControl}>
+                                                <InputLabel className={styles.inputLabel}>Username</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                className={styles.selectLabel}
+                                                value={participantName}
+                                                onChange={(event) => {
+                                                    setParticipantName(event.target.value);
+                                                }}
+                                                >
+                                                    {
+                                                        usernameList.map((each,id) => (
+                                                            <MenuItem key={id} value={each}>{each}</MenuItem>
+                                                        ))
+                                                    }
+                                                
+                                                </Select>
+                                            </FormControl>
+
+                                            <FormControl className={styles.formControl}>
+                                                <InputLabel className={styles.inputLabel}>Permission</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                className={styles.selectLabel}
+                                                value={permission}
+                                                onChange={(event) => {
+                                                    setPermission(event.target.value);
+                                                }}
+                                                >
+                                                    
+                                                            <MenuItem value="Admin">Admin</MenuItem>
+                                                            <MenuItem value="Triager">Triager</MenuItem>
+                                                            <MenuItem value="Viewer">Viewer</MenuItem>
+
+                                                    
+                                                
+                                                </Select>
+                                            </FormControl>
+
+                                            <button onClick={(e) => {
+                                                e.preventDefault();
+                                                addParticipant(participantName);
+                                                setChipData(() => [...chipData, participantName]);
+                                                setPermission('');
+                                                setParticipantName('');
+                                            }}>Add</button>*/}
+
                                         </div>
 
                                          <div className={styles.chipContainer}>
@@ -262,6 +333,24 @@ function index({ data, participants, tickets, projectId }) {
                                     </div>
                                 </div>
                             </div>
+                            {/*<div className={styles.allParticipants}>
+                                <div className={styles.allParticipantsHeadContainer}>
+                                    <h2>Available Participants</h2>
+                                </div>
+                                {
+                                    usernameList.map(eachUser => (
+                                        <div onClick={(e) => {
+                                            console.log(e.target.innerText)
+                                            addParticipant(e.target.innerText);
+                                            setChipData(() => [...chipData, e.target.innerText]);
+                                            setParticipantName('');
+                                        }} key={eachUser} className={styles.eachUsernameContainer}>
+                                            <AddCircleOutlineIcon className={styles.circleOutlineIcon} />
+                                            <h4 className={styles.eachUsername}>{eachUser}</h4>
+                                        </div>
+                                    ))
+                                }
+                            </div>*/}
 
                             <div className={styles.editParticipantButton}>
                                 <button onClick={editParticipants}>Save</button>

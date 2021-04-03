@@ -159,27 +159,19 @@
     display: flex;
     justify-content: space-evenly;
     margin-bottom: 20px;
+    margin-top: 10px;
     align-items: center;
     width: fit-content;
-    .participantLabel {
-        width: 100%;
-        margin-top: 10px;
-        display: flex;
-        margin-left: 3px;
-        justify-content: flex-start;
-        color: white;
-    }
     input {
         width: 100%;
-        padding: 8px;
-        outline: none;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 2px;
+        padding: 10px;
+        font-size: 16px;
         border: none;
-        font-size: 15px;
-        border-radius: 5px;
+        border-radius:  5px;
+        margin-left: 3px;
+        justify-content: flex-start;
+        color: black;
     }
     button {
         padding-right: 20px;
@@ -198,6 +190,71 @@
             opacity: 0.7;
         }
     }
+}
+
+.allParticipants {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.eachUsernameContainer {
+    background-color: white;
+    width:fit-content;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.5;
+    }
+}
+
+.participantSelect {
+    display: flex;
+    width: fit-content;
+    padding: 10px;
+}
+
+.formControl {
+    margin-right: 40px !important;
+    color: blue !important;
+}
+
+.inputLabel {
+    color: white !important;
+    margin-right: 20px !important ;
+}
+
+.selectLabel {
+    color: white !important;
+    width: 100px;
+}
+
+.circleOutlineIcon {
+    color: black !important;
+    font-size: 30px !important;
+    
+}
+
+.eachUsername {
+    font-weight: 400;
+    color: black;
+}
+
+.allParticipantsHeadContainer {
+    h2 {
+        color: white;
+        font-weight: 400px !important;
+    }
+    margin-bottom: 20px;
 }
 
 

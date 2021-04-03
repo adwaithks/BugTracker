@@ -26,11 +26,10 @@ const userSchema = mongoose.Schema({
         ref: 'Project'
     }],
     roles: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'Project',
-        role_in_project: {
-            type: String,
-            required: true
+        permissions: [String],
+        projectId: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Project'
         }
     }]
 

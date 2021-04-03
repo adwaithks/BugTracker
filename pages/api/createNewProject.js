@@ -4,10 +4,11 @@ import User from '../models/userModel';
 
 initDB();
 export default async (req, res) => {
+
     const project = new Project({
         title: req.body.title,
         description: req.body.description,
-        participants: req.body.participants,
+        participants: [req.body.author],
         author: req.body.author,
         newTickets: 0,
         triagedTickets: 0,
@@ -21,21 +22,10 @@ export default async (req, res) => {
     const user = await User.findOne({
         username: req.body.author
     });
-
-    const users = await User.find({
-        "username": {$in : req.body.participants}
-    });
-    users.forEach( async eachUser => {
-        eachUser.in_projects.push(project._id);
-        await eachUser.save().then().catch();
-    });
-
+    user.in_projects.push(project._id);
     user.leading_projects.push(project._id);
-
-    await user.save().then().catch(err => {
-        console.log('err');
-    });
-
+    await user.save().then().catch();
+    
     await project.save().then((doc) => {
         res.status = 200;
         res.header = 'Content-Type: application/json';

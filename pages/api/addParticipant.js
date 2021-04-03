@@ -11,16 +11,21 @@ export default async(req, res) => {
     });
 
     if (!project.participants.includes(req.body.name)) {
-        project.participants.push(req.body.name);
+       project.participants.push(req.body.name);
     }
     const user = await User.findOne({
         username: req.body.name
     });
-
-    user.in_projects.push(req.body.projectId);
-    await user.save().then().catch(err => {
-        console.log('user.in_projects err');
-    });
+    if (user) {
+        user.in_projects.push(req.body.projectId);
+        await user.save().then().catch(err => {
+            console.log('user.in_projects err');
+        });
+    } else {
+        console.log('No such user. Not able to add to project')
+        return
+    }
+    
 
     await project.save().then(doc => {
         res.json(doc);

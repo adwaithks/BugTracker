@@ -15,16 +15,18 @@ export default async(req, res) => {
         username: req.body.removed
     });
 
-
-    user.in_projects.pull(req.body.projectId);
-    await user.save().then().catch(err => {
-        console.log('err');
-    });
-
-    await project.save().then(doc => {
-        return res.json(doc)
-    }).catch(err => {
-        console.log('err');
-    });
+    if (user && project.author != req.body.removed) {
+        user.in_projects.pull(req.body.projectId);
+        await user.save().then().catch(err => {
+            console.log('err');
+        });
+    
+        await project.save().then(doc => {
+            return res.json(doc)
+        }).catch(err => {
+            console.log('err');
+        });
+    }
+    
 
 }

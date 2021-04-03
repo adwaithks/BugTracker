@@ -3,7 +3,6 @@ import styles from './index.module.scss';
 import {useRouter} from 'next/router';
 import Modal from 'react-modal';
 import LayoutFrame from '../components/LayoutFrame';
-import Chip from '@material-ui/core/Chip';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -15,7 +14,6 @@ const index = ({data}) => {
     const [editorContent, setEditorContent] = React.useState('');
     const [projectTitle, setProjectTitle] = React.useState('');
     const [chipData, setChipData] = React.useState([]);
-    const [participantName, setParticipantName] = React.useState('');
     const [analytics, setAnalytics] = React.useState({});
     const [me, setMe] = React.useState({});
 
@@ -45,7 +43,7 @@ const index = ({data}) => {
             });
             const response2 = await res2.json();
             
-            setAnalytics(response2)            
+            setAnalytics(response2);                 
             setUsername(res.username);
             setChipData([res.username])
         }
@@ -85,7 +83,6 @@ const index = ({data}) => {
         const data = {
             title: projectTitle,
             description: editorContent,
-            participants: chipData,
             author: username,
             analytics: [0, 0, 0, 0, 0, 0]
         }
@@ -160,7 +157,7 @@ const index = ({data}) => {
                             </div>
 
                             <div className={styles.participantsContainer}>
-                                <div className={styles.participantLabel}>
+                             {/**   <div className={styles.participantLabel}>
                                     <label htmlFor="">Project Participants</label>
                                 </div>
                                 <div className={styles.participantSelect}>
@@ -187,7 +184,7 @@ const index = ({data}) => {
                                             />
                                         ))
                                     }
-                                </div>
+                                </div>**/}
                                 <div className={styles.newProjectCreateButton}>
                                     <button onClick={createNewProject}>Create New Project</button>
                                 </div>

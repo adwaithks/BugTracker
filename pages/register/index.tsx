@@ -11,11 +11,6 @@ function index() {
 
 
     const register = async () => {
-        console.log({
-            username: username,
-            email: email,
-            password: password
-        });
         const response = await fetch('http://localhost:3000/api/register', {
             method: 'POST',
             headers: {

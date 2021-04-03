@@ -1,5 +1,6 @@
 import initDB from '../utils/connectDB';
 import Project from '../models/projectModel';
+import User from '../models/userModel';
 
 initDB();
 export default async (req, res) => {
@@ -15,8 +16,15 @@ export default async (req, res) => {
         issuesReceivedChart: [],
         overallTickettypeChart: []
     } 
-    const projects = await Project.find({
-        author: req.body.user
+    var projects = [];
+
+
+    const allProjects = await Project.find();
+    allProjects.map(each => {
+        if (each.participants.includes(req.body.user.toString())) {
+            projects.push(each);
+        }
+        
     });
     projects.forEach(project => {
         analyticsMatch.newTickets += project.newTickets;

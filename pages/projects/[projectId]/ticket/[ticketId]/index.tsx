@@ -15,6 +15,7 @@ function index({ data }) {
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [chipData, setChipData] = React.useState(data.tags);
+    const [chipDatatemp, setChipDatatemp] = React.useState([]);
     const [ticketId, setTicketId] = React.useState(data._id);
     const [username, setUsername] = React.useState('');
     const [selectValue, setSelectValue] = React.useState(data.currentStatus);
@@ -108,9 +109,7 @@ function index({ data }) {
             id: ticketId,
             currentState: 'closed',
             prevState: selectValue
-        }
-        console.log(bodyData);
-        
+        }        
         
         await fetch('http://localhost:3000/api/closeTicket', {
             method: 'POST',
@@ -148,10 +147,9 @@ function index({ data }) {
             tagData: chipData
         }
         let tempString = '';
-        chipData.forEach((each) => {
+        chipDatatemp.forEach((each) => {
             tempString  = tempString + `<strong>${each}</strong>`
         });
-        console.log('TempString:' + tempString);
         
         const data2 = {
             id: ticketId,
@@ -175,6 +173,7 @@ function index({ data }) {
             body: JSON.stringify(data2)
         })
         setIsOpen(false);
+        setChipDatatemp([]);
         refreshData();
     }
 
@@ -395,6 +394,7 @@ function index({ data }) {
                                 <input type="text" value={label} onChange={(e) => { setLabel(e.target.value) }} placeholder="Enter a label name" />
                                 <button onClick={() => {
                                     setChipData(() => [...chipData, label]);
+                                    setChipDatatemp(() => [...chipDatatemp, label]);
                                     setLabel('');
                                 }}>Add</button>
                             </div>
