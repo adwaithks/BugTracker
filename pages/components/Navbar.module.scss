@@ -8,3 +8,39 @@
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
 }
+
+
+
+.burgerIconContainer {
+    display: flex;
+    flex-direction: column;
+    .burgerIcon {
+        color: white !important;
+        font-size: 45px !important;
+        cursor: pointer;
+        :hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+.burgerIconOptions {
+    position: absolute;
+    z-index: 900;
+    border-radius: 5px;
+    margin-top: 40px;
+    width: 95px;
+    border: white solid 1px;
+    margin-left: 10px;
+    padding: 30px;
+    background-color: rgba(42, 42, 42, 0.938);
+    h4 {
+        color: white;
+        margin-bottom: 10px;
+        font-size: 18px;
+        &:hover {
+            cursor: pointer;
+            color:rgb(112, 112, 112)
+        }
+    }
+}

@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import LayoutFrame from '../components/LayoutFrame';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const index = ({data}) => {
 
@@ -16,9 +17,37 @@ const index = ({data}) => {
     const [chipData, setChipData] = React.useState([]);
     const [analytics, setAnalytics] = React.useState({});
     const [me, setMe] = React.useState({});
+    const [burgerIcon, setBurgerIcon] = React.useState(false); //false - not open
+    const [burgerIconVisibility, setBurgerIconVisibility] = React.useState(false); //false - not open
 
     const router = useRouter();
+    
     React.useEffect(() => {
+
+    if (window.innerWidth > 1101) {
+        setBurgerIconVisibility(false)
+    }
+
+    if (window.innerWidth < 950) {
+        setBurgerIconVisibility(true); //(true);
+    }
+    const resizeListener = () => {
+        if (window.innerWidth > 1101) {
+            setBurgerIconVisibility(false);
+        }
+
+    if (window.innerWidth < 950) {
+        setBurgerIconVisibility(true); //(true);
+    }
+      };
+      window.addEventListener('resize', resizeListener);
+
+
+
+
+
+
+
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
             const response = await fetch('http://localhost:3000/api/me', {
@@ -48,6 +77,10 @@ const index = ({data}) => {
             setChipData([res.username])
         }
         main();
+
+        return () => {
+            window.removeEventListener('resize', resizeListener);
+        }
     }, []);
 
     
@@ -108,6 +141,30 @@ const index = ({data}) => {
     return (
         <LayoutFrame>
             <div className={styles.newTicketContainer}>
+            {
+                        burgerIconVisibility ? (
+                            <div className={styles.burgerIconContainer}>
+                    
+                    
+                    <MenuIcon className={styles.burgerIcon} onClick={() => {setBurgerIcon(!burgerIcon)}} />
+                    {
+                        (burgerIcon) ? (
+                    <div className={styles.burgerIconOptions}>
+                        <h4 onClick={() =>{router.push('/dashboard')}}>Dashboard</h4>
+                        <h4 onClick={() =>{router.push('/alltickets')}}>All Tickets</h4>
+                        <h4 onClick={() => {router.push('/projects')}}>My Projects</h4>
+                        <h4 onClick={() => {
+                            window.localStorage.removeItem('accessToken');
+                            router.push('/login');
+                            }}>Logout</h4>
+                    </div>
+                        ) : null
+                    }
+                    
+                </div>
+                        ) : null
+                    }
+                
                 <div className={styles.newTicketBtn}>
                     <button onClick={() => {
                         setIsOpen(!modalIsOpen);
@@ -200,7 +257,7 @@ const index = ({data}) => {
             </Modal>
             <div className={styles.ticketAnalyse}>
 
-            <div className={styles.openTickets}>
+                <div className={styles.openTickets}>
                     <div className={styles.purple}></div>
                     <div className={styles.openTicketsContent}>
                         <h1>{analytics.newTickets ? analytics.newTickets : 0}</h1>

@@ -5,6 +5,14 @@ import styles from './LayoutFrame.module.scss';
 
 
 function LayoutFrame(props) {
+
+    const [dashboard, setDashboard] = React.useState('')
+
+    React.useEffect(() => {
+        setDashboard(window.location.href.split('/')[3]);
+    }, [])
+
+
     return (
         <div className={styles.layout}>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -23,7 +31,9 @@ function LayoutFrame(props) {
                 </style>
             <Sidebar />
             <div className={styles.bodyContent}>
-                <Navbar />
+                {
+                    dashboard == 'dashboard' ? null :  <Navbar />
+                }
                 {props.children}
             </div>
         </div>

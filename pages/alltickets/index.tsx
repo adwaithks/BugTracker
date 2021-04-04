@@ -71,7 +71,7 @@ function index() {
                 {
                         data.map((each, id) => (
                             me.in_projects == undefined ? null : me.in_projects.includes(each.projectId) ? (
-<div onClick={() => {
+                        <div onClick={() => {
                                 router.push(`/projects/${each.projectId}/ticket/${each._id}`)
                             }} key={id} className={styles.eachTicket}>
                                 <div className={styles.ticketListUpper}>

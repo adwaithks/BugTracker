@@ -14,7 +14,8 @@
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
     border: rgb(53, 53, 53) solid 1px;    
-    height: 50px;
+    height: fit-content;
+    padding: 2px;
     padding-left: 15px;
     transition: ease-in all 0.2s;
     display: flex;
@@ -22,7 +23,6 @@
     margin-left: auto;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
     margin-right: auto;
     h3 {
         width: 30%;
@@ -74,5 +74,81 @@
     background-color: orange;
     h4 {
         font-size: 10px;
+    }
+}
+
+@media (max-width: 450px) {
+    .eachProject {
+        color: white;
+        width: 92%;
+        background-color: rgba(255, 255, 255, 0.075);
+        box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        border: rgb(53, 53, 53) solid 1px;    
+        height: fit-content;
+        padding: 2px;
+        padding-left: 5px;
+        transition: ease-in all 0.2s;
+        margin-bottom: 10px;
+        display: flex;
+        padding-right: 15px;
+        margin-left: auto;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
+        margin-right: auto;
+        h3 {
+            width: 30%;
+        }
+        &:hover {
+            cursor: pointer;
+            transform: scale(1.005);
+        }
+    }
+    
+    .participants {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        width: fit-content;
+        margin-top: 10px;
+        height: fit-content;
+        h5 {
+            margin-right: 5px;
+            background-color: orange;
+            padding: 2px;
+            color: black;
+            border-radius: 5px;
+        }
+    }
+    
+    .participantsIcon {
+        color: rgb(233, 233, 233) !important;
+        margin-right: 5px;
+        font-size: 20px !important;
+    }
+    
+    
+    .descPart {
+        width: 95%;
+        height: fit-content;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        h4 {
+            font-weight: 400;
+        }
+        h5 {
+                font-weight: 400;
+        }
+    }
+    
+    .projectParticAvatar {
+        height: 50px;
+        border-radius: 50%;
+        width: 50px;
+        background-color: orange;
+        h4 {
+            font-size: 10px;
+        }
     }
 }

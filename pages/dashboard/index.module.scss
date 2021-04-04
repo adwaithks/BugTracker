@@ -18,12 +18,16 @@
 }
 
 .newTicketContainer {
-    width: 95%;
-    height: 40px;
+    width: 100%;
+    height: fit-content;
     margin-top: 20px;
+    background-color: rgb(42, 42, 42);
     display: flex;
+    position: sticky;
+    z-index: 900;
+    top: 0;
     border-radius: 5px;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     margin-left: auto;
     margin-right: auto;
@@ -32,6 +36,7 @@
 .newTicketBtn {
     width: fit-content;
     margin-right: 20px;
+    
     height: fit-content;
     button {
         width: fit-content;
@@ -78,6 +83,39 @@
     margin-right: 10px;
 }
 
+.burgerIconContainer {
+    display: flex;
+    flex-direction: column;
+    .burgerIcon {
+        color: white !important;
+        font-size: 45px !important;
+        cursor: pointer;
+        :hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+.burgerIconOptions {
+    position: absolute;
+    z-index: 900;
+    border-radius: 5px;
+    margin-top: 40px;
+    width: 95px;
+    border: white solid 1px;
+    margin-left: 10px;
+    padding: 30px;
+    background-color: rgba(42, 42, 42, 0.938);
+    h4 {
+        color: white;
+        margin-bottom: 10px;
+        font-size: 18px;
+        &:hover {
+            cursor: pointer;
+            color:rgb(112, 112, 112)
+        }
+    }
+}
 
 .ticketAnalyse {
     display: flex;
@@ -94,8 +132,6 @@
 .newTickets, .resolvedTickets, .unresolvedTickets, .openTickets {
     @include ticketCountsBox();
     box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
-    backdrop-filter: blur( 5.5px );
-    -webkit-backdrop-filter: blur( 5.5px );
     border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
@@ -122,6 +158,7 @@
     height: 180px;
     scrollbar-width: none;  
     overflow-y: scroll;    
+
 }
 
 .latestTicketsContainer::-webkit-scrollbar {
@@ -130,16 +167,15 @@
 }
 /* Optional: show position indicator in red */
 .latestTicketsContainer::-webkit-scrollbar-thumb {
-    background: #FF0000;
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;
 }
 
 .overallTicketTypes {
     width: 55%;
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 5.5px );
     border: 1px solid rgba( 255, 255, 255, 0.18 );
     height: 100%;
-    -webkit-backdrop-filter: blur( 5.5px );
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
     display: flex;
@@ -164,9 +200,7 @@
     height: 100% !important; 
     background: rgba( 255, 255, 255, 0.20 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 5.5px );
     height: fit-content;
-    -webkit-backdrop-filter: blur( 5.5px );
     border: 1px solid rgba( 255, 255, 255, 0.18 );
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
@@ -196,58 +230,6 @@
     justify-content: space-evenly;
 }
 
-.roundgreen {
-    height: 9px;
-    width: 9px;
-    margin-right: 5px;
-    border-radius: 50%;
-    background-color: green;
-}
-
-.roundred {
-    height: 9px;
-    width: 9px;
-    margin-right: 5px;
-    border-radius: 50%;
-    background-color: red;
-}
-
-
-.roundorange {
-    height: 9px;
-    width: 9px;
-    margin-right: 5px;
-    border-radius: 50%;
-    background-color: orange;
-}
-
-
-.excellent {
-    display: flex;
-    justify-content: center;
-    margin-left: 5px;
-    margin-right: 5px;
-    align-items: center;
-    width: fit-content;
-}
-
-.good {
-    display: flex;
-    margin-left: 5px;
-    margin-right: 5px;
-    justify-content: center;
-    align-items: center;
-    width: fit-content;
-}
-
-.fair {
-    display: flex;
-    margin-left: 5px;
-    margin-right: 10px;
-    justify-content: center;
-    align-items: center;
-    width: fit-content;
-}
 
 .issuesReceivedHeading, .issuesReceivedCount {
     height: 10%;
@@ -272,7 +254,7 @@
 }
 
 .newProjectModal {
-    width: 40%;
+    width: 50%;
     margin-left: auto;
     margin-top: 150px;
     background-color: rgb(22, 22, 22);
@@ -385,8 +367,6 @@
         padding-left: 20px;
         height: 32px;
         box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
-        backdrop-filter: blur( 5.5px );
-        -webkit-backdrop-filter: blur( 5.5px );
         border: 1px solid rgba( 255, 255, 255, 0.18 );
         margin-left: 20px;
         width: fit-content;
@@ -444,8 +424,6 @@
         margin-bottom: 30px;
         padding: 10px;
         box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
-        backdrop-filter: blur( 5.5px );
-        -webkit-backdrop-filter: blur( 5.5px );
         border: 1px solid rgba( 255, 255, 255, 0.18 );
         cursor: pointer;
         border-radius: 5px;
@@ -527,8 +505,6 @@
     margin-right: auto;
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
-    backdrop-filter: blur( 5.5px );
-    -webkit-backdrop-filter: blur( 5.5px );
     border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
@@ -622,3 +598,177 @@
         font-weight: 400;
     }
 }
+
+
+@media (max-width: 1500px) {
+    .newTickets, .resolvedTickets, .unresolvedTickets, .openTickets {
+        @include ticketCountsBox();
+        box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
+    }
+
+    .overallTicketTypes {
+        width: 55%;
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.075);
+        box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        display: flex;
+        flex-direction: column;
+        border-radius:  5px;
+        color: white;
+        height: fit-content;
+    }
+
+    .issuesReceived {
+        width: 43%;
+        height: 100% !important; 
+        background: rgba( 255, 255, 255, 0.20 );
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        height: fit-content;
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
+        background-color: rgba(255, 255, 255, 0.075);
+        box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        height: fit-content;
+        border-radius:  5px;
+    }
+    
+    .latestTicketsGlass {
+        width: 98%;
+        border-radius: 5px;
+        height: fit-content;
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: rgba(255, 255, 255, 0.075);
+        box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
+    }
+}
+
+
+@media (max-width: 890px) {
+
+    .eachTicket {
+        background-color: rgba(255, 255, 255, 0.075);
+        box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+        width: 95%;
+        margin-bottom: 10px;
+        height: fit-content;
+        border: rgb(167, 167, 167) solid 1px;
+        margin-left: auto;
+        flex-wrap: wrap;
+        padding: 5px;
+        transition: ease-in all 0.2s;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        margin-right: auto;
+        &:hover {
+            transform: scale(1.02);
+        }
+    }
+
+.ticketAnalyse {
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+    width: 95%;
+    background-color: rgb(24, 24, 24);
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-evenly;
+}
+
+.newTickets, .resolvedTickets, .unresolvedTickets, .openTickets {
+    @include ticketCountsBox();
+    box-shadow: 0 8px 32px 0 rgba(29, 29, 29, 0.37);
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.newTicketsContent, .resolvedTicketsContent, .unresolvedTicketsContent, .openTicketsContent {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.ticketGraphs {
+    width: 95%;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-right: auto;
+    justify-content: space-between;
+    padding: 10px;
+    margin-left: auto;
+    border-radius: 5px;
+    background-color: rgb(24, 24, 24);
+    display: flex;
+}
+
+
+.overallTicketTypesGraph {
+    width: 100%;
+
+    *{
+        margin-bottom: 25px;
+        margin-top: 25px;
+        height: 365px !important;
+    }
+    
+}
+
+
+.overallTicketTypes {
+    width: 100%;
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    display: flex;
+    margin-bottom: 10px;
+    flex-direction: column;
+    border-radius:  5px;
+    color: white;
+    height: fit-content;
+}
+
+.issuesReceived {
+    width: 100%;
+    height: 100% !important; 
+    background: rgba( 255, 255, 255, 0.20 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    height: fit-content;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    background-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    border-radius:  5px;
+}
+
+.newProjectModal {
+    width: 80%;
+    margin-left: auto;
+    margin-top: 150px;
+    background-color: rgb(22, 22, 22);
+    margin-right: auto;
+    height: fit-content;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+}
+

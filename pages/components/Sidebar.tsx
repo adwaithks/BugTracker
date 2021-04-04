@@ -12,7 +12,7 @@ function Sidebar() {
     const [expanded, setExpanded] = useState(true);
     const [username, setUsername] = React.useState('');
     const [letter, setLetter] = React.useState('')
-
+    const [sidebarVisibility, setSidebarVisibility] = React.useState(true);
 
     const router = useRouter();
     const pageRoute = (page) => {
@@ -28,6 +28,31 @@ function Sidebar() {
     }
 
     useEffect(() => {
+        if (window.innerWidth > 1101) {
+            setExpanded(true)
+            setSidebarVisibility(true)
+        }
+        if (window.innerWidth < 1100) {
+            setExpanded(false);
+        }
+        if (window.innerWidth < 950) {
+            setSidebarVisibility(false)
+        }
+        const resizeListener = () => {
+            if (window.innerWidth > 1101) {
+                setExpanded(true)
+                setSidebarVisibility(true)
+            }
+            if (window.innerWidth < 1100) {
+                setExpanded(false);
+            }
+            if (window.innerWidth < 950) {
+                setSidebarVisibility(false)
+            }
+          };
+          window.addEventListener('resize', resizeListener);
+            
+
         const main = async () => {
         setActiveTab(window.location.href.split("/")[3]);
         if (!window.localStorage.getItem("username") || !window.localStorage.getItem("letter")) {
@@ -49,11 +74,16 @@ function Sidebar() {
         }
         }
         main();
+        return () => {
+            window.removeEventListener('resize', resizeListener);
+        }
     }, []);
 
     return (
 
-        (expanded === true) ? (
+
+
+        (expanded === true && sidebarVisibility === true) ? (
             <div className={styles.sidebar} >
                 <div className={styles.expandBtnContainer}>
                     <div className={styles.expandBtn}>
@@ -130,7 +160,7 @@ function Sidebar() {
                     <button onClick={logout}>Logout</button>
                 </div>
             </div>
-        ) : (
+        ) : (expanded === false && sidebarVisibility === true) ? (
             <div className={styles.closedNav}>
                 <style jsx global>
                     {`
@@ -201,7 +231,7 @@ function Sidebar() {
                     }
                 </div>
             </div>
-        )
+        ) : null
 
 
     )
