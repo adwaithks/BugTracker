@@ -8,5 +8,7 @@ export default async(req, res) => {
     const ticket = await Ticket.findOne({
         _id: id
     });
+    res.status = 200;
+    res.header = 'Content-Type: application/json';
     res.json(ticket);
 }

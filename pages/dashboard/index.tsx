@@ -97,11 +97,12 @@ const index = ({data}) => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                router.push(`/projects/${data._id}`)
             })
             .catch(err => {
                 console.log(err);
             });
+            
         }
 
     return (

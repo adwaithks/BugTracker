@@ -234,7 +234,7 @@
 
 .ticketContent {
     width: 92%;
-    border: white solid 10px;
+    border: white solid 100px;
     background-color: rgba(182, 182, 182, 0.26);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
     border-radius: 5px;
@@ -257,9 +257,10 @@
         border-radius: 5px;
     }
     code {
-        background-color: rgb(41, 41, 41);
+        background-color: rgb(32, 32, 32);
         border-radius: 5px;
-        padding: 1px;
+        color: rgb(255, 255, 255);
+        width:fit-content;
     }      
     pre {
         border-radius: 5px;

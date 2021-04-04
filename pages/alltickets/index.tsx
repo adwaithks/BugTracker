@@ -22,14 +22,15 @@ function index() {
             });
             const res2 = await response.json();  
             setMe(res2); 
-            setData(data);                                 
+            setData(data);  
+            settempData(data);                               
         }
         main();
     }, []);
 
     const [me, setMe] =  React.useState({});
     const [data, setData] = React.useState([]);
-
+    const [tempdata, settempData] = React.useState([]);
 
     var colors = {
         'new': ['greenyellow', 'black'],
@@ -52,10 +53,8 @@ function index() {
         'accepted': ['green', 'white']
     }
 
-    const searchHandler = (e) => {
-        console.log(e.target.value);
-        
-        setData(data.filter(function(each) {
+    const searchHandler = (e) => {      
+        setData(tempdata.filter(function(each) {
             return each.title.toLowerCase().match(e.target.value.toLowerCase());
         }));
     }

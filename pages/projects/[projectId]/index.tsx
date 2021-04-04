@@ -625,6 +625,7 @@ export async function getServerSideProps(context) {
             id: projectId
         })
     });
+
     const data = await response.json();
     const participants = data.participants;
 

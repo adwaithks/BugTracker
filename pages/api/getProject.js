@@ -8,6 +8,6 @@ export default async(req, res) => {
     const project = await Project.findOne({
         _id: id
     });
-    res.json(project);
+    res.json(JSON.stringify(project));
 
 }
