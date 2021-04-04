@@ -1,6 +1,7 @@
 .bodyContent {
     height: 100vh;
     display: flex;
+    scrollbar-width: none;  
     overflow-y: scroll;
     flex-direction: column;
     width: 100%;

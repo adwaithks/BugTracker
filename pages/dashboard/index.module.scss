@@ -120,6 +120,7 @@
 
 .latestTicketsContainer {
     height: 180px;
+    scrollbar-width: none;  
     overflow-y: scroll;    
 }
 
@@ -520,7 +521,7 @@
 .latestTicketsGlass {
     width: 98%;
     border-radius: 5px;
-    height: 92%;
+    height: fit-content;
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;

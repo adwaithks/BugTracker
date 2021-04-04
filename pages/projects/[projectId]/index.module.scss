@@ -5,6 +5,7 @@
     margin-left: auto;
     margin-right: auto;
     background-color: black;
+    scrollbar-width: none;  
     height: 350px;
     display: flex;
     flex-direction: column;
@@ -532,6 +533,7 @@
 .previewSection {
     width: 95%;
     height: 410px;
+    scrollbar-width: none;  
     word-break: break-all;
     margin-left: auto;
     margin-bottom: 15px;
@@ -566,6 +568,8 @@
 
 .ticketDetails {
     overflow-y: scroll;
+    scrollbar-width: none;  
+
 }
 
 .ticketDetails::-webkit-scrollbar {

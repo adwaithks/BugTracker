@@ -6,8 +6,8 @@ import jwt from 'jsonwebtoken';
 initDB();
 export default async (req, res) => {
     const accessToken = req.headers.accesstoken.split(' ')[1];
-    jwt.verify(accessToken, 'jwtsecret', async (err, decoded) => {
-        if (err) return res.status(403).json('Invalid Authorization Token');
+    const decoded = jwt.verify(accessToken, 'jwtsecret');
+    if (decoded) {
         const users = await User.find();
         var usernames = [];
         const projectId = mongoose.Types.ObjectId(JSON.parse(req.body).projectId)
@@ -16,6 +16,7 @@ export default async (req, res) => {
             usernames.push(user.username);
             }
         });
-        res.json(usernames);
-      });
-}
+
+            res.json(usernames);
+          }
+    }

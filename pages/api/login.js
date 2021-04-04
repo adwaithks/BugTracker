@@ -13,18 +13,19 @@ export default async(req, res) => {
 
     if (!user) return res.json('User not found!')
 
-    jwt.sign({
+    const token = jwt.sign({
         userId: user._id,
         email: user.email,
         username: user.username
-    }, 'jwtsecret', (err, token) => {
-        if (err) return res.status(500).json('Internal Server Error');
-        res.status(200).json({
-            accessToken: token,
-            expiresIn: '1h',
-            tokenType: 'Bearer'
-        })
-    });
-
-
-}
+    }, 'jwtsecret');
+        if (token) {
+            return res.status(200).json({
+                accessToken: token,
+                expiresIn: '1h',
+                tokenType: 'Bearer'
+            }) 
+        } 
+        else {
+            return res.status(500).json('Internal Server Error');
+        }
+    }
