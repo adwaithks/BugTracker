@@ -11,7 +11,7 @@ function index() {
 
 
     const register = async () => {
-        const response = await fetch('http://localhost:3000/api/register', {
+        const response = await fetch(`http://localhost:${process.env.PORT}/api/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

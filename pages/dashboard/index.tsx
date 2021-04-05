@@ -72,7 +72,7 @@ const index = ({data}) => {
       
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch('http://localhost:3000/api/me', {
+            const response = await fetch(`http://localhost:${process.env.PORT}/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -85,7 +85,7 @@ const index = ({data}) => {
             const res = await response.json();
             setMe(res);
 
-            const res2 = await fetch('http://localhost:3000/api/getAnalytics', {
+            const res2 = await fetch(`http://localhost:${process.env.PORT}/api/getAnalytics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -143,7 +143,7 @@ const index = ({data}) => {
         }
 
         setIsOpen(false);
-        await fetch('http://localhost:3000/api/createNewProject', {
+        await fetch(`http://localhost:${process.env.PORT}/api/createNewProject`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -453,7 +453,7 @@ const index = ({data}) => {
 
 
 export async function getServerSideProps(context) {
-    const res = await fetch('http://localhost:3000/api/latestTickets', {
+    const res = await fetch(`http://localhost:${process.env.PORT}/api/latestTickets`, {
         method: 'GET'
     });
     const response = await res.json();
