@@ -25,10 +25,10 @@ function index() {
         const main = async() => {
             const token = window.localStorage.getItem('accessToken');
 
-            const res = await fetch(`http://localhost:${process.env.PORT}/api/getAllTickets`)
+            const res = await fetch(`http://localhost:3000/api/getAllTickets`)
             const data = await res.json();
 
-            const response = await fetch(`http://localhost:${process.env.PORT}/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token

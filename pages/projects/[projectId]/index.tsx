@@ -42,7 +42,7 @@ function index({ data, participants, tickets, projectId }) {
     React.useEffect(() => {
         const main = async() => {
             const token = window.localStorage.getItem('accessToken');
-            const response3 = await fetch(`http://localhost:${process.env.PORT}/api/me`, {
+            const response3 = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -53,7 +53,7 @@ function index({ data, participants, tickets, projectId }) {
             setChipData(participants);
             setMe(res);
 
-            const response2 = await fetch(`http://localhost:${process.env.PORT}/api/getUsers`, {
+            const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
                 method: 'POST',
                 headers: {
                     'accessToken': token
@@ -133,7 +133,7 @@ function index({ data, participants, tickets, projectId }) {
             permission: permission
         }
 
-        const res = await fetch(`http://localhost:${process.env.PORT}/api/addParticipant`, {
+        const res = await fetch(`http://localhost:3000/api/addParticipant`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -152,7 +152,7 @@ function index({ data, participants, tickets, projectId }) {
                 removed: deleteName
             }
     
-            const res = await fetch(`http://localhost:${process.env.PORT}/api/removeParticipant`, {
+            const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -180,7 +180,7 @@ function index({ data, participants, tickets, projectId }) {
         }
 
         
-        const res = await fetch(`http://localhost:${process.env.PORT}/api/createNewTicket`, {
+        const res = await fetch(`http://localhost:3000/api/createNewTicket`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -622,7 +622,7 @@ function index({ data, participants, tickets, projectId }) {
 export async function getServerSideProps(context) {
     const projectId = context.req.url.split('/')[2];
 
-    const response = await fetch(`http://localhost:${process.env.PORT}/api/getProject`, {
+    const response = await fetch(`http://localhost:3000/api/getProject`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -635,7 +635,7 @@ export async function getServerSideProps(context) {
     const data = await response.json();
     const participants = data.participants;
 
-    const response2 = await fetch(`http://localhost:${process.env.PORT}/api/getProjectTickets`, {
+    const response2 = await fetch(`http://localhost:3000/api/getProjectTickets`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
