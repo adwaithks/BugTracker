@@ -11,7 +11,7 @@ function index() {
 
 
     const register = async () => {
-        const response = await fetch(`/api/register`, {
+        const response = await fetch(`http://ksissuetracker.herokuapp.com/api/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
