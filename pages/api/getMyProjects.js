@@ -1,5 +1,5 @@
-import Project from '../models/projectModel';
-import initDB from '../utils/connectDB';
+import Project from '../../models/projectModel';
+import initDB from '../../utils/connectDB';
 
 initDB();
 export default async(req, res) => {

@@ -1,6 +1,6 @@
-import initDB from '../utils/connectDB';
-import Project from '../models/projectModel';
-import User from '../models/userModel';
+import initDB from '../../utils/connectDB';
+import Project from '../../models/projectModel';
+import User from '../../models/userModel';
 
 initDB();
 export default async (req, res) => {

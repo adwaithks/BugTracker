@@ -1,7 +1,7 @@
-import Ticket from '../models/ticketModel';
-import initDB from '../utils/connectDB';
+import Ticket from '../../models/ticketModel';
+import initDB from '../../utils/connectDB';
 import mongoose from 'mongoose';
-import Project from '../models/projectModel'
+import Project from '../../models/projectModel'
 
 initDB();
 export default async(req, res) => {

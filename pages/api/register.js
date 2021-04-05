@@ -1,5 +1,5 @@
-import User from '../models/userModel';
-import initDB from '../utils/connectDB';
+import User from '../../models/userModel';
+import initDB from '../../utils/connectDB';
 
 initDB();
 export default async(req, res) => {

@@ -1,5 +1,5 @@
-import Ticket from '../models/ticketModel';
-import initDB from '../utils/connectDB';
+import Ticket from '../../models/ticketModel';
+import initDB from '../../utils/connectDB';
 
 initDB();
 export default async(req, res) => {

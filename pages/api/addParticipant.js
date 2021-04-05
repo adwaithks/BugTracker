@@ -1,6 +1,6 @@
-import Project from '../models/projectModel';
-import initDB from '../utils/connectDB';
-import User from '../models/userModel';
+import Project from '../../models/projectModel';
+import initDB from '../../utils/connectDB';
+import User from '../../models/userModel';
 import mongoose from 'mongoose';
 
 initDB();
