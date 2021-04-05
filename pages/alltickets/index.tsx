@@ -5,6 +5,20 @@ import { useRouter } from 'next/router';
 
 function index() {
 
+    interface meInterface {
+        created_at?: string,
+        email?: string,
+        in_projects?: [string],
+        leading_projects?: [string],
+        password?: string,
+        raised_tickets?: [string],
+        roles?: [string],
+        updatedAt?: string,
+        username?: string,
+        __v?: number,
+        _id?: string
+    }
+
     var router = useRouter();
 
     React.useEffect(() => {
@@ -28,7 +42,7 @@ function index() {
         main();
     }, []);
 
-    const [me, setMe] =  React.useState({});
+    const [me, setMe] =  React.useState<meInterface>({});
     const [data, setData] = React.useState([]);
     const [tempdata, settempData] = React.useState([]);
 

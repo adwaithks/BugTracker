@@ -201,6 +201,7 @@
 
 .ticketConversationHead {
     width: 100%;
+    
     margin-bottom: 10px;
     justify-content: flex-start;
     h4 {
@@ -244,11 +245,9 @@
 
 .ticketContent {
     width: 92%;
-    border: white solid 100px;
     background-color: rgba(182, 182, 182, 0.26);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
     border-radius: 5px;
-    border: rgb(99, 99, 99);
     padding: 15px;
     h1, h2, h3, h4, h5 {
         margin-bottom: 10px;
@@ -265,16 +264,22 @@
     p > code {
         background-color: rgb(41, 41, 41);
         border-radius: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
     }
     code {
         background-color: rgb(32, 32, 32);
         border-radius: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
         color: rgb(255, 255, 255);
         width:fit-content;
     }      
     pre {
         border-radius: 5px;
-        padding: 0px;
+    }
+    ul {
+        margin-left: 10px;
     }
     strong {
         background-color: white;
@@ -290,7 +295,6 @@
         color: white;
         overflow-wrap: break-word;
         padding: 2px;
-
     }
 }
 

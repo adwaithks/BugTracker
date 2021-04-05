@@ -672,6 +672,40 @@
     }
 }
 
+@media (max-width: 1200px) {
+    .newTicketModal {
+        width: 60%;
+        height: fit-content;
+        background-color: black;
+        border: none;
+        outline: none;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 20%;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+@media (max-width: 700px) {
+    .newTicketModal {
+        width: 80%;
+        height: fit-content;
+        background-color: black;
+        border: none;
+        outline: none;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        top: 20%;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+    }
+}
 
 @media (max-width: 500px) {
     .editParticipantModal {

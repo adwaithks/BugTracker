@@ -4,19 +4,25 @@ import styles from './index.module.scss';
 import Modal from 'react-modal';
 import Chip from '@material-ui/core/Chip';
 import GroupIcon from '@material-ui/icons/Group';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-//import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
 import CloseIcon from '@material-ui/icons/Close';
 
 function index({ data, participants, tickets, projectId }) {
 
-    
+    interface meInterface {
+        created_at?: string,
+        email?: string,
+        in_projects?: [string],
+        leading_projects?: [string],
+        password?: string,
+        raised_tickets?: [string],
+        roles?: [string],
+        updatedAt?: string,
+        username?: string,
+        __v?: number,
+        _id?: string
+    }
 
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -29,7 +35,7 @@ function index({ data, participants, tickets, projectId }) {
     const [participantName, setParticipantName] = React.useState('');
     const [username, setUsername] = React.useState('');
     const [usernameList, setusernameList] = React.useState([]);
-    const [me, setMe] = React.useState({});
+    const [me, setMe] = React.useState<meInterface>({});
     const [permission, setPermission] = React.useState('Viewer');
 
 

@@ -7,7 +7,35 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 
+
+
 const index = ({data}) => {
+
+    interface analyticsInterface {
+        acceptedTickets?: number,
+        issuesReceivedChart?: [number],
+        issuesReceivedNum?: number,
+        newTickets?: number,
+        overallTickettypeChart?: [number],
+        pendingTickets?: number,
+        resolvedTickets?: number,
+        triagedTickets?: number,
+        unresolvedTickets?: number
+    }
+
+    interface meInterface {
+        created_at?: string,
+        email?: string,
+        in_projects?: [string],
+        leading_projects?: [string],
+        password?: string,
+        raised_tickets?: [string],
+        roles?: [string],
+        updatedAt?: string,
+        username?: string,
+        __v?: number,
+        _id?: string
+    }
 
 
     const [username, setUsername] = React.useState('')
@@ -15,8 +43,8 @@ const index = ({data}) => {
     const [editorContent, setEditorContent] = React.useState('');
     const [projectTitle, setProjectTitle] = React.useState('');
     const [chipData, setChipData] = React.useState([]);
-    const [analytics, setAnalytics] = React.useState({});
-    const [me, setMe] = React.useState({});
+    const [analytics, setAnalytics] = React.useState<analyticsInterface>({});
+    const [me, setMe] = React.useState<meInterface>({});
     const [burgerIcon, setBurgerIcon] = React.useState(false); //false - not open
     const [burgerIconVisibility, setBurgerIconVisibility] = React.useState(false); //false - not open
 
@@ -41,13 +69,7 @@ const index = ({data}) => {
     }
       };
       window.addEventListener('resize', resizeListener);
-
-
-
-
-
-
-
+      
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
             const response = await fetch('http://localhost:3000/api/me', {
@@ -71,7 +93,7 @@ const index = ({data}) => {
                 })
             });
             const response2 = await res2.json();
-            
+            console.log(res)
             setAnalytics(response2);                 
             setUsername(res.username);
             setChipData([res.username])
@@ -267,7 +289,7 @@ const index = ({data}) => {
                 <div className={styles.newTickets}>
                     <div className={styles.blue}></div>
                     <div className={styles.newTicketsContent}>
-                        <h1>{analytics.triagedTickets ? analytics.triagedTickets : 0}</h1>
+                        <h1>{analytics!.triagedTickets ? analytics!.triagedTickets : 0}</h1>
                         <h3>Triaged Tickets</h3>
                     </div>
                 </div>
