@@ -26,14 +26,14 @@ function Sidebar() {
     const router = useRouter();
     const pageRoute = (page) => {
         setActiveTab(page);
-        router.push(`/${page}`);
+        router.push(`/${page}`, null, {shallow: true});
     }
 
     const logout = () => {
         window.localStorage.removeItem('accessToken');
         window.localStorage.removeItem('letter');
         window.localStorage.removeItem('username')
-        router.push('/login');
+        router.push('/login', null, {shallow: true});
     }
 
     useEffect(() => {
@@ -66,7 +66,7 @@ function Sidebar() {
         setActiveTab(window.location.href.split("/")[3]);
         if (!window.localStorage.getItem("username") || !window.localStorage.getItem("letter")) {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token

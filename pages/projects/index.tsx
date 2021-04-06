@@ -14,7 +14,7 @@ function index({ data }) {
     React.useEffect(() => {
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -37,7 +37,10 @@ function index({ data }) {
                             username == undefined ? null : each.participants.includes(username) ? (
                                 <div onClick={(e) => {
                                     e.preventDefault();
-                                    router.push(`/projects/${each._id}`);
+                                    router.push(
+                                        '/projects/[projectId]',
+                                        `/projects/${each._id}`
+                                        );
                                 }} className={styles.eachProject} key={each._id}>
                                     <h3>{each.title}</h3>
                                     <div className={styles.descPart}>
@@ -66,7 +69,7 @@ function index({ data }) {
 }
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`http://ksissuetracker.herokuapp.com/api/getMyProjects`);
+    const res = await fetch(`http://localhost:3000/api/getMyProjects`);
     const data = await res.json();
 
     return {

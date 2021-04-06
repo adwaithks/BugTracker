@@ -25,10 +25,10 @@ function index() {
         const main = async() => {
             const token = window.localStorage.getItem('accessToken');
 
-            const res = await fetch(`http://ksissuetracker.herokuapp.com/api/getAllTickets`)
+            const res = await fetch(`http://localhost:3000/api/getAllTickets`)
             const data = await res.json();
 
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -86,7 +86,10 @@ function index() {
                         data.map((each, id) => (
                             me.in_projects == undefined ? null : me.in_projects.includes(each.projectId) ? (
                         <div onClick={() => {
-                                router.push(`/projects/${each.projectId}/ticket/${each._id}`)
+                                router.push(
+                                    '/projects/[projectId]/ticket/[ticketId]',
+                                    `/projects/${each.projectId}/ticket/${each._id}`
+                                    )
                             }} key={id} className={styles.eachTicket}>
                                 <div className={styles.ticketListUpper}>
                                     <div className={styles.ticketHeading}>

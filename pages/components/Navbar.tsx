@@ -62,12 +62,12 @@ function Navbar() {
                     {
                     burgerIcon ? (
                     <div className={styles.burgerIconOptions}>
-                        <h4 onClick={() =>{router.push('/dashboard')}}>Dashboard</h4>
-                        <h4 onClick={() =>{router.push('/alltickets')}}>All Tickets</h4>
-                        <h4 onClick={() => {router.push('/projects')}}>My Projects</h4>
+                        <h4 onClick={() =>{router.push('/dashboard', null, {shallow: true})}}>Dashboard</h4>
+                        <h4 onClick={() =>{router.push('/alltickets', null, {shallow: true})}}>All Tickets</h4>
+                        <h4 onClick={() => {router.push('/projects', null, {shallow: true})}}>My Projects</h4>
                         <h4 onClick={() => {
                             window.localStorage.removeItem('accessToken');
-                            router.push('/login');
+                            router.push('/login', null, {shallow: true});
                             }}>Logout</h4>
                     </div>
                 

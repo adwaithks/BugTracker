@@ -72,20 +72,20 @@ const index = ({data}) => {
       
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
                 }
             });
             if (response.status !== 200) {
-                router.push('/login');
+                router.push('/login', null, {shallow: true});
             }
             
             const res = await response.json();
             setMe(res);
 
-            const res2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getAnalytics`, {
+            const res2 = await fetch(`http://localhost:3000/api/getAnalytics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -93,7 +93,6 @@ const index = ({data}) => {
                 })
             });
             const response2 = await res2.json();
-            console.log(res)
             setAnalytics(response2);                 
             setUsername(res.username);
             setChipData([res.username])
@@ -143,7 +142,7 @@ const index = ({data}) => {
         }
 
         setIsOpen(false);
-        await fetch(`http://ksissuetracker.herokuapp.com/api/createNewProject`, {
+        await fetch(`http://localhost:3000/api/createNewProject`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -152,7 +151,10 @@ const index = ({data}) => {
         })
             .then(res => res.json())
             .then(data => {
-                router.push(`/projects/${data._id}`)
+                router.push(
+                    '/projects/[projectId]',
+                    `/projects/${data._id}`
+                    )
             })
             .catch(err => {
                 console.log(err);
@@ -172,12 +174,12 @@ const index = ({data}) => {
                     {
                         (burgerIcon) ? (
                     <div className={styles.burgerIconOptions}>
-                        <h4 onClick={() =>{router.push('/dashboard')}}>Dashboard</h4>
-                        <h4 onClick={() =>{router.push('/alltickets')}}>All Tickets</h4>
-                        <h4 onClick={() => {router.push('/projects')}}>My Projects</h4>
+                        <h4 onClick={() =>{router.push('/dashboard', null, {shallow: true})}}>Dashboard</h4>
+                        <h4 onClick={() =>{router.push('/alltickets', null, {shallow: true})}}>All Tickets</h4>
+                        <h4 onClick={() => {router.push('/projects', null, {shallow: true})}}>My Projects</h4>
                         <h4 onClick={() => {
                             window.localStorage.removeItem('accessToken');
-                            router.push('/login');
+                            router.push('/login', null, {shallow: true});
                             }}>Logout</h4>
                     </div>
                         ) : null
@@ -393,7 +395,7 @@ const index = ({data}) => {
                         data.map((each, id) => (
                             me.in_projects == undefined ? null : me.in_projects.includes(each.projectId) ? (
 <div onClick={() => {
-                                router.push(`/projects/${each.projectId}/ticket/${each._id}`)
+                                router.push(`/projects/${each.projectId}/ticket/${each._id}`, null, {shallow: true})
                             }} key={id} className={styles.eachTicket}>
                                 <div className={styles.ticketListUpper}>
                                     <div className={styles.ticketHeading}>
@@ -452,7 +454,7 @@ const index = ({data}) => {
 
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`http://ksissuetracker.herokuapp.com/api/latestTickets`, {
+    const res = await fetch(`http://localhost:3000/api/latestTickets`, {
         method: 'GET'
     });
     const response = await res.json();
