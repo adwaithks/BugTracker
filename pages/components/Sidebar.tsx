@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styles from './Sidebar.module.scss';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -6,13 +6,22 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import { useRouter } from 'next/router'
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import {UserContext} from '../../context/UserContext';
+import {OtherContext} from '../../context/OtherContext';
 
 function Sidebar() {
-    const [activeTab, setActiveTab] = useState('');
-    const [expanded, setExpanded] = useState(true);
-    const [username, setUsername] = React.useState('');
-    const [letter, setLetter] = React.useState('')
-    const [sidebarVisibility, setSidebarVisibility] = React.useState(true);
+
+    const {username, setUsername, letter, setLetter} = useContext(UserContext);
+    const {
+        activeTab, setActiveTab,
+        expanded, setExpanded,
+        sidebarVisibility, setSidebarVisibility
+    } = useContext(OtherContext);
+
+
+    //const [activeTab, setActiveTab] = useState('');
+    //const [expanded, setExpanded] = useState(true);
+    //const [sidebarVisibility, setSidebarVisibility] = React.useState(true);
 
     const router = useRouter();
     const pageRoute = (page) => {
@@ -57,7 +66,7 @@ function Sidebar() {
         setActiveTab(window.location.href.split("/")[3]);
         if (!window.localStorage.getItem("username") || !window.localStorage.getItem("letter")) {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -80,13 +89,10 @@ function Sidebar() {
     }, []);
 
     return (
-
-
-
         (expanded === true && sidebarVisibility === true) ? (
             <div className={styles.sidebar} >
                 <div className={styles.expandBtnContainer}>
-                    <div className={styles.expandBtn}>
+                    {/*<div className={styles.expandBtn}>
                         {
                             expanded ? (
                                 <ArrowBackIcon onClick={() => {
@@ -98,7 +104,7 @@ function Sidebar() {
                                 }} />
                             )
                         }
-                    </div>
+                    </div>*/}
                 </div>
                 <div className={styles.userGreet}>
                     <div className={styles.avatar}>
@@ -114,7 +120,7 @@ function Sidebar() {
                                 <h3>Dashboard</h3>
                             </div>
                         ) : (
-                            <div className={styles.dashboard} onClick={(e) => {
+                            <div className={styles.dashboardExp} onClick={(e) => {
                                 e.preventDefault();
                                 pageRoute('dashboard')
                             }}>
@@ -130,7 +136,7 @@ function Sidebar() {
                                 <h3>All Tickets</h3>
                             </div>
                         ) : (
-                            <div className={styles.alltickets} onClick={(e) => {
+                            <div className={styles.allticketsExp} onClick={(e) => {
                                 e.preventDefault();
                                 pageRoute('alltickets')
                             }}>
@@ -146,7 +152,7 @@ function Sidebar() {
                                 <h3>My Projects</h3>
                             </div>
                         ) : (
-                            <div className={styles.assignments} onClick={(e) => {
+                            <div className={styles.projectsExp} onClick={(e) => {
                                 e.preventDefault();
                                 pageRoute('projects')
                             }}>
@@ -172,7 +178,7 @@ function Sidebar() {
                         `}
                 </style>
                 <div className={styles.expandBtnContainer}>
-                    <div className={styles.expandBtn}>
+                   {/*} <div className={styles.expandBtn}>
                         {
                             expanded ? (
                                 <ArrowBackIcon onClick={() => {
@@ -184,13 +190,14 @@ function Sidebar() {
                                 }} />
                             )
                         }
-                    </div>
+                    </div>*/}
                 </div>
                 <div className={styles.closedNavBtnGroup}>
                     {
                         activeTab == 'dashboard' ? (
                             <div className={styles.closedNavActive}>
                                 <DashboardIcon className={styles.closedNavIcon} />
+                                <h4>Dashboard</h4>
                             </div>
                         ) : (
                             <div className={styles.dashboard} onClick={(e) => {
@@ -198,6 +205,7 @@ function Sidebar() {
                                 pageRoute('dashboard')
                             }}>
                                 <DashboardIcon className={styles.closedNavIcon} />
+                                <h4>Dashboard</h4>
                             </div>
                         )
                     }
@@ -205,13 +213,17 @@ function Sidebar() {
                         activeTab == 'alltickets' ? (
                             <div className={styles.closedNavActive}>
                                 <ConfirmationNumberIcon className={styles.closedNavIcon} />
+                                <h4>All Tickets</h4>
+
                             </div>
                         ) : (
-                            <div className={styles.alltickets} onClick={(e) => {
+                            <div className={styles.dashboard} onClick={(e) => {
                                 e.preventDefault();
                                 pageRoute('alltickets')
                             }}>
                                 <ConfirmationNumberIcon className={styles.closedNavIcon} />
+                                <h4>All Tickets</h4>
+
                             </div>
                         )
                     }
@@ -219,21 +231,22 @@ function Sidebar() {
                         activeTab == 'projects' ? (
                             <div className={styles.closedNavActive}>
                                 <DescriptionIcon className={styles.closedNavIcon} />
+                                <h4>Projects</h4>
+
                             </div>
                         ) : (
-                            <div className={styles.alltickets} onClick={(e) => {
+                            <div className={styles.dashboard} onClick={(e) => {
                                 e.preventDefault();
                                 pageRoute('projects')
                             }}>
                                 <DescriptionIcon className={styles.closedNavIcon} />
+                                <h4>Projects</h4>
                             </div>
                         )
                     }
                 </div>
             </div>
         ) : null
-
-
     )
 }
 

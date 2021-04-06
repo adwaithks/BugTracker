@@ -6,7 +6,8 @@ import styles from './LayoutFrame.module.scss';
 
 function LayoutFrame(props) {
 
-    const [dashboard, setDashboard] = React.useState('')
+    const [dashboard, setDashboard] = React.useState('');
+
 
     React.useEffect(() => {
         setDashboard(window.location.href.split('/')[3]);

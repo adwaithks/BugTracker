@@ -7,7 +7,9 @@ export default async(req, res) => {
     const id = mongoose.Types.ObjectId(req.body.id);
     const tickets = await Ticket.find({
         projectId: id
-    });
+    }).sort({
+        created_at: -1,
+      });
     res.json(tickets)
 
 }

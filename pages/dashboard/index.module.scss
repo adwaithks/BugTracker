@@ -23,8 +23,6 @@
     margin-top: 20px;
     background-color: rgb(42, 42, 42);
     display: flex;
-    position: sticky;
-    z-index: 900;
     top: 0;
     border-radius: 5px;
     justify-content: space-between;
@@ -256,6 +254,8 @@
 .newProjectModal {
     width: 50%;
     margin-left: auto;
+    position: sticky;
+    z-index: 1200;
     margin-top: 150px;
     background-color: rgb(22, 22, 22);
     margin-right: auto;
