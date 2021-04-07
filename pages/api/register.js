@@ -11,10 +11,10 @@ export default async(req, res) => {
         success: 'Username already exists'
     });
 
-    const user = await User.findOne({
+    const useremail = await User.findOne({
         email: req.body.email
     });
-    if (user) return  res.status(503).json({
+    if (useremail) return  res.status(503).json({
         success: 'Email already exists'
     });
 
