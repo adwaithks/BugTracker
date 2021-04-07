@@ -10,6 +10,10 @@ export default async(req, res) => {
         _id: id
     });
 
+    if (project.author.toLowerCase() != req.body.me.toLowerCase()) {
+        return res.status(403).json({message: 'You are not allowed to add participants'})
+    }
+
     project.participants.pull(req.body.removed);
     const user = await User.findOne({
         username: req.body.removed

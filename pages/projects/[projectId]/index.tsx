@@ -41,7 +41,7 @@ function index({ data, participants, tickets, projectId }) {
     React.useEffect(() => {
         const main = async() => {
             const token = window.localStorage.getItem('accessToken');
-            const response3 = await fetch(`http://localhost:3000/api/me`, {
+            const response3 = await fetch(`http://issuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -52,7 +52,7 @@ function index({ data, participants, tickets, projectId }) {
             setChipData(participants);
             setMe(res);
 
-            const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
+            const response2 = await fetch(`http://issuetracker.herokuapp.com/api/getUsers`, {
                 method: 'POST',
                 headers: {
                     'accessToken': token
@@ -107,37 +107,28 @@ function index({ data, participants, tickets, projectId }) {
 
      const editParticipants = async () => {
         setAddParticipantModal(false);
-        /**const bodyData = {
-            id: projectId,
-            participants: chipData
-        }
-        console.log(bodyData);
-        
-        const res = await fetch('http://localhost:3000/api/editParticipants', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bodyData)
-
-        });**/
-
         refreshData();
     }
 
    const addParticipant = async (particName) => {
         const bodyData = {
             name: particName,
-            projectId: projectId
+            projectId: projectId,
+            me: me.username
         }
 
-        const res = await fetch(`http://localhost:3000/api/addParticipant`, {
+        const res = await fetch(`http://issuetracker.herokuapp.com/api/addParticipant`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bodyData)
         });
+        const resjson = await res.json();
+        console.log(resjson.status)
+            if (res.status === 403) {
+                window.alert(resjson.message)
+            }
     }
 
     const handleDelete = async (deleteName: any) => {      
@@ -147,10 +138,11 @@ function index({ data, participants, tickets, projectId }) {
             }));
             const bodyData = {
                 projectId: projectId,
-                removed: deleteName
+                removed: deleteName,
+                me: me.username
             }
     
-            const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
+            const res = await fetch(`http://issuetracker.herokuapp.com/api/removeParticipant`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -158,6 +150,10 @@ function index({ data, participants, tickets, projectId }) {
                 body: JSON.stringify(bodyData)
     
             });
+            const resjson = await res.json();
+            if (resjson.status === 403) {
+                alert(resjson.message)
+            }
             
         } else {
             console.log('not removable')
@@ -178,14 +174,13 @@ function index({ data, participants, tickets, projectId }) {
         }
 
         
-        const res = await fetch(`http://localhost:3000/api/createNewTicket`, {
+        const res = await fetch(`http://issuetracker.herokuapp.com/api/createNewTicket`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bodyData)
         });
-        const finalData = await res.json();
         setIsOpen(false);
         refreshData();
     }
@@ -209,10 +204,9 @@ function index({ data, participants, tickets, projectId }) {
                 </div>
                 <div className={styles.projectDetailsContainer}>
                     <div className={styles.projectHead}>
+                        <h5>#{data._id}</h5>
                         <h1>{data.title}</h1>
-                    </div>
-                    <div className={styles.projectDesc}>
-                        <Markdown>{data.description}</Markdown>
+                        <h4>Created By {data.author}</h4>
                     </div>
                     <div className={styles.projectParts}>
                         <h4>Participants:</h4>
@@ -223,6 +217,9 @@ function index({ data, participants, tickets, projectId }) {
                                 </div>
                             ))
                         }
+                    </div>
+                    <div className={styles.projectDesc}>
+                        <Markdown>{data.description}</Markdown>
                     </div>
                 </div>
                 <Modal
@@ -625,7 +622,7 @@ function index({ data, participants, tickets, projectId }) {
 
 export async function getServerSideProps(context) {
     const projectId = context.req.__NEXT_INIT_QUERY.projectId ? context.req.__NEXT_INIT_QUERY.projectId : context.req.url.split('/')[2];
-    const response = await fetch(`http://localhost:3000/api/getProject`, {
+    const response = await fetch(`http://issuetracker.herokuapp.com/api/getProject`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -638,7 +635,7 @@ export async function getServerSideProps(context) {
     const data = await response.json();
     const participants = data.participants;
 
-    const response2 = await fetch(`http://localhost:3000/api/getProjectTickets`, {
+    const response2 = await fetch(`http://issuetracker.herokuapp.com/api/getProjectTickets`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

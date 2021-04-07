@@ -9,6 +9,9 @@ export default async(req, res) => {
     const project = await Project.findOne({
         _id: id
     });
+    if (project.author.toLowerCase() != req.body.me.toLowerCase()) {
+        return res.status(403).json({message: 'You are not allowed to add participants'})
+    }
 
     if (!project.participants.includes(req.body.name)) {
        project.participants.push(req.body.name);

@@ -26,7 +26,7 @@ function LayoutFrame(props) {
                         font-family: 'Karla';
                     }
                     html { 
-                        background-color: rgb(41, 41, 41);
+                        background-color: #f0f5ef;
                     }
                 `}
                 </style>

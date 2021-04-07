@@ -25,10 +25,10 @@ function index() {
         const main = async() => {
             const token = window.localStorage.getItem('accessToken');
 
-            const res = await fetch(`http://localhost:3000/api/getAllTickets`)
+            const res = await fetch(`http://issuetracker.herokuapp.com/api/getAllTickets`)
             const data = await res.json();
 
-            const response = await fetch(`http://localhost:3000/api/me`, {
+            const response = await fetch(`http://issuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
