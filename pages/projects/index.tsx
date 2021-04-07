@@ -14,7 +14,7 @@ function index({ data }) {
     React.useEffect(() => {
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://issuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -69,7 +69,7 @@ function index({ data }) {
 }
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`http://issuetracker.herokuapp.com/api/getMyProjects`);
+    const res = await fetch(`http://ksissuetracker.herokuapp.com/api/getMyProjects`);
     const data = await res.json();
 
     return {

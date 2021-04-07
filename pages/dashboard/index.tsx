@@ -72,7 +72,7 @@ const index = ({data}) => {
       
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://issuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -85,7 +85,7 @@ const index = ({data}) => {
             const res = await response.json();
             setMe(res);
 
-            const res2 = await fetch(`http://issuetracker.herokuapp.com/api/getAnalytics`, {
+            const res2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getAnalytics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -142,7 +142,7 @@ const index = ({data}) => {
         }
 
         setIsOpen(false);
-        await fetch(`http://issuetracker.herokuapp.com/api/createNewProject`, {
+        await fetch(`http://ksissuetracker.herokuapp.com/api/createNewProject`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -454,7 +454,7 @@ const index = ({data}) => {
 
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`http://issuetracker.herokuapp.com/api/latestTickets`, {
+    const res = await fetch(`http://ksissuetracker.herokuapp.com/api/latestTickets`, {
         method: 'GET'
     });
     const response = await res.json();
