@@ -31,7 +31,7 @@ export default async(req, res) => {
     
 
     await project.save().then(doc => {
-        res.json(doc);
+        res.status(200).json(doc);
     }).catch(err => {
         console.log('projects.save() err');
     });

@@ -11,6 +11,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CloseIcon from '@material-ui/icons/Close';
 import Markdown from 'markdown-to-jsx';
 import SyncLoader from "react-spinners/SyncLoader";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function index({ data }) {
 
@@ -29,6 +31,27 @@ function index({ data }) {
     const [reportCloseModal, setReportCloseModal] = React.useState(false);
     const [reportSelectionModal, setReportSelectionModal] = React.useState(false);
 
+
+    const notifySuccess = (message) => toast.success(message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+
+    const notifyError = (message) => toast.error(message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+
     const addLabel = (event: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpen(!modalIsOpen);
     };
@@ -37,7 +60,7 @@ function index({ data }) {
         setisLoading(true)
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -45,7 +68,7 @@ function index({ data }) {
             });
             const res = await response.json();
             setUsername(res.username);
-            setisLoading(false)
+            setisLoading(false);
         }
         main();
     }, []);
@@ -77,7 +100,7 @@ function index({ data }) {
     const setCurrentState = async () => {
         if (temp !== 'closed') {
         
-            await fetch(`http://ksissuetracker.herokuapp.com/api/reportCurrentState`, {
+            await fetch(`http://localhost:3000/api/reportCurrentState`, {
                 method: 'POST',
                 headers: {
                     'Content-Type':'application/json'
@@ -89,6 +112,7 @@ function index({ data }) {
                 })
             });
             refreshData();
+            notifySuccess('New ticket state ' + temp + ' !');
         } else {
             closeTicket();
         }
@@ -116,7 +140,7 @@ function index({ data }) {
             prevState: selectValue
         }        
         
-        await fetch(`http://ksissuetracker.herokuapp.com/api/closeTicket`, {
+        await fetch(`http://localhost:3000/api/closeTicket`, {
             method: 'POST',
             body: JSON.stringify(bodyData),
             headers: {
@@ -131,13 +155,14 @@ function index({ data }) {
             action: 2
         }
 
-        await fetch(`http://ksissuetracker.herokuapp.com/api/submitReply`, {
+        await fetch(`http://localhost:3000/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
+        notifyError('Ticket successfully closed !');
         refreshData();
 
     }
@@ -163,20 +188,21 @@ function index({ data }) {
             reply: `${username} added label ` + tempString,
             tagData: chipData,
         }
-        await fetch(`http://ksissuetracker.herokuapp.com/api/setLabels`, {
+        await fetch(`http://localhost:3000/api/setLabels`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bodyData)
         });
-        await fetch(`http://ksissuetracker.herokuapp.com/api/submitReply`, {
+        await fetch(`http://localhost:3000/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data2)
-        })
+        });
+        notifySuccess('Added new label(s) !');
         setIsOpen(false);
         setChipDatatemp([]);
         refreshData();
@@ -200,7 +226,7 @@ function index({ data }) {
             id: id
         }
 
-        await fetch(`http://ksissuetracker.herokuapp.com/api/submitReply`, {
+        await fetch(`http://localhost:3000/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -492,13 +518,24 @@ function index({ data }) {
 
                 </div>
             </div>
+            <ToastContainer
+                position="bottom-center"
+                autoClose={2000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </LayoutFrame>
     )
 }
 
 export async function getServerSideProps(context) {
     const ticketId = context.req.__NEXT_INIT_QUERY.ticketId ? context.req.__NEXT_INIT_QUERY.ticketId : context.req.url.split('/')[4];
-    const response = await fetch(`http://ksissuetracker.herokuapp.com/api/getTicket`, {
+    const response = await fetch(`http://localhost:3000/api/getTicket`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

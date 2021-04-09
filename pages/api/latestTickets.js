@@ -9,6 +9,5 @@ export default async(req, res) => {
     })
     .limit(10);
 
-    return res.json(tickets);
-
+    res.json(tickets);
 }

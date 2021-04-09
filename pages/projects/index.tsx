@@ -18,7 +18,7 @@ function index({ data }) {
         setisLoading(true)
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -88,7 +88,7 @@ function index({ data }) {
 }
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`http://ksissuetracker.herokuapp.com/api/getMyProjects`);
+    const res = await fetch(`http://localhost:3000/api/getMyProjects`);
     const data = await res.json();
 
     return {

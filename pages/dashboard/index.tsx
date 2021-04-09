@@ -8,11 +8,30 @@ import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import {UserContext} from '../../context/UserContext';
 import SyncLoader from "react-spinners/SyncLoader";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const index = ({data}) => {
 
+    const notifySuccess = (message) => toast.success(message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
 
+    const notifyError = (message) => toast.error(message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
     const {username, setUsername, letter, setLetter} = useContext(UserContext);
 
     interface analyticsInterface {
@@ -76,7 +95,7 @@ const index = ({data}) => {
       
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -89,7 +108,7 @@ const index = ({data}) => {
             const res = await response.json();
             setMe(res);
 
-            const res2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getAnalytics`, {
+            const res2 = await fetch(`http://localhost:3000/api/getAnalytics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -147,7 +166,7 @@ const index = ({data}) => {
         }
 
         setIsOpen(false);
-        await fetch(`http://ksissuetracker.herokuapp.com/api/createNewProject`, {
+        await fetch(`http://localhost:3000/api/createNewProject`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -156,11 +175,12 @@ const index = ({data}) => {
         })
             .then(res => res.json())
             .then(data => {
-                setisLoading(true)
+                notifySuccess('New Project created !')
+                setisLoading(true);
                 router.push(
                     '/projects/[projectId]',
                     `/projects/${data._id}`
-                    )
+                    );
             })
             .catch(err => {
                 console.log(err);
@@ -467,17 +487,27 @@ const index = ({data}) => {
                 </div>
                 
                 </div>
-                </LayoutFrame>
+                <ToastContainer
+                position="bottom-center"
+                autoClose={2000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+        </LayoutFrame>
     )
 }
 
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`http://ksissuetracker.herokuapp.com/api/latestTickets`, {
+    const res = await fetch(`http://localhost:3000/api/latestTickets`, {
         method: 'GET'
     });
     const response = await res.json();
-
     
     return { 
         props: {

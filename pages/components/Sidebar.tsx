@@ -70,6 +70,9 @@ function Sidebar() {
                     'accessToken': token
                 }
             });
+            if (response.status !== 200) {
+                router.push('/login');
+            }
             const res = await response.json();
             window.localStorage.setItem("username", res.username);
             window.localStorage.setItem("letter", res.username[0].toUpperCase());
@@ -99,7 +102,7 @@ function Sidebar() {
                         background-color: rgba(42, 42, 42, 0.8)
                     }
                     `
-            } />
+                } />
                 <div className={styles.expandBtnContainer}>
                     {/*<div className={styles.expandBtn}>
                         {
@@ -252,7 +255,7 @@ function Sidebar() {
                             <div className={styles.dashboard} onClick={(e) => {
                                 setisLoading(true)
                                 e.preventDefault();
-                                pageRoute('projects')
+                                pageRoute('projects');
                             }}>
                                 <DescriptionIcon className={styles.closedNavIcon} />
                                 <h4>Projects</h4>

@@ -7,9 +7,45 @@ import GroupIcon from '@material-ui/icons/Group';
 import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
 import CloseIcon from '@material-ui/icons/Close';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import SyncLoader from "react-spinners/SyncLoader";
 
-function index({ data, participants, tickets, projectId }) {
+function index({ data, participants, tickets, projectId, openTickets, closedTickets }) {
+    
+    
+    const searchHandler = (e) => {      
+        if (ticketCatActive == 'open') {
+            setOpenTickets(tempopenTicketsState.filter(function(each) {
+                return each.title.toLowerCase().match(e.toLowerCase());
+            }));
+        } else {
+            setClosedTickets(tempclosedTicketsState.filter(function(each) {
+                return each.title.toLowerCase().match(e.toLowerCase());
+            }));
+        }
+    }
+
+    const notifySuccess = (message) => toast.success(message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+
+    const notifyError = (message) => toast.error(message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+
 
     interface meInterface {
         created_at?: string,
@@ -25,6 +61,10 @@ function index({ data, participants, tickets, projectId }) {
         _id?: string
     }
 
+    const [openTicketsState, setOpenTickets] = React.useState(openTickets);
+    const [closedTicketsState, setClosedTickets] = React.useState(closedTickets);
+    const [tempopenTicketsState, tempsetOpenTickets] = React.useState(openTickets);
+    const [tempclosedTicketsState, tempsetClosedTickets] = React.useState(closedTickets);
     const [isLoading, setisLoading] = React.useState(false);
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -44,7 +84,7 @@ function index({ data, participants, tickets, projectId }) {
         const main = async() => {
             setisLoading(true)
             const token = window.localStorage.getItem('accessToken');
-            const response3 = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response3 = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -55,7 +95,7 @@ function index({ data, participants, tickets, projectId }) {
             setChipData(participants);
             setMe(res);
 
-            const response2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getUsers`, {
+            const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
                 method: 'POST',
                 headers: {
                     'accessToken': token
@@ -116,7 +156,7 @@ function index({ data, participants, tickets, projectId }) {
         }
         console.log(bodyData);
         
-        const res = await fetch('http://ksissuetracker.herokuapp.com/api/editParticipants', {
+        const res = await fetch('http://localhost:3000/api/editParticipants', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -135,7 +175,7 @@ function index({ data, participants, tickets, projectId }) {
             me: me.username
         }
 
-        const res = await fetch(`http://ksissuetracker.herokuapp.com/api/addParticipant`, {
+        const res = await fetch(`http://localhost:3000/api/addParticipant`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -143,9 +183,11 @@ function index({ data, participants, tickets, projectId }) {
             body: JSON.stringify(bodyData)
         });
         const resjson = await res.json();
-            if (res.status === 403) {
-                window.alert(resjson.message)
-            }
+        if (res.status !== 200) {
+            notifyError('Unexpected error Occured !');
+        } else {
+            notifySuccess(particName + ' was added to the project !');
+        }
     }
 
     const handleDelete = async (deleteName: any) => {      
@@ -159,7 +201,7 @@ function index({ data, participants, tickets, projectId }) {
                 me: me.username
             }
     
-            const res = await fetch(`http://ksissuetracker.herokuapp.com/api/removeParticipant`, {
+            const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -168,12 +210,14 @@ function index({ data, participants, tickets, projectId }) {
     
             });
             const resjson = await res.json();
-            if (resjson.status === 403) {
-                alert(resjson.message)
+            if (res.status != 200) {
+                notifyError(resjson.message)
+            }else {
+                notifyError(deleteName + ' was removed !')
             }
             
         } else {
-            console.log('not removable')
+            notifyError(deleteName + ' was not removed !')
             return;
         }
 
@@ -191,13 +235,15 @@ function index({ data, participants, tickets, projectId }) {
         }
 
         
-        const res = await fetch(`http://ksissuetracker.herokuapp.com/api/createNewTicket`, {
+        const res = await fetch(`http://localhost:3000/api/createNewTicket`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bodyData)
         });
+        notifySuccess('New ticket created !');
+
         setIsOpen(false);
         refreshData();
     }
@@ -219,6 +265,7 @@ function index({ data, participants, tickets, projectId }) {
                         }}>Add Participants</button>
                     </div>
                 </div>
+
                 <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
                     `position: absolute;
                     top: 50%;
@@ -250,6 +297,11 @@ function index({ data, participants, tickets, projectId }) {
                     <div className={styles.projectDesc}>
                         <Markdown>{data.description}</Markdown>
                     </div>
+                </div>
+                <div className={styles.searchContainer}>
+                    <input placeholder="Search" type="text" onChange={(e) => {
+                        searchHandler(e.target.value);
+                    }} />
                 </div>
                 <Modal
                     className={styles.editParticipantModal}
@@ -501,7 +553,7 @@ function index({ data, participants, tickets, projectId }) {
                             ticketCatActive === 'open' ? (
                                 <div className={styles.ticketList}>
                                     {
-                                        tickets.map((each: any, id: number) => (
+                                        openTicketsState.map((each: any, id: number) => (
                                             each.currentStatus != 'closed' ? (
                                                 <div onClick={() => {
                                                     setisLoading(true)
@@ -563,7 +615,7 @@ function index({ data, participants, tickets, projectId }) {
                             ) : ticketCatActive === 'closed' ? (
                                 <div className={styles.ticketList}>
                                     {
-                                        tickets.map((each: any, id: number) => (
+                                        closedTicketsState.map((each: any, id: number) => (
                                             each.currentStatus == 'closed' ? (
                                                 <div onClick={() => {
                                                     router.push(
@@ -647,13 +699,27 @@ function index({ data, participants, tickets, projectId }) {
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="bottom-center"
+                autoClose={2000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </LayoutFrame>
     )
 }
 
 export async function getServerSideProps(context) {
+
+    var closedTickets = [];
+    var openTickets = [];
     const projectId = context.req.__NEXT_INIT_QUERY.projectId ? context.req.__NEXT_INIT_QUERY.projectId : context.req.url.split('/')[2];
-    const response = await fetch(`http://ksissuetracker.herokuapp.com/api/getProject`, {
+    const response = await fetch(`http://localhost:3000/api/getProject`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -666,7 +732,7 @@ export async function getServerSideProps(context) {
     const data = await response.json();
     const participants = data.participants;
 
-    const response2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getProjectTickets`, {
+    const response2 = await fetch(`http://localhost:3000/api/getProjectTickets`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -677,9 +743,14 @@ export async function getServerSideProps(context) {
     });
 
     const data2 = await response2.json();
+    data2.map(eachTicket => {
+        if (eachTicket.currentStatus === 'closed') {
+            closedTickets.push(eachTicket)
+        }else {
+            openTickets.push(eachTicket)
+        }
+    });
 
-    
-    
 
     return {
         props: {
@@ -687,6 +758,8 @@ export async function getServerSideProps(context) {
             participants: participants,
             tickets: data2,
             projectId: projectId,
+            openTickets: openTickets,
+            closedTickets: closedTickets
         }
     }
 }
