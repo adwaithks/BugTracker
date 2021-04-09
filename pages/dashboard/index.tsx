@@ -7,8 +7,11 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import {UserContext} from '../../context/UserContext';
+import SyncLoader from "react-spinners/SyncLoader";
+
 
 const index = ({data}) => {
+
 
     const {username, setUsername, letter, setLetter} = useContext(UserContext);
 
@@ -38,7 +41,7 @@ const index = ({data}) => {
         _id?: string
     }
 
-
+    const [isLoading, setisLoading] = React.useState(false);
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [editorContent, setEditorContent] = React.useState('');
     const [projectTitle, setProjectTitle] = React.useState('');
@@ -51,6 +54,7 @@ const index = ({data}) => {
     const router = useRouter();
     
     React.useEffect(() => {
+        setisLoading(true);
 
     if (window.innerWidth > 1101) {
         setBurgerIconVisibility(false)
@@ -72,7 +76,7 @@ const index = ({data}) => {
       
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -85,7 +89,7 @@ const index = ({data}) => {
             const res = await response.json();
             setMe(res);
 
-            const res2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getAnalytics`, {
+            const res2 = await fetch(`http://localhost:3000/api/getAnalytics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -95,7 +99,8 @@ const index = ({data}) => {
             const response2 = await res2.json();
             setAnalytics(response2);                 
             setUsername(res.username);
-            setChipData([res.username])
+            setChipData([res.username]);
+            setisLoading(false);
         }
         main();
 
@@ -142,7 +147,7 @@ const index = ({data}) => {
         }
 
         setIsOpen(false);
-        await fetch(`http://ksissuetracker.herokuapp.com/api/createNewProject`, {
+        await fetch(`http://localhost:3000/api/createNewProject`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -195,6 +200,18 @@ const index = ({data}) => {
                     }}>Create A New Project</button>
                 </div>
             </div>
+            <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
+                    `position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, 50%);
+                    z-index: 9000;
+                    .dashboard {
+                        background-color: rgba(42, 42, 42, 0.8)
+                    }
+                    `
+            } />
+
             <Modal
                 className={styles.newProjectModal}
                 isOpen={modalIsOpen}
@@ -454,7 +471,7 @@ const index = ({data}) => {
 
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`http://ksissuetracker.herokuapp.com/api/latestTickets`, {
+    const res = await fetch(`http://localhost:3000/api/latestTickets`, {
         method: 'GET'
     });
     const response = await res.json();

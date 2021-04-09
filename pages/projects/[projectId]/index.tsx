@@ -41,7 +41,7 @@ function index({ data, participants, tickets, projectId }) {
     React.useEffect(() => {
         const main = async() => {
             const token = window.localStorage.getItem('accessToken');
-            const response3 = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response3 = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -52,7 +52,7 @@ function index({ data, participants, tickets, projectId }) {
             setChipData(participants);
             setMe(res);
 
-            const response2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getUsers`, {
+            const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
                 method: 'POST',
                 headers: {
                     'accessToken': token
@@ -107,6 +107,21 @@ function index({ data, participants, tickets, projectId }) {
 
      const editParticipants = async () => {
         setAddParticipantModal(false);
+        /**const bodyData = {
+            id: projectId,
+            participants: chipData
+        }
+        console.log(bodyData);
+        
+        const res = await fetch('http://localhost:3000/api/editParticipants', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyData)
+
+        });**/
+
         refreshData();
     }
 
@@ -117,7 +132,7 @@ function index({ data, participants, tickets, projectId }) {
             me: me.username
         }
 
-        const res = await fetch(`http://ksissuetracker.herokuapp.com/api/addParticipant`, {
+        const res = await fetch(`http://localhost:3000/api/addParticipant`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -125,7 +140,6 @@ function index({ data, participants, tickets, projectId }) {
             body: JSON.stringify(bodyData)
         });
         const resjson = await res.json();
-        console.log(resjson.status)
             if (res.status === 403) {
                 window.alert(resjson.message)
             }
@@ -142,7 +156,7 @@ function index({ data, participants, tickets, projectId }) {
                 me: me.username
             }
     
-            const res = await fetch(`http://ksissuetracker.herokuapp.com/api/removeParticipant`, {
+            const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -174,7 +188,7 @@ function index({ data, participants, tickets, projectId }) {
         }
 
         
-        const res = await fetch(`http://ksissuetracker.herokuapp.com/api/createNewTicket`, {
+        const res = await fetch(`http://localhost:3000/api/createNewTicket`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -622,7 +636,7 @@ function index({ data, participants, tickets, projectId }) {
 
 export async function getServerSideProps(context) {
     const projectId = context.req.__NEXT_INIT_QUERY.projectId ? context.req.__NEXT_INIT_QUERY.projectId : context.req.url.split('/')[2];
-    const response = await fetch(`http://ksissuetracker.herokuapp.com/api/getProject`, {
+    const response = await fetch(`http://localhost:3000/api/getProject`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -635,7 +649,7 @@ export async function getServerSideProps(context) {
     const data = await response.json();
     const participants = data.participants;
 
-    const response2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getProjectTickets`, {
+    const response2 = await fetch(`http://localhost:3000/api/getProjectTickets`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
