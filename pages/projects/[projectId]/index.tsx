@@ -7,6 +7,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
 import CloseIcon from '@material-ui/icons/Close';
+import SyncLoader from "react-spinners/SyncLoader";
 
 function index({ data, participants, tickets, projectId }) {
 
@@ -24,6 +25,7 @@ function index({ data, participants, tickets, projectId }) {
         _id?: string
     }
 
+    const [isLoading, setisLoading] = React.useState(false);
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [ticketTitle, setTicketTitle] = React.useState('');
@@ -40,8 +42,9 @@ function index({ data, participants, tickets, projectId }) {
 
     React.useEffect(() => {
         const main = async() => {
+            setisLoading(true)
             const token = window.localStorage.getItem('accessToken');
-            const response3 = await fetch(`http://localhost:3000/api/me`, {
+            const response3 = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -52,7 +55,7 @@ function index({ data, participants, tickets, projectId }) {
             setChipData(participants);
             setMe(res);
 
-            const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
+            const response2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getUsers`, {
                 method: 'POST',
                 headers: {
                     'accessToken': token
@@ -63,7 +66,7 @@ function index({ data, participants, tickets, projectId }) {
             });
             const res2 = await response2.json();
             setusernameList(res2);
-            
+            setisLoading(false)
         }
         main();
     }, [modalIsOpen]);
@@ -113,7 +116,7 @@ function index({ data, participants, tickets, projectId }) {
         }
         console.log(bodyData);
         
-        const res = await fetch('http://localhost:3000/api/editParticipants', {
+        const res = await fetch('http://ksissuetracker.herokuapp.com/api/editParticipants', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -132,7 +135,7 @@ function index({ data, participants, tickets, projectId }) {
             me: me.username
         }
 
-        const res = await fetch(`http://localhost:3000/api/addParticipant`, {
+        const res = await fetch(`http://ksissuetracker.herokuapp.com/api/addParticipant`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -156,7 +159,7 @@ function index({ data, participants, tickets, projectId }) {
                 me: me.username
             }
     
-            const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
+            const res = await fetch(`http://ksissuetracker.herokuapp.com/api/removeParticipant`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -188,7 +191,7 @@ function index({ data, participants, tickets, projectId }) {
         }
 
         
-        const res = await fetch(`http://localhost:3000/api/createNewTicket`, {
+        const res = await fetch(`http://ksissuetracker.herokuapp.com/api/createNewTicket`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -216,6 +219,18 @@ function index({ data, participants, tickets, projectId }) {
                         }}>Add Participants</button>
                     </div>
                 </div>
+                <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
+                    `position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, 50%);
+                    z-index: 9000;
+                    .dashboard {
+                        background-color: rgba(42, 42, 42, 0.8)
+                    }
+                    `
+            } />
+            
                 <div className={styles.projectDetailsContainer}>
                     <div className={styles.projectHead}>
                         <h5>#{data._id}</h5>
@@ -489,6 +504,8 @@ function index({ data, participants, tickets, projectId }) {
                                         tickets.map((each: any, id: number) => (
                                             each.currentStatus != 'closed' ? (
                                                 <div onClick={() => {
+                                                    setisLoading(true)
+
                                                     router.push(
                                                         '/projects/[projectId]/ticket/[ticketId]',
                                                         `/projects/${each.projectId}/ticket/${each._id}`
@@ -636,7 +653,7 @@ function index({ data, participants, tickets, projectId }) {
 
 export async function getServerSideProps(context) {
     const projectId = context.req.__NEXT_INIT_QUERY.projectId ? context.req.__NEXT_INIT_QUERY.projectId : context.req.url.split('/')[2];
-    const response = await fetch(`http://localhost:3000/api/getProject`, {
+    const response = await fetch(`http://ksissuetracker.herokuapp.com/api/getProject`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -649,7 +666,7 @@ export async function getServerSideProps(context) {
     const data = await response.json();
     const participants = data.participants;
 
-    const response2 = await fetch(`http://localhost:3000/api/getProjectTickets`, {
+    const response2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getProjectTickets`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

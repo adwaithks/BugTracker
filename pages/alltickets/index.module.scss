@@ -85,7 +85,13 @@
     margin-top: 8px;
     height: 50%;
 }
-
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    z-index: 9000;
+}
 .ticketHeading {
     display: flex;
     width: 100%;

@@ -11,7 +11,7 @@ export default async(req, res) => {
         password: req.body.password
     });
 
-    if (!user) return res.json('User not found!')
+    if (!user) return res.status(403).json({message: 'email/password incorrect'})
 
     const token = jwt.sign({
         userId: user._id,
@@ -26,6 +26,6 @@ export default async(req, res) => {
             }) 
         } 
         else {
-            return res.status(500).json('Internal Server Error');
+            return res.status(500).json({message: 'Internal Server Error'});
         }
     }

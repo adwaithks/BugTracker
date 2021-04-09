@@ -242,7 +242,13 @@
         color: rgb(143, 143, 143);
     }
 }
-
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    z-index: 9000;
+}
 .ticketContent {
     width: 92%;
     background-color: rgba(182, 182, 182, 0.26);

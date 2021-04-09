@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useEffect, useContext } from 'react';
 import styles from './Sidebar.module.scss';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { useRouter } from 'next/router'
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import {UserContext} from '../../context/UserContext';
 import {OtherContext} from '../../context/OtherContext';
+import SyncLoader from "react-spinners/SyncLoader";
 
 function Sidebar() {
 
@@ -19,8 +18,7 @@ function Sidebar() {
     } = useContext(OtherContext);
 
 
-    //const [activeTab, setActiveTab] = useState('');
-    //const [expanded, setExpanded] = useState(true);
+    const [isLoading, setisLoading] = React.useState(false);    //const [expanded, setExpanded] = useState(true);
     //const [sidebarVisibility, setSidebarVisibility] = React.useState(true);
 
     const router = useRouter();
@@ -91,6 +89,17 @@ function Sidebar() {
     return (
         (expanded === true && sidebarVisibility === true) ? (
             <div className={styles.sidebar} >
+                <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
+                    `position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, 50%);
+                    z-index: 9000;
+                    .dashboard {
+                        background-color: rgba(42, 42, 42, 0.8)
+                    }
+                    `
+            } />
                 <div className={styles.expandBtnContainer}>
                     {/*<div className={styles.expandBtn}>
                         {
@@ -121,6 +130,7 @@ function Sidebar() {
                             </div>
                         ) : (
                             <div className={styles.dashboardExp} onClick={(e) => {
+                                setisLoading(true)
                                 e.preventDefault();
                                 pageRoute('dashboard')
                             }}>
@@ -137,6 +147,7 @@ function Sidebar() {
                             </div>
                         ) : (
                             <div className={styles.allticketsExp} onClick={(e) => {
+                                setisLoading(true)
                                 e.preventDefault();
                                 pageRoute('alltickets')
                             }}>
@@ -153,6 +164,7 @@ function Sidebar() {
                             </div>
                         ) : (
                             <div className={styles.projectsExp} onClick={(e) => {
+                                setisLoading(true)
                                 e.preventDefault();
                                 pageRoute('projects')
                             }}>
@@ -201,6 +213,7 @@ function Sidebar() {
                             </div>
                         ) : (
                             <div className={styles.dashboard} onClick={(e) => {
+                                setisLoading(true)
                                 e.preventDefault();
                                 pageRoute('dashboard')
                             }}>
@@ -218,6 +231,7 @@ function Sidebar() {
                             </div>
                         ) : (
                             <div className={styles.dashboard} onClick={(e) => {
+                                setisLoading(true)
                                 e.preventDefault();
                                 pageRoute('alltickets')
                             }}>
@@ -236,6 +250,7 @@ function Sidebar() {
                             </div>
                         ) : (
                             <div className={styles.dashboard} onClick={(e) => {
+                                setisLoading(true)
                                 e.preventDefault();
                                 pageRoute('projects')
                             }}>

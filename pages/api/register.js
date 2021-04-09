@@ -8,14 +8,14 @@ export default async(req, res) => {
         username: req.body.username
     });
     if (user) return  res.status(503).json({
-        success: 'Username already exists'
+        message: 'Username already exists'
     });
 
     const useremail = await User.findOne({
         email: req.body.email
     });
     if (useremail) return  res.status(503).json({
-        success: 'Email already exists'
+        message: 'Email already exists'
     });
 
     const new_user = new User({
@@ -26,7 +26,7 @@ export default async(req, res) => {
 
     await new_user.save().then(doc => {
         res.status(200).json({
-            success: 'Registration Successfull'
+            message: 'Registration Successfull'
         })
     }).catch(err => {
         console.log('Register Error');

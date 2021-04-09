@@ -10,11 +10,12 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CloseIcon from '@material-ui/icons/Close';
 import Markdown from 'markdown-to-jsx';
+import SyncLoader from "react-spinners/SyncLoader";
 
 function index({ data }) {
 
     const {username, setUsername} = useContext(UserContext); 
-
+    const [isLoading, setisLoading] = React.useState(false);
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [chipData, setChipData] = React.useState(data.tags);
@@ -33,9 +34,10 @@ function index({ data }) {
     };
 
     React.useEffect(() => {
+        setisLoading(true)
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://localhost:3000/api/me`, {
+            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -43,6 +45,7 @@ function index({ data }) {
             });
             const res = await response.json();
             setUsername(res.username);
+            setisLoading(false)
         }
         main();
     }, []);
@@ -74,7 +77,7 @@ function index({ data }) {
     const setCurrentState = async () => {
         if (temp !== 'closed') {
         
-            await fetch(`http://localhost:3000/api/reportCurrentState`, {
+            await fetch(`http://ksissuetracker.herokuapp.com/api/reportCurrentState`, {
                 method: 'POST',
                 headers: {
                     'Content-Type':'application/json'
@@ -113,7 +116,7 @@ function index({ data }) {
             prevState: selectValue
         }        
         
-        await fetch(`http://localhost:3000/api/closeTicket`, {
+        await fetch(`http://ksissuetracker.herokuapp.com/api/closeTicket`, {
             method: 'POST',
             body: JSON.stringify(bodyData),
             headers: {
@@ -128,7 +131,7 @@ function index({ data }) {
             action: 2
         }
 
-        await fetch(`http://localhost:3000/api/submitReply`, {
+        await fetch(`http://ksissuetracker.herokuapp.com/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -160,14 +163,14 @@ function index({ data }) {
             reply: `${username} added label ` + tempString,
             tagData: chipData,
         }
-        await fetch(`http://localhost:3000/api/setLabels`, {
+        await fetch(`http://ksissuetracker.herokuapp.com/api/setLabels`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bodyData)
         });
-        await fetch(`http://localhost:3000/api/submitReply`, {
+        await fetch(`http://ksissuetracker.herokuapp.com/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -197,7 +200,7 @@ function index({ data }) {
             id: id
         }
 
-        await fetch(`http://localhost:3000/api/submitReply`, {
+        await fetch(`http://ksissuetracker.herokuapp.com/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -211,14 +214,23 @@ function index({ data }) {
 
     return (
         <LayoutFrame>
+            <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
+                    `position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, 50%);
+                    z-index: 9000;
+                    .dashboard {
+                        background-color: rgba(42, 42, 42, 0.8)
+                    }
+                    `
+            } />
             <div className={styles.headingheader}>
                 <div className={styles.heading}>
                     <h5>#{data._id}</h5>
                     <h2>{data.title}</h2>
                     <h4>Opened on {data.created_at} by {data.author}</h4>
                 </div>
-
-
 
                 <div className={styles.labelsInHead}>
                     <h5 style={{
@@ -486,7 +498,7 @@ function index({ data }) {
 
 export async function getServerSideProps(context) {
     const ticketId = context.req.__NEXT_INIT_QUERY.ticketId ? context.req.__NEXT_INIT_QUERY.ticketId : context.req.url.split('/')[4];
-    const response = await fetch(`http://localhost:3000/api/getTicket`, {
+    const response = await fetch(`http://ksissuetracker.herokuapp.com/api/getTicket`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

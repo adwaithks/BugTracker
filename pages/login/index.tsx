@@ -1,16 +1,24 @@
 import React, {useState} from 'react';
 import { useRouter } from 'next/router';
 import styles from './index.module.scss';
+import SyncLoader from "react-spinners/SyncLoader";
 
 function index() {
 
+    const [isLoading, setisLoading] = useState(false);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     var router = useRouter();
 
+    React.useEffect(() => {
+        if (window.localStorage.getItem('accessToken')) {
+            router.push('/dashboard');
+        }
+    },[]);
+
 
     const login = async () => {
-        const response = await fetch(`http://localhost:3000/api/login`, {
+        const response = await fetch(`http://ksissuetracker.herokuapp.com/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -20,13 +28,16 @@ function index() {
                 password: password,
             })
         });
-
-
         const res = await response.json();
-        const accessToken = res.tokenType + " " + res.accessToken;
-        window.localStorage.setItem('accessToken', accessToken);
-        router.push('/dashboard');
-
+        if (response.status === 403 || response.status === 500) {
+            alert(res.message);
+            setisLoading(false);
+        } else {
+            
+            const accessToken = res.tokenType + " " + res.accessToken;
+            window.localStorage.setItem('accessToken', accessToken);
+            router.push('/dashboard');
+        }
     }
 
     return (
@@ -45,29 +56,45 @@ function index() {
                     }
                 `}
                 </style>
+                <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
+                    `position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, 50%);
+                    z-index: 9000;
+                    .dashboard {
+                        background-color: rgba(42, 42, 42, 0.8)
+                    }
+                    `
+            } />
         <div className={styles.container}>
             <div className={styles.loginhead}>
                     <h1>Sign In</h1>
             </div>
             <div className={styles.emailContainer}>
                 <label htmlFor="">Email</label>
-                <input placeholder="Email" type="email" onChange={(e) => {
+                <input required placeholder="Email" type="email" onChange={(e) => {
                     setEmail(e.target.value)
                 }}/>
             </div>
             <div className={styles.pswdContainer}>
                 <label htmlFor="">Password</label>
-                <input placeholder="Password" type="password" onChange={(e) => {
+                <input required placeholder="Password" type="password" onChange={(e) => {
                     setPassword(e.target.value)
                 }}/>
             </div>
             <div className={styles.buttonContainer}>
                 <button onClick={() => {
-                    login();
+                    if (email && password){
+                        setisLoading(!isLoading)
+                        login()
+                    }else {
+                        alert('One or more required fields incomplete!');
+                    }
                 }}>Login</button>
             </div>   
             <div className={styles.linkContainer}>
-                <a href="/register">Create Account ?</a>
+                <a onClick={() =>{router.push('/register')}}>Create Account? </a>
             </div>           
         </div>
         </div>

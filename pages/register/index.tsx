@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
 import { useRouter } from 'next/router';
 import styles from './index.module.scss';
+import SyncLoader from "react-spinners/SyncLoader";
 
 function index() {
     var router = useRouter();
 
-
+    const [isLoading, setisLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
 
 
     const register = async () => {
-        const response = await fetch(`http://localhost:3000/api/register`, {
+        const response = await fetch(`http://ksissuetracker.herokuapp.com/api/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,17 +26,29 @@ function index() {
         });
         if (response.status === 503) {
             const res = await response.json();
-            alert(res.success);
+            setisLoading(false);
+            alert(res.message);
         }
 
         if (response.status == 200) {
-            router.push('/login')
+            router.push('/login');
         }
         
     }
 
     return (
         <div className={styles.registerPage}>
+            <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
+                    `position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, 50%);
+                    z-index: 9000;
+                    .dashboard {
+                        background-color: rgba(42, 42, 42, 0.8)
+                    }
+                    `
+            } />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
        <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet" />
        <style jsx global>
@@ -62,19 +75,25 @@ function index() {
        </div>
        <div className={styles.emailContainer}>
            <label htmlFor="">Email</label>
-           <input placeholder="Email" type="email" onChange={(e) => {
+           <input required placeholder="Email" type="email" onChange={(e) => {
                setEmail(e.target.value)
            }}/>
        </div>
        <div className={styles.pswdContainer}>
            <label htmlFor="">Password</label>
-           <input placeholder="Password" type="password" onChange={(e) => {
+           <input required placeholder="Password" type="password" onChange={(e) => {
                setPassword(e.target.value)
            }}/>
        </div>
        <div className={styles.buttonContainer}>
            <button onClick={() => {
-               register();
+               if (username && email && password) {
+                setisLoading(true);
+                register();
+               }else {
+                   alert('One or more required fields incomplete!');
+               }
+               
            }}>Register</button>
        </div>   
        <div className={styles.linkContainer}>
