@@ -8,7 +8,7 @@ export default async (req, res) => {
     const project = new Project({
         title: req.body.title,
         description: req.body.description,
-        participants: [req.body.author],
+        participants: [],
         author: req.body.author,
         newTickets: 0,
         triagedTickets: 0,
@@ -18,6 +18,12 @@ export default async (req, res) => {
         resolvedTickets: 0,
         unresolvedTickets: 0,
     });
+
+    project.participants.push({
+        name: req.body.author,
+        permission: 'admin'
+    });
+    project.participant_names.push(req.body.author);
 
     const user = await User.findOne({
         username: req.body.author

@@ -6,7 +6,7 @@ const initDB = () => {
         return
     }
 
-    mongoose.connect('mongodb+srv://ruby:Ruby123@cluster0.pfsz5.mongodb.net/Cluster0?retryWrites=true&w=majority', {
+    mongoose.connect('mongodb+srv://ruby:ruby@cluster0.pfsz5.mongodb.net/Cluster0?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => {
