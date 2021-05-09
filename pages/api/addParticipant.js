@@ -10,36 +10,41 @@ export default async(req, res) => {
         _id: id
     });
 
+    const user = await User.findOne({
+        email: req.body.name
+    });
+    if (!user) {
+        console.log('no such user')
+        return res.status(404).json({
+            message: 'No such user. Not able to add to project'
+        });
+    }
+
 
     project.participants.map(each => {
-        if (each.name === req.body.me && (each.permission === 'projectlead' || each.permission === 'admin')) {
-            console.log('pushing new participant')
+        if (each.email === req.body.myEmail && (each.permission === 'projectlead' || each.permission === 'admin')) {
+            console.log('pushing new participant: ' + user.username)
             project.participants.push({
-                name: req.body.name,
+                email: req.body.name,
+                name: user.username,
                 permission: req.body.permission
             });
-            project.participant_names.push(req.body.name);
+            
+            project.participant_names.push(user.username);
         }
     })
 
-    const user = await User.findOne({
-        username: req.body.name
-    });
-
-    if (user) {
-        user.in_projects.push(req.body.projectId);
-        await user.save().then().catch(err => {
-            console.log('user.in_projects err');
-        });
-    } else {
-        console.log('No such user. Not able to add to project');
-        return
-    }
     
+    const response_participant = project.participants[project.participants.length - 1];
+
+    user.in_projects.push(req.body.projectId);
+    await user.save().then().catch(err => {
+        console.log('user.in_projects err');
+    });
 
     await project.save().then(doc => {
         console.log('project saved successfully!!!')
-        res.status(200).json(doc);
+        res.status(200).json(response_participant);
     }).catch(err => {
         console.log('projects.save() err');
     });

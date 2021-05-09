@@ -15,6 +15,7 @@ const projectSchema = mongoose.Schema({
     },
     participants: [{
         name: String,
+        email: String,
         permission: String
     }],
     participant_names: [String],

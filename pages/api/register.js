@@ -2,6 +2,12 @@ import User from '../../models/userModel';
 import initDB from '../../utils/connectDB';
 
 initDB();
+
+function ucfirst(str) {
+    let firstLetter = str.substr(0, 1);
+    return firstLetter.toUpperCase() + str.substr(1).split(" ").join("");
+}
+
 export default async(req, res) => {
 
     const user = await User.findOne({
@@ -18,8 +24,10 @@ export default async(req, res) => {
         message: 'Email already exists'
     });
 
+    const username = ucfirst(req.body.username);
+
     const new_user = new User({
-        username: req.body.username,
+        username: username,
         email: req.body.email,
         password: req.body.password
     });

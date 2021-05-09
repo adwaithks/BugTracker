@@ -32,7 +32,7 @@ const index = ({ data }) => {
         draggable: true,
         progress: undefined,
     });
-    const { username, setUsername, letter, setLetter } = useContext(UserContext);
+    const { username, setUsername, letter, setLetter, email, setEmail } = useContext(UserContext);
 
     interface analyticsInterface {
         acceptedTickets?: number,
@@ -117,6 +117,7 @@ const index = ({ data }) => {
             });
             const response2 = await res2.json();
             setAnalytics(response2);
+            setEmail(res.email);
             setUsername(res.username);
             setChipData([res.username]);
             setisLoading(false);
@@ -151,18 +152,14 @@ const index = ({ data }) => {
         'accepted': ['green', 'white']
     }
 
-    const handleDelete = (deleteName: any) => () => {
-        setChipData(chipData.filter((eachName) => {
-            return eachName != deleteName;
-        }));
-    };
 
     const createNewProject = async () => {
         const data = {
             title: projectTitle,
             description: editorContent,
             author: username,
-            analytics: [0, 0, 0, 0, 0, 0]
+            analytics: [0, 0, 0, 0, 0, 0],
+            email: email
         }
 
         setIsOpen(false);
@@ -276,34 +273,6 @@ const index = ({ data }) => {
                             </div>
 
                             <div className={styles.participantsContainer}>
-                                {/**   <div className={styles.participantLabel}>
-                                    <label htmlFor="">Project Participants</label>
-                                </div>
-                                <div className={styles.participantSelect}>
-
-
-                                    <input type="text" placeholder="Enter name" value={participantName} onChange={(e) => {
-                                        setParticipantName(e.target.value);
-                                    }} />
-
-                                    <button onClick={(e) => {
-                                        e.preventDefault();
-                                        setChipData(() => [...chipData, participantName]);
-                                        setParticipantName('');
-                                    }}>Add</button>
-                                </div>
-                                <div className={styles.chipContainer}>
-                                    {
-                                        chipData.map((each, key) => (
-                                            <Chip
-                                                key={key}
-                                                label={each}
-                                                onDelete={each === username ? undefined : handleDelete(each)}
-                                                className={styles.chip}
-                                            />
-                                        ))
-                                    }
-                                </div>**/}
                                 <div className={styles.newProjectCreateButton}>
                                     <button onClick={createNewProject}>Create New Project</button>
                                 </div>

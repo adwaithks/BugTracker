@@ -5,32 +5,42 @@ import mongoose from 'mongoose';
 
 initDB();
 export default async(req, res) => {
-    const id = mongoose.Types.ObjectId(req.body.projectId);
+    const project_id = mongoose.Types.ObjectId(req.body.projectId);
     const project = await Project.findOne({
-        _id: id
+        _id: project_id
     });
-
-    if (project.author.toLowerCase() != req.body.me.toLowerCase()) {
-        return res.status(403).json({message: 'You are not allowed to add participants'})
-    }
-
-    project.participants.pull(req.body.removed);
     const user = await User.findOne({
-        username: req.body.removed
+        username: req.body.deletename
     });
 
-    if (user && project.author != req.body.removed) {
-        user.in_projects.pull(req.body.projectId);
-        await user.save().then().catch(err => {
-            console.log('err');
-        });
-    
-        await project.save().then(doc => {
-            return res.json(doc)
-        }).catch(err => {
-            console.log('err');
-        });
+    if (!user) {
+        return res.json({
+            comment: `${user.username} was not removed from ${project.title}` 
+        })
     }
-    
 
+    project.participants.map((each, index) => {
+        if (each.name === req.body.deletename) {
+            console.log('person removed from project!');
+            project.participants.splice(index, 1);
+            project.participant_names.pull(user.username);
+        }
+    });
+
+    user.in_projects.pull(req.body.projectId);
+    await user.save().then().catch(err => {
+        return res.json({
+            comment: `${user.username} was not removed from ${project.title}` 
+        })
+    });
+
+    await project.save().then(doc => {
+        return res.json({
+            comment: `${user.username} was removed from ${project.title}` 
+        })
+    }).catch(err => {
+        return res.json({
+            comment: `${user.username} was not removed from ${project.title}` 
+        })
+    });
 }

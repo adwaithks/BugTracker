@@ -1,6 +1,7 @@
-import React, {useContext} from 'react';
-import {UserContext} from '../../../../../context/UserContext';
+import React, { useContext } from 'react';
+import { UserContext } from '../../../../../context/UserContext';
 import { useRouter } from 'next/router';
+import { ParticipantsContext } from '../../../../../context/ParticipantsContext';
 import LayoutFrame from '../../../../components/LayoutFrame';
 import styles from './index.module.scss';
 import Modal from 'react-modal';
@@ -16,7 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function index({ data }) {
 
-    const {username, setUsername} = useContext(UserContext); 
+    const { username, setUsername } = useContext(UserContext);
     const [isLoading, setisLoading] = React.useState(false);
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -30,6 +31,7 @@ function index({ data }) {
     const [prevState, setPrevState] = React.useState('');
     const [reportCloseModal, setReportCloseModal] = React.useState(false);
     const [reportSelectionModal, setReportSelectionModal] = React.useState(false);
+    //const { myPermission, setMyPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
 
 
     const notifySuccess = (message) => toast.success(message, {
@@ -50,7 +52,7 @@ function index({ data }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        });
+    });
 
     const addLabel = (event: React.MouseEvent<HTMLButtonElement>) => {
         setIsOpen(!modalIsOpen);
@@ -95,15 +97,15 @@ function index({ data }) {
         'pending': ['purple', 'white'],
         'accepted': ['green', 'white']
     }
-    
+
 
     const setCurrentState = async () => {
         if (temp !== 'closed') {
-        
+
             await fetch(`http://localhost:3000/api/reportCurrentState`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type':'application/json'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     id: ticketId,
@@ -116,7 +118,7 @@ function index({ data }) {
         } else {
             closeTicket();
         }
-        
+
     }
 
     const selectOnChange = (e) => {
@@ -126,7 +128,7 @@ function index({ data }) {
 
     const selectOnClose = () => {
         setSelectOpen(false)
-    }   
+    }
 
     const selectOnOpen = () => {
         setSelectOpen(true)
@@ -138,8 +140,8 @@ function index({ data }) {
             id: ticketId,
             currentState: 'closed',
             prevState: selectValue
-        }        
-        
+        }
+
         await fetch(`http://localhost:3000/api/closeTicket`, {
             method: 'POST',
             body: JSON.stringify(bodyData),
@@ -178,9 +180,9 @@ function index({ data }) {
         }
         let tempString = '';
         chipDatatemp.forEach((each) => {
-            tempString  = tempString + `<strong>${each}</strong>`
+            tempString = tempString + `<strong>${each}</strong>`
         });
-        
+
         const data2 = {
             id: ticketId,
             action: 1,
@@ -240,8 +242,8 @@ function index({ data }) {
 
     return (
         <LayoutFrame>
-            <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
-                    `position: absolute;
+            <SyncLoader color={'#fff9'} loading={isLoading} size={20} css={
+                `position: absolute;
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%, 50%);
@@ -262,7 +264,7 @@ function index({ data }) {
                     <h5 style={{
                         paddingLeft: '25px',
                         paddingRight: '25px',
-                        display:'flex',
+                        display: 'flex',
                         alignItems: 'center',
                         padding: '4px',
                         border: 'black solid 1px',
@@ -274,7 +276,7 @@ function index({ data }) {
                         data.tags.map((each, keyId) => (
                             <h5 key={keyId} style={{
                                 paddingLeft: '25px',
-                                display:'flex',
+                                display: 'flex',
                                 alignItems: 'center',
                                 paddingRight: '25px',
                                 padding: '3px',
@@ -291,79 +293,79 @@ function index({ data }) {
 
 
             <Modal
-                    className={styles.reportSelectModal}
-                    isOpen={reportSelectionModal}
-                    onRequestClose={() => {
-                        setReportSelectionModal(!reportSelectionModal)
-                    }}
-                    styles={{
-                        overlay: {
-                            background: 'rgb(0, 0, 0)'
-                        }
-                    }}
-                >
-                    <>
-                        <div className={styles.modalCloseIconContainer}>
-                            <div className={styles.modalCloseIcon} onClick={() => {
-                                setReportSelectionModal(!reportSelectionModal)
-                            }}>
-                                <CloseIcon />
-                            </div>
+                className={styles.reportSelectModal}
+                isOpen={reportSelectionModal}
+                onRequestClose={() => {
+                    setReportSelectionModal(!reportSelectionModal)
+                }}
+                styles={{
+                    overlay: {
+                        background: 'rgb(0, 0, 0)'
+                    }
+                }}
+            >
+                <>
+                    <div className={styles.modalCloseIconContainer}>
+                        <div className={styles.modalCloseIcon} onClick={() => {
+                            setReportSelectionModal(!reportSelectionModal)
+                        }}>
+                            <CloseIcon />
                         </div>
-                        <div className={styles.reportModalInfo}>
-                            <div className={styles.reportSelectHeading}>
-                                <h3>Do you want to change the current state of report to {temp}?</h3>
-                            </div>
-                            <div className={styles.reportSelectBtnGroup}>
-                                <button onClick={()=>{
-                                    setPrevState(selectValue);
-                                    setSelectValue(temp);
-                                    setReportSelectionModal(!reportSelectionModal);
-                                    setCurrentState();
-                                    }} className={styles.proceed}>Proceed</button>
-                                <button onClick={()=>{setReportSelectionModal(!reportSelectionModal)}} className={styles.cancel}>Cancel</button>
-                            </div>
+                    </div>
+                    <div className={styles.reportModalInfo}>
+                        <div className={styles.reportSelectHeading}>
+                            <h3>Do you want to change the current state of report to {temp}?</h3>
                         </div>
-                        
-                    </>
-                </Modal>
+                        <div className={styles.reportSelectBtnGroup}>
+                            <button onClick={() => {
+                                setPrevState(selectValue);
+                                setSelectValue(temp);
+                                setReportSelectionModal(!reportSelectionModal);
+                                setCurrentState();
+                            }} className={styles.proceed}>Proceed</button>
+                            <button onClick={() => { setReportSelectionModal(!reportSelectionModal) }} className={styles.cancel}>Cancel</button>
+                        </div>
+                    </div>
+
+                </>
+            </Modal>
 
 
-                <Modal
-                    className={styles.reportSelectModal}
-                    isOpen={reportCloseModal}
-                    onRequestClose={() => {
-                        setReportCloseModal(!reportCloseModal)
-                    }}
-                    styles={{
-                        overlay: {
-                            background: 'rgb(0, 0, 0)'
-                        }
-                    }}
-                >
-                    <>
-                        <div className={styles.modalCloseIconContainer}>
-                            <div className={styles.modalCloseIcon} onClick={() => {
+            <Modal
+                className={styles.reportSelectModal}
+                isOpen={reportCloseModal}
+                onRequestClose={() => {
+                    setReportCloseModal(!reportCloseModal)
+                }}
+                styles={{
+                    overlay: {
+                        background: 'rgb(0, 0, 0)'
+                    }
+                }}
+            >
+                <>
+                    <div className={styles.modalCloseIconContainer}>
+                        <div className={styles.modalCloseIcon} onClick={() => {
+                            setReportCloseModal(!reportCloseModal)
+                        }}>
+                            <CloseIcon />
+                        </div>
+                    </div>
+                    <div className={styles.reportModalInfo}>
+                        <div className={styles.reportSelectHeading}>
+                            <h3>Are you sure you want to close the ticket and mark it as resolved?</h3>
+                        </div>
+                        <div className={styles.reportSelectBtnGroup}>
+                            <button onClick={() => {
                                 setReportCloseModal(!reportCloseModal)
-                            }}>
-                                <CloseIcon />
-                            </div>
+                                closeTicket()
+                            }} className={styles.proceed}>Proceed</button>
+                            <button onClick={() => { setReportCloseModal(!reportCloseModal) }} className={styles.cancel}>Cancel</button>
                         </div>
-                        <div className={styles.reportModalInfo}>
-                            <div className={styles.reportSelectHeading}>
-                                <h3>Are you sure you want to close the ticket and mark it as resolved?</h3>
-                            </div>
-                            <div className={styles.reportSelectBtnGroup}>
-                                <button onClick={()=>{
-                                    setReportCloseModal(!reportCloseModal)
-                                    closeTicket()
-                                    }} className={styles.proceed}>Proceed</button>
-                                <button onClick={()=>{setReportCloseModal(!reportCloseModal)}} className={styles.cancel}>Cancel</button>
-                            </div>
-                        </div>
-                        
-                    </>
-                </Modal>
+                    </div>
+
+                </>
+            </Modal>
 
             <div className={styles.ticketConversationList}>
                 <div key={data._id} className={styles.ticketConversation}>
@@ -465,29 +467,29 @@ function index({ data }) {
                             <div className={styles.projectDesc}>
                                 <div className={styles.reportStateContainer}>
                                     <div>
-                                        
+
                                     </div>
                                     <div className={styles.currentStatus}>
                                         <h4>Current Status</h4>
-                                    <FormControl className={styles.reportStateFormControl}>
-                                        <Select
-                                        placeholder="Change TicketState"
-                                        className={styles.reportStateSelect}
-                                        open={selectOpen}
-                                        onClose={selectOnClose}
-                                        onOpen={selectOnOpen}
-                                        value={selectValue}
-                                        onChange={selectOnChange}>
-                                            <MenuItem value="">{selectValue}</MenuItem>
-                                            {
-                                                ['New', 'Triaged', 'Accepted', 'Pending', 'Unresolved'].map((each, id) => (
-                                                    (each !== selectValue.toLowerCase()) ? (
-                                                        <MenuItem key={id} value={each}>{each}</MenuItem>
-                                                    ) : (null)
-                                                ))
-                                            }
-                                        </Select>
-                                    </FormControl>
+                                        <FormControl className={styles.reportStateFormControl}>
+                                            <Select
+                                                placeholder="Change TicketState"
+                                                className={styles.reportStateSelect}
+                                                open={selectOpen}
+                                                onClose={selectOnClose}
+                                                onOpen={selectOnOpen}
+                                                value={selectValue}
+                                                onChange={selectOnChange}>
+                                                <MenuItem value="">{selectValue}</MenuItem>
+                                                {
+                                                    ['New', 'Triaged', 'Accepted', 'Pending', 'Unresolved'].map((each, id) => (
+                                                        (each !== selectValue.toLowerCase()) ? (
+                                                            <MenuItem key={id} value={each}>{each}</MenuItem>
+                                                        ) : (null)
+                                                    ))
+                                                }
+                                            </Select>
+                                        </FormControl>
                                     </div>
                                 </div>
                                 <textarea placeholder="Description (Markdown supported)" className={styles.editor} value={editorContent} onChange={(e) => {
@@ -504,9 +506,9 @@ function index({ data }) {
                             <div className={styles.buttonContainer}>
                                 <button className={styles.labelButton} onClick={addLabel}>Add Labels</button>
                                 <button onClick={() => { submitReply(data._id, 0) }}>Comment</button>
-                                <button className={styles.ticketcloseButton} onClick={() => { 
+                                <button className={styles.ticketcloseButton} onClick={() => {
                                     setReportCloseModal(true);
-                                 }}>Close Ticket</button>
+                                }}>Close Ticket</button>
                             </div>
                         ) : (
                             null

@@ -10,8 +10,13 @@ export default async(req, res) => {
         _id: id
     });
 
+    if (!req.body.newRole || req.body.newRole == "" || req.body.newRole == " ") {
+        req.body.newRole = 'triager';
+    }
+
     project.participants.map((each, index) => {
-        if (each.name.toLowerCase() == req.body.user.name.toLowerCase()) {
+        if (each.email.toLowerCase() == req.body.user.email.toLowerCase()) {
+            console.log('newrole: ' + req.body.newRole.split(" ").join("").toLowerCase());
             project.participants[index].permission = req.body.newRole.split(" ").join("").toLowerCase();
         }
     })

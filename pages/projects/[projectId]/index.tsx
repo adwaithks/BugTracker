@@ -1,21 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import LayoutFrame from '../../components/LayoutFrame';
 import styles from './index.module.scss';
-import Modal from 'react-modal';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
+import Modal from 'react-modal';
+import { ParticipantsContext } from '../../../context/ParticipantsContext';
+import { UserContext } from '../../../context/UserContext';
+import Markdown from 'markdown-to-jsx';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import CloseIcon from '@material-ui/icons/Close';
 import { ToastContainer, toast, Id } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EachParticipant from '../../components/EachParticipant';
 import SyncLoader from "react-spinners/SyncLoader";
-import EditIcon from '@material-ui/icons/Edit';
-import CheckIcon from '@material-ui/icons/Check';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-function index({ data, participants, tickets, projectId, openTickets, closedTickets }) {
+const index = ({ data, participants, tickets, projectId, openTickets, closedTickets }) => {
 
     const roles = [{
         value: 'Engineer',
@@ -30,6 +29,9 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
         label: 'Triager'
     }
     ]
+
+    const { setMyPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
+    const { email, setEmail } = useContext(UserContext);
 
     const searchHandler = (e) => {
         if (ticketCatActive == 'open') {
@@ -78,11 +80,6 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
         _id?: string
     }
 
-    interface myPermission {
-        _id?: any,
-        name?: String,
-        permission?: String
-    }
 
     const [openTicketsState, setOpenTickets] = React.useState(openTickets);
     const [closedTicketsState, setClosedTickets] = React.useState(closedTickets);
@@ -93,20 +90,13 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [ticketTitle, setTicketTitle] = React.useState('');
     const [newPartPermission, setNewPartPermission] = React.useState('Triager');
-    const [newPartName, setNewPartName] = React.useState('');
     const [previewTabActive, setPreviewTabActive] = React.useState(false);
     const [dataState, setDataState] = React.useState(data);
-    const [role, setRole] = React.useState('Triager');
-    const [participantEdit, setParticipantEdit] = React.useState(false);
     const [ticketCatActive, setTicketcatactive] = React.useState('open');
     const [addParticipantModal, setAddParticipantModal] = React.useState(false);
-    const [myPermission, setMyPermission] = React.useState<myPermission>({});
-    const [chipData, setChipData] = React.useState([]);
-    const [participantState, setParticipantState] = React.useState([]);
+    const [newPartName, setNewPartName] = React.useState('');
     const [username, setUsername] = React.useState('');
-    const [usernameList, setusernameList] = React.useState([]);
     const [me, setMe] = React.useState<meInterface>({});
-
 
     React.useEffect(() => {
         const main = async () => {
@@ -119,18 +109,20 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                 }
             });
             const res = await response3.json();
+            if (!res.in_projects.includes(projectId)) {
+                router.push('/dashboard', undefined, {
+                    shallow: true
+                });
+                window.alert('Unauthorised!')
+            }
             setUsername(res.username);
-            // setChipData(participants);
-            console.log(participants)
+            setEmail(res.email);
             setParticipantState(participants);
             participants.map(each => {
                 if (each.name === res.username) {
                     setMyPermission(each);
-                    console.log('my permission: ')
-                    console.log(each)
                 }
             })
-            console.log(participants);
             setMe(res);
 
             const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
@@ -143,19 +135,24 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                 })
             });
             const res2 = await response2.json();
-            setusernameList(res2);
             setisLoading(false)
         }
         main();
     }, [modalIsOpen]);
 
-    var router = useRouter();
+    const router = useRouter();
 
     const refreshData = () => {
         router.replace(router.asPath);
     }
 
-
+    function isEmpty(obj) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    }
 
     var colors = {
         'new': ['greenyellow', 'black'],
@@ -186,37 +183,17 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
 
 
 
-    const editParticipants = async (user, newRole) => {
-        //setAddParticipantModal(false);
-        const bodyData = {
-            id: projectId,
-            user: user,
-            newRole: newRole
+    const addParticipant = async (particEmail, permission) => {
+        if (!particEmail.includes('@')) {
+            notifyError('Enter a valid emailId !')
+            return
         }
-
-        const res = await fetch('http://localhost:3000/api/editParticipants', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bodyData)
-
-        });
-        const response = await res.json();
-        if (response) {
-            refreshData();
-        }
-    }
-
-    const addParticipant = async (particName, permission) => {
         const bodyData = {
-            name: particName,
+            name: particEmail,
+            myEmail: email,
             permission: permission.split(" ").join("").toLowerCase(),
             projectId: projectId,
-            me: me.username
         }
-
-        console.log(bodyData);
 
         const res = await fetch(`http://localhost:3000/api/addParticipant`, {
             method: 'POST',
@@ -225,46 +202,14 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
             },
             body: JSON.stringify(bodyData)
         });
-        const resjson = await res.json();
-        if (res.status !== 200) {
-            notifyError('Unexpected error Occured !');
-        } else {
-            notifySuccess(particName + ' was added to the project !');
+        const response_participant = await res.json();
+        if (res.status == 404) {
+            notifyError(response_participant.message);
+        } else if (res.status == 200) {
+            setParticipantState([...participantState, response_participant]);
+            notifySuccess(particEmail + ' was added to the project !');
+            refreshData();
         }
-    }
-
-    const handleDelete = async (deleteName: any) => {
-        if (me.in_projects == undefined ? null : me.in_projects.includes(projectId)) {
-            setChipData(chipData.filter((eachName) => {
-                return eachName != deleteName;
-            }));
-            const bodyData = {
-                projectId: projectId,
-                removed: deleteName,
-                me: me.username
-            }
-
-            const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(bodyData)
-
-            });
-            const resjson = await res.json();
-            if (res.status != 200) {
-                notifyError(resjson.message)
-            } else {
-                notifyError(deleteName + ' was removed !')
-            }
-
-        } else {
-            notifyError(deleteName + ' was not removed !')
-            return;
-        }
-
-
     }
 
     const createNewTicket = async () => {
@@ -285,10 +230,11 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
             },
             body: JSON.stringify(bodyData)
         });
-        notifySuccess('New ticket created !');
-
+        if (res.status === 200) {
+            notifySuccess('New ticket created !');
+            refreshData();
+        }
         setIsOpen(false);
-        refreshData();
     }
 
     return (
@@ -305,7 +251,7 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                         <button onClick={(e) => {
                             e.preventDefault();
                             setAddParticipantModal(!addParticipantModal);
-                        }}>Add Participants</button>
+                        }}>Edit Participants</button>
                     </div>
                 </div>
 
@@ -370,136 +316,54 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                     <CloseIcon />
                                 </div>
                             </div>
-                            <div className="participants-info">
-                                {
-                                    participantState.map((person, index) => (
-                                        <div style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            border: 'red solid 1px',
-                                            justifyContent: 'space-evenly',
-                                            backgroundColor: 'rgba(255, 255, 255, 0.705)',
-                                            borderRadius: '5px'
-                                        }} key={index}>
-                                            <TextField disabled={true} defaultValue={person.name} label="Username" />
-
-                                            <TextField
-                                                disabled={!participantEdit}
-                                                select
-                                                label="Permission"
-                                                value={role}
-                                                onChange={(e) => {
-                                                    setRole(e.target.value)
-                                                }}
-                                            >
-                                                {
-                                                    roles.map((option) => (
-                                                        <MenuItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </MenuItem>
-                                                    ))
-                                                }
-                                            </TextField>
-                                            <div style={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                width: '50px'
-                                            }}>
-                                                {
-                                                    (person.name !== myPermission.name && (myPermission.permission === 'projectlead' || myPermission.permission === 'admin')) ?
-                                                        participantEdit ? (
-                                                            <>
-                                                                <CheckIcon style={{ cursor: 'pointer' }} onClick={(e) => {
-                                                                    setParticipantEdit(!participantEdit);
-                                                                    console.log(person._id);
-                                                                    console.log(participants[index]);
-                                                                    console.log(role)
-                                                                    editParticipants(participants[index], role);
-                                                                }} />
-                                                                <DeleteForeverIcon style={{ cursor: 'pointer' }} />
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <EditIcon style={{ cursor: 'pointer' }} onClick={() => {
-                                                                    setParticipantEdit(!participantEdit)
-                                                                }} />
-                                                                <DeleteForeverIcon style={{ cursor: 'pointer' }} />
-                                                            </>
-                                                        )
-                                                        :
-                                                        null
-                                                }
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                                {/***
-                                                        participantEdit ? (
-                                                            <>
-                                                                <CheckIcon style={{ cursor: 'pointer' }} onClick={(e) => {
-                                                                    setParticipantEdit(!participantEdit);
-                                                                    console.log(person._id);
-                                                                    console.log(participants[index]);
-                                                                    console.log(role)
-                                                                    editParticipants(participants[index], role);
-                                                                }} />
-                                                                <DeleteForeverIcon style={{ cursor: 'pointer' }} />
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <EditIcon style={{ cursor: 'pointer' }} onClick={() => {
-                                                                    setParticipantEdit(!participantEdit)
-                                                                }} />
-                                                                <DeleteForeverIcon style={{ cursor: 'pointer' }} />
-                                                            </>
-                                                        )
- */}
+                            <div className={styles.editParticipantsHeadContainer}>
+                                <h2 className={styles.editParticipantsHead}><GroupAddIcon className={styles.groupAddIcon} />Edit Participants</h2>
                             </div>
-                            <div style={{
-                                borderRadius: '5px',
-                                border: 'darkgray solid 1px',
-                                display: 'flex',
-                                marginTop: '50px',
-                                marginBottom: '50px',
-                                alignItems: 'center',
-                                justifyContent: 'space-evenly'
-                            }}>
-                                <TextField label="Username" value={newPartName} onChange={(e) => {
+                            <div className={styles.participantsInfo}>
+                                {
+                                    participantState.map((person, index) => {
+                                        return (
+                                            <>
+                                                {
+                                                    (!isEmpty(person)) ? (
+                                                        <EachParticipant key={index} notifySuccess={notifySuccess} notifyError={notifyError} refreshData={refreshData} person={person} index={index} projectId={projectId} />
+                                                    ) : null
+                                                }
+                                            </>
+                                        )
+                                    })
+                                }
+                            </div>
+                            <div className={styles.addParticpantHeadContainer}>
+                                <h3>Add Participant</h3>
+                            </div>
+                            <div className={styles.addParticipantsBox}>
+
+                                <input className={styles.eachParticipantTextField} placeholder="EmailId" value={newPartName} onChange={(e) => {
                                     setNewPartName(e.target.value);
                                 }} />
 
-                                <TextField
-                                    select
-                                    label="Permission"
-                                    value={newPartPermission}
-                                    onChange={(e) => {
-                                        setNewPartPermission(e.target.value);
-                                    }}
-                                >
+                                <select className={styles.roleSelect} onChange={(e) => {
+                                    setNewPartPermission(e.target.value);
+                                }}>
                                     {
-                                        roles.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
+                                        roles.map(option => (
+                                            <option className={styles.roleSelect} value={option.value}>{option.label}</option>
                                         ))
                                     }
-                                </TextField>
+                                </select>
                                 <button onClick={() => {
                                     addParticipant(newPartName, newPartPermission);
-                                    setParticipantState([...participantState, {
-                                        name: newPartName,
-                                        permission: newPartPermission,
-                                        _id: 123
-                                    }])
+                                    setNewPartName('');
                                 }} disabled={newPartName ? false : true} style={{
                                     display: 'flex',
                                     cursor: 'pointer',
-                                    width: '100px',
+                                    width: '120px',
                                     borderRadius: '5px',
                                     backgroundColor: newPartName ? 'blue' : 'gray',
                                     color: newPartName ? 'white' : 'darkgray',
                                     fontSize: '20px',
-                                    height: '37px',
+                                    height: '35px',
                                     outline: 'none',
                                     border: 'none',
                                     justifyContent: 'space-evenly',
@@ -593,7 +457,9 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                             </textarea>
                                         </div>
                                         <div className={styles.createTicketButton}>
-                                            <button onClick={createNewTicket}>Create a new ticket</button>
+                                            <button onClick={() => {
+                                                createNewTicket();
+                                            }}>Create a new ticket</button>
                                         </div>
 
                                     </div>

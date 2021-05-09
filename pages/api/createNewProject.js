@@ -21,7 +21,8 @@ export default async (req, res) => {
 
     project.participants.push({
         name: req.body.author,
-        permission: 'admin'
+        permission: 'admin',
+        email: req.body.email
     });
     project.participant_names.push(req.body.author);
 
