@@ -1,17 +1,17 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import styles from './index.module.scss';
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 import Modal from 'react-modal';
 import LayoutFrame from '../components/LayoutFrame';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
-import {UserContext} from '../../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import SyncLoader from "react-spinners/SyncLoader";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const index = ({data}) => {
+const index = ({ data }) => {
 
     const notifySuccess = (message) => toast.success(message, {
         position: "bottom-center",
@@ -31,8 +31,8 @@ const index = ({data}) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        });
-    const {username, setUsername, letter, setLetter} = useContext(UserContext);
+    });
+    const { username, setUsername, letter, setLetter, email, setEmail } = useContext(UserContext);
 
     interface analyticsInterface {
         acceptedTickets?: number,
@@ -71,28 +71,28 @@ const index = ({data}) => {
     const [burgerIconVisibility, setBurgerIconVisibility] = React.useState(false); //false - not open
 
     const router = useRouter();
-    
+
     React.useEffect(() => {
         setisLoading(true);
 
-    if (window.innerWidth > 1101) {
-        setBurgerIconVisibility(false)
-    }
-
-    if (window.innerWidth < 950) {
-        setBurgerIconVisibility(true); //(true);
-    }
-    const resizeListener = () => {
         if (window.innerWidth > 1101) {
-            setBurgerIconVisibility(false);
+            setBurgerIconVisibility(false)
         }
 
-    if (window.innerWidth < 950) {
-        setBurgerIconVisibility(true); //(true);
-    }
-      };
-      window.addEventListener('resize', resizeListener);
-      
+        if (window.innerWidth < 950) {
+            setBurgerIconVisibility(true); //(true);
+        }
+        const resizeListener = () => {
+            if (window.innerWidth > 1101) {
+                setBurgerIconVisibility(false);
+            }
+
+            if (window.innerWidth < 950) {
+                setBurgerIconVisibility(true); //(true);
+            }
+        };
+        window.addEventListener('resize', resizeListener);
+
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
             const response = await fetch(`http://localhost:3000/api/me`, {
@@ -102,21 +102,22 @@ const index = ({data}) => {
                 }
             });
             if (response.status !== 200) {
-                router.push('/login', null, {shallow: true});
+                router.push('/login', null, { shallow: true });
             }
-            
+
             const res = await response.json();
             setMe(res);
 
             const res2 = await fetch(`http://localhost:3000/api/getAnalytics`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     user: res.username
                 })
             });
             const response2 = await res2.json();
-            setAnalytics(response2);                 
+            setAnalytics(response2);
+            setEmail(res.email);
             setUsername(res.username);
             setChipData([res.username]);
             setisLoading(false);
@@ -128,7 +129,7 @@ const index = ({data}) => {
         }
     }, []);
 
-    
+
 
     var colors = {
         'new': ['greenyellow', 'black'],
@@ -151,18 +152,14 @@ const index = ({data}) => {
         'accepted': ['green', 'white']
     }
 
-    const handleDelete = (deleteName: any) => () => {
-        setChipData(chipData.filter((eachName) => {
-            return eachName != deleteName;
-        }));
-    };
 
     const createNewProject = async () => {
         const data = {
             title: projectTitle,
             description: editorContent,
             author: username,
-            analytics: [0, 0, 0, 0, 0, 0]
+            analytics: [0, 0, 0, 0, 0, 0],
+            email: email
         }
 
         setIsOpen(false);
@@ -180,49 +177,49 @@ const index = ({data}) => {
                 router.push(
                     '/projects/[projectId]',
                     `/projects/${data._id}`
-                    );
+                );
             })
             .catch(err => {
                 console.log(err);
             });
-            
-        }
+
+    }
 
     return (
         <LayoutFrame>
             <div className={styles.newTicketContainer}>
-            {
-                        burgerIconVisibility ? (
-                            <div className={styles.burgerIconContainer}>
-                    
-                    
-                    <MenuIcon className={styles.burgerIcon} onClick={() => {setBurgerIcon(!burgerIcon)}} />
-                    {
-                        (burgerIcon) ? (
-                    <div className={styles.burgerIconOptions}>
-                        <h4 onClick={() =>{router.push('/dashboard', null, {shallow: true})}}>Dashboard</h4>
-                        <h4 onClick={() =>{router.push('/alltickets', null, {shallow: true})}}>All Tickets</h4>
-                        <h4 onClick={() => {router.push('/projects', null, {shallow: true})}}>My Projects</h4>
-                        <h4 onClick={() => {
-                            window.localStorage.removeItem('accessToken');
-                            router.push('/login', null, {shallow: true});
-                            }}>Logout</h4>
-                    </div>
-                        ) : null
-                    }
-                    
-                </div>
-                        ) : null
-                    }
-                
+                {
+                    burgerIconVisibility ? (
+                        <div className={styles.burgerIconContainer}>
+
+
+                            <MenuIcon className={styles.burgerIcon} onClick={() => { setBurgerIcon(!burgerIcon) }} />
+                            {
+                                (burgerIcon) ? (
+                                    <div className={styles.burgerIconOptions}>
+                                        <h4 onClick={() => { router.push('/dashboard', null, { shallow: true }) }}>Dashboard</h4>
+                                        <h4 onClick={() => { router.push('/alltickets', null, { shallow: true }) }}>All Tickets</h4>
+                                        <h4 onClick={() => { router.push('/projects', null, { shallow: true }) }}>My Projects</h4>
+                                        <h4 onClick={() => {
+                                            window.localStorage.removeItem('accessToken');
+                                            router.push('/login', null, { shallow: true });
+                                        }}>Logout</h4>
+                                    </div>
+                                ) : null
+                            }
+
+                        </div>
+                    ) : null
+                }
+
                 <div className={styles.newTicketBtn}>
                     <button onClick={() => {
                         setIsOpen(!modalIsOpen);
                     }}>Create A New Project</button>
                 </div>
             </div>
-            <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
-                    `position: absolute;
+            <SyncLoader color={'#fff9'} loading={isLoading} size={20} css={
+                `position: absolute;
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%, 50%);
@@ -276,34 +273,6 @@ const index = ({data}) => {
                             </div>
 
                             <div className={styles.participantsContainer}>
-                             {/**   <div className={styles.participantLabel}>
-                                    <label htmlFor="">Project Participants</label>
-                                </div>
-                                <div className={styles.participantSelect}>
-
-
-                                    <input type="text" placeholder="Enter name" value={participantName} onChange={(e) => {
-                                        setParticipantName(e.target.value);
-                                    }} />
-
-                                    <button onClick={(e) => {
-                                        e.preventDefault();
-                                        setChipData(() => [...chipData, participantName]);
-                                        setParticipantName('');
-                                    }}>Add</button>
-                                </div>
-                                <div className={styles.chipContainer}>
-                                    {
-                                        chipData.map((each, key) => (
-                                            <Chip
-                                                key={key}
-                                                label={each}
-                                                onDelete={each === username ? undefined : handleDelete(each)}
-                                                className={styles.chip}
-                                            />
-                                        ))
-                                    }
-                                </div>**/}
                                 <div className={styles.newProjectCreateButton}>
                                     <button onClick={createNewProject}>Create New Project</button>
                                 </div>
@@ -421,73 +390,73 @@ const index = ({data}) => {
                         }} />
                     </div>
                 </div>
-               
+
             </div>
             <div className={styles.latestTickets}>
                 <div className={styles.latestTicketsGlass}>
-                <div className={styles.latestTicketsHead}>
-                <h3>Latest Tickets</h3>
-                </div>
-                <div className={styles.latestTicketsContainer}>
-                    {
-                        data.map((each, id) => (
-                            me.in_projects == undefined ? null : me.in_projects.includes(each.projectId) ? (
-                            <div onClick={() => {
-                                setisLoading(true)
-                                router.push(`/projects/${each.projectId}/ticket/${each._id}`, null, {shallow: true})
-                            }} key={id} className={styles.eachTicket}>
-                                <div className={styles.ticketListUpper}>
-                                    <div className={styles.ticketHeading}>
-                                        <h3>{each.title}</h3>
-                                        <div className={styles.ticketTags}>
-                                        <h5 style={{
-                                            paddingLeft: '25px',
-                                            paddingRight: '25px',
-                                            display:'flex',
-                                            alignItems: 'center',
-                                            padding: '4px',
-                                            border: 'black solid 1px',
-                                            borderRadius: '10px',
-                                            backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
-                                            color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
-                                        }}>{each.currentStatus}</h5>
-                                            {
-                                                each.tags.map((each, keyId) => (
-                                                    <h5 key={keyId} style={{
+                    <div className={styles.latestTicketsHead}>
+                        <h3>Latest Tickets</h3>
+                    </div>
+                    <div className={styles.latestTicketsContainer}>
+                        {
+                            data.map((each, id) => (
+                                me.in_projects == undefined ? null : me.in_projects.includes(each.projectId) ? (
+                                    <div onClick={() => {
+                                        setisLoading(true)
+                                        router.push(`/projects/${each.projectId}/ticket/${each._id}`, null, { shallow: true })
+                                    }} key={id} className={styles.eachTicket}>
+                                        <div className={styles.ticketListUpper}>
+                                            <div className={styles.ticketHeading}>
+                                                <h3>{each.title}</h3>
+                                                <div className={styles.ticketTags}>
+                                                    <h5 style={{
                                                         paddingLeft: '25px',
-                                                        display:'flex',
-                                                        alignItems: 'center',
                                                         paddingRight: '25px',
-                                                        padding: '3px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        padding: '4px',
+                                                        border: 'black solid 1px',
                                                         borderRadius: '10px',
-                                                        marginRight: '5px',
-                                                        marginLeft: '5px',
-                                                        backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
-                                                        color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
-                                                    }}>{each}</h5>
-                                                ))
-                                            }
+                                                        backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
+                                                        color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
+                                                    }}>{each.currentStatus}</h5>
+                                                    {
+                                                        each.tags.map((each, keyId) => (
+                                                            <h5 key={keyId} style={{
+                                                                paddingLeft: '25px',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                paddingRight: '25px',
+                                                                padding: '3px',
+                                                                borderRadius: '10px',
+                                                                marginRight: '5px',
+                                                                marginLeft: '5px',
+                                                                backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
+                                                                color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
+                                                            }}>{each}</h5>
+                                                        ))
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className={styles.ticketListLower}>
+                                            <div className={styles.ticketId}>
+                                                <h5>#{each._id}</h5>
+                                            </div>
+                                            <div className={styles.reportDate}>
+                                                <h5>Opened On {each.created_at} by {each.author}</h5>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className={styles.ticketListLower}>
-                                    <div className={styles.ticketId}>
-                                        <h5>#{each._id}</h5>
-                                    </div>
-                                    <div className={styles.reportDate}>
-                                        <h5>Opened On {each.created_at} by {each.author}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            ) : null 
-                        ))
-                    }
-                
+                                ) : null
+                            ))
+                        }
+
+                    </div>
                 </div>
-                </div>
-                
-                </div>
-                <ToastContainer
+
+            </div>
+            <ToastContainer
                 position="bottom-center"
                 autoClose={2000}
                 hideProgressBar
@@ -508,8 +477,8 @@ export async function getServerSideProps(context) {
         method: 'GET'
     });
     const response = await res.json();
-    
-    return { 
+
+    return {
         props: {
             data: response,
         }

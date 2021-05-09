@@ -1,16 +1,16 @@
-import React, {useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import styles from './Sidebar.module.scss';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { useRouter } from 'next/router'
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import {UserContext} from '../../context/UserContext';
-import {OtherContext} from '../../context/OtherContext';
+import { UserContext } from '../../context/UserContext';
+import { OtherContext } from '../../context/OtherContext';
 import SyncLoader from "react-spinners/SyncLoader";
 
 function Sidebar() {
 
-    const {username, setUsername, letter, setLetter} = useContext(UserContext);
+    const { username, setUsername, letter, setLetter, email, setEmail } = useContext(UserContext);
     const {
         activeTab, setActiveTab,
         expanded, setExpanded,
@@ -24,14 +24,14 @@ function Sidebar() {
     const router = useRouter();
     const pageRoute = (page) => {
         setActiveTab(page);
-        router.push(`/${page}`, null, {shallow: true});
+        router.push(`/${page}`, null, { shallow: true });
     }
 
     const logout = () => {
         window.localStorage.removeItem('accessToken');
         window.localStorage.removeItem('letter');
         window.localStorage.removeItem('username')
-        router.push('/login', null, {shallow: true});
+        router.push('/login', null, { shallow: true });
     }
 
     useEffect(() => {
@@ -56,32 +56,36 @@ function Sidebar() {
             if (window.innerWidth < 950) {
                 setSidebarVisibility(false)
             }
-          };
-          window.addEventListener('resize', resizeListener);
-            
+        };
+        window.addEventListener('resize', resizeListener);
+
 
         const main = async () => {
-        setActiveTab(window.location.href.split("/")[3]);
-        if (!window.localStorage.getItem("username") || !window.localStorage.getItem("letter")) {
-            const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://localhost:3000/api/me`, {
-                method: 'GET',
-                headers: {
-                    'accessToken': token
+            setActiveTab(window.location.href.split("/")[3]);
+            if (!window.localStorage.getItem("username") || !window.localStorage.getItem("letter")) {
+                const token = window.localStorage.getItem('accessToken');
+                const response = await fetch(`http://localhost:3000/api/me`, {
+                    method: 'GET',
+                    headers: {
+                        'accessToken': token
+                    }
+                });
+                if (response.status !== 200) {
+                    router.push('/login');
                 }
-            });
-            if (response.status !== 200) {
-                router.push('/login');
+                const res = await response.json();
+                window.localStorage.setItem("username", res.username);
+                window.localStorage.setItem("email", res.email);
+                window.localStorage.setItem("letter", res.username[0].toUpperCase());
+                setEmail(res.email);
+                let firstLetter = res.username.substr(0, 1);
+                setUsername(firstLetter.toUpperCase() + res.username.substr(1));
+                setLetter(res.username[0].toUpperCase());
+            } else {
+                setUsername(window.localStorage.getItem("username"))
+                setEmail(window.localStorage.getItem("email"))
+                setLetter(window.localStorage.getItem("letter"))
             }
-            const res = await response.json();
-            window.localStorage.setItem("username", res.username);
-            window.localStorage.setItem("letter", res.username[0].toUpperCase());
-            setUsername(res.username);
-            setLetter(res.username[0].toUpperCase());
-        } else {
-            setUsername(window.localStorage.getItem("username"))
-            setLetter(window.localStorage.getItem("letter"))
-        }
         }
         main();
         return () => {
@@ -92,7 +96,7 @@ function Sidebar() {
     return (
         (expanded === true && sidebarVisibility === true) ? (
             <div className={styles.sidebar} >
-                <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
+                <SyncLoader color={'#fff9'} loading={isLoading} size={20} css={
                     `position: absolute;
                     top: 50%;
                     left: 50%;
@@ -123,6 +127,10 @@ function Sidebar() {
                         <h1>{letter}</h1>
                     </div>
                     <h2>{username}</h2>
+                    <h4 style={{
+                        color: 'gray',
+                        fontWeight: '400'
+                    }}>{email}</h4>
                 </div>
                 <div className={styles.navOptions}>
                     {
@@ -193,7 +201,7 @@ function Sidebar() {
                         `}
                 </style>
                 <div className={styles.expandBtnContainer}>
-                   {/*} <div className={styles.expandBtn}>
+                    {/*} <div className={styles.expandBtn}>
                         {
                             expanded ? (
                                 <ArrowBackIcon onClick={() => {

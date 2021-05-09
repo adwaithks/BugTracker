@@ -1,26 +1,45 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import LayoutFrame from '../../components/LayoutFrame';
 import styles from './index.module.scss';
-import Modal from 'react-modal';
-import Chip from '@material-ui/core/Chip';
-import GroupIcon from '@material-ui/icons/Group';
-import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
+import Modal from 'react-modal';
+import { ParticipantsContext } from '../../../context/ParticipantsContext';
+import { UserContext } from '../../../context/UserContext';
+import Markdown from 'markdown-to-jsx';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import CloseIcon from '@material-ui/icons/Close';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast, Id } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EachParticipant from '../../components/EachParticipant';
 import SyncLoader from "react-spinners/SyncLoader";
+import AddIcon from '@material-ui/icons/Add';
 
-function index({ data, participants, tickets, projectId, openTickets, closedTickets }) {
-    
-    
-    const searchHandler = (e) => {      
+const index = ({ data, participants, tickets, projectId, openTickets, closedTickets }) => {
+
+    const roles = [{
+        value: 'Engineer',
+        label: 'Engineer'
+    },
+    {
+        value: 'Project Lead',
+        label: 'Project Lead'
+    },
+    {
+        value: 'Triager',
+        label: 'Triager'
+    }
+    ]
+
+    const { setMyPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
+    const { email, setEmail } = useContext(UserContext);
+
+    const searchHandler = (e) => {
         if (ticketCatActive == 'open') {
-            setOpenTickets(tempopenTicketsState.filter(function(each) {
+            setOpenTickets(tempopenTicketsState.filter(function (each) {
                 return each.title.toLowerCase().match(e.toLowerCase());
             }));
         } else {
-            setClosedTickets(tempclosedTicketsState.filter(function(each) {
+            setClosedTickets(tempclosedTicketsState.filter(function (each) {
                 return each.title.toLowerCase().match(e.toLowerCase());
             }));
         }
@@ -44,7 +63,7 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        });
+    });
 
 
     interface meInterface {
@@ -61,6 +80,7 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
         _id?: string
     }
 
+
     const [openTicketsState, setOpenTickets] = React.useState(openTickets);
     const [closedTicketsState, setClosedTickets] = React.useState(closedTickets);
     const [tempopenTicketsState, tempsetOpenTickets] = React.useState(openTickets);
@@ -69,19 +89,17 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [ticketTitle, setTicketTitle] = React.useState('');
+    const [newPartPermission, setNewPartPermission] = React.useState('Triager');
     const [previewTabActive, setPreviewTabActive] = React.useState(false);
     const [dataState, setDataState] = React.useState(data);
     const [ticketCatActive, setTicketcatactive] = React.useState('open');
     const [addParticipantModal, setAddParticipantModal] = React.useState(false);
-    const [chipData, setChipData] = React.useState([]);
-    const [participantName, setParticipantName] = React.useState('');
+    const [newPartName, setNewPartName] = React.useState('');
     const [username, setUsername] = React.useState('');
-    const [usernameList, setusernameList] = React.useState([]);
     const [me, setMe] = React.useState<meInterface>({});
 
-
     React.useEffect(() => {
-        const main = async() => {
+        const main = async () => {
             setisLoading(true)
             const token = window.localStorage.getItem('accessToken');
             const response3 = await fetch(`http://localhost:3000/api/me`, {
@@ -91,8 +109,20 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                 }
             });
             const res = await response3.json();
+            if (!res.in_projects.includes(projectId)) {
+                router.push('/dashboard', undefined, {
+                    shallow: true
+                });
+                window.alert('Unauthorised!')
+            }
             setUsername(res.username);
-            setChipData(participants);
+            setEmail(res.email);
+            setParticipantState(participants);
+            participants.map(each => {
+                if (each.name === res.username) {
+                    setMyPermission(each);
+                }
+            })
             setMe(res);
 
             const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
@@ -105,20 +135,25 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                 })
             });
             const res2 = await response2.json();
-            setusernameList(res2);
             setisLoading(false)
         }
         main();
     }, [modalIsOpen]);
 
-    var router = useRouter();
+    const router = useRouter();
 
     const refreshData = () => {
         router.replace(router.asPath);
     }
-  
 
-    
+    function isEmpty(obj) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    }
+
     var colors = {
         'new': ['greenyellow', 'black'],
         'New': ['greenyellow', 'black'],
@@ -148,31 +183,16 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
 
 
 
-     const editParticipants = async () => {
-        setAddParticipantModal(false);
-        /**const bodyData = {
-            id: projectId,
-            participants: chipData
+    const addParticipant = async (particEmail, permission) => {
+        if (!particEmail.includes('@')) {
+            notifyError('Enter a valid emailId !')
+            return
         }
-        console.log(bodyData);
-        
-        const res = await fetch('http://localhost:3000/api/editParticipants', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bodyData)
-
-        });**/
-
-        refreshData();
-    }
-
-   const addParticipant = async (particName) => {
         const bodyData = {
-            name: particName,
+            name: particEmail,
+            myEmail: email,
+            permission: permission.split(" ").join("").toLowerCase(),
             projectId: projectId,
-            me: me.username
         }
 
         const res = await fetch(`http://localhost:3000/api/addParticipant`, {
@@ -182,46 +202,14 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
             },
             body: JSON.stringify(bodyData)
         });
-        const resjson = await res.json();
-        if (res.status !== 200) {
-            notifyError('Unexpected error Occured !');
-        } else {
-            notifySuccess(particName + ' was added to the project !');
+        const response_participant = await res.json();
+        if (res.status == 404) {
+            notifyError(response_participant.message);
+        } else if (res.status == 200) {
+            setParticipantState([...participantState, response_participant]);
+            notifySuccess(particEmail + ' was added to the project !');
+            refreshData();
         }
-    }
-
-    const handleDelete = async (deleteName: any) => {      
-        if  (me.in_projects == undefined ? null : me.in_projects.includes(projectId)) {
-            setChipData(chipData.filter((eachName) => {
-                return eachName != deleteName;
-            }));
-            const bodyData = {
-                projectId: projectId,
-                removed: deleteName,
-                me: me.username
-            }
-    
-            const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(bodyData)
-    
-            });
-            const resjson = await res.json();
-            if (res.status != 200) {
-                notifyError(resjson.message)
-            }else {
-                notifyError(deleteName + ' was removed !')
-            }
-            
-        } else {
-            notifyError(deleteName + ' was not removed !')
-            return;
-        }
-
-        
     }
 
     const createNewTicket = async () => {
@@ -234,7 +222,7 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
             projectId: projectId
         }
 
-        
+
         const res = await fetch(`http://localhost:3000/api/createNewTicket`, {
             method: 'POST',
             headers: {
@@ -242,10 +230,11 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
             },
             body: JSON.stringify(bodyData)
         });
-        notifySuccess('New ticket created !');
-
+        if (res.status === 200) {
+            notifySuccess('New ticket created !');
+            refreshData();
+        }
         setIsOpen(false);
-        refreshData();
     }
 
     return (
@@ -262,11 +251,11 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                         <button onClick={(e) => {
                             e.preventDefault();
                             setAddParticipantModal(!addParticipantModal);
-                        }}>Add Participants</button>
+                        }}>Edit Participants</button>
                     </div>
                 </div>
 
-                <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
+                <SyncLoader color={'#fff9'} loading={isLoading} size={20} css={
                     `position: absolute;
                     top: 50%;
                     left: 50%;
@@ -276,8 +265,8 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                         background-color: rgba(42, 42, 42, 0.8)
                     }
                     `
-            } />
-            
+                } />
+
                 <div className={styles.projectDetailsContainer}>
                     <div className={styles.projectHead}>
                         <h5>#{data._id}</h5>
@@ -289,7 +278,7 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                         {
                             participants.map((each, id) => (
                                 <div key={id} className={styles.partAvatar}>
-                                    <h3>{each}</h3>
+                                    <h3>{each.name}</h3>
                                 </div>
                             ))
                         }
@@ -307,7 +296,7 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                     className={styles.editParticipantModal}
                     isOpen={addParticipantModal}
                     onRequestClose={() => {
-                        setChipData(participants);
+                        //setChipData(participants);
                         setAddParticipantModal(!addParticipantModal)
                     }}
                     style={{
@@ -321,126 +310,73 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                         <>
                             <div className={styles.modalCloseIconContainer}>
                                 <div className={styles.modalCloseIcon} onClick={() => {
-                                    setChipData(participants);
+                                    //setChipData(participants);
                                     setAddParticipantModal(!addParticipantModal);
                                 }}>
                                     <CloseIcon />
                                 </div>
                             </div>
-                            <div>
-                                <div className={styles.chipContainer}>
-                                    <div className={styles.participantHeading}>
-                                        <GroupIcon />
-                                        <h5>Participants</h5>
-                                    </div>
-                                    <div className={styles.participantsContainer}>
-                                        <div className={styles.participantLabel}>
-                                            <label htmlFor="">Project Participants</label>
-                                        </div>
-                                        <div className={styles.participantSelect}>
-                                            <input type="text" placeholder="Enter name" value={participantName} onChange={(e) => {
-                                                setParticipantName(e.target.value);
-                                            }} />
-
-                                            <button onClick={(e) => {
-                                                e.preventDefault();
-                                                addParticipant(participantName);
-                                                setChipData(() => [...chipData, participantName]);
-                                                setParticipantName('');
-                                            }}>Add</button>
-                                            {/*<FormControl className={styles.formControl}>
-                                                <InputLabel className={styles.inputLabel}>Username</InputLabel>
-                                                <Select
-                                                labelId="demo-simple-select-label"
-                                                className={styles.selectLabel}
-                                                value={participantName}
-                                                onChange={(event) => {
-                                                    setParticipantName(event.target.value);
-                                                }}
-                                                >
-                                                    {
-                                                        usernameList.map((each,id) => (
-                                                            <MenuItem key={id} value={each}>{each}</MenuItem>
-                                                        ))
-                                                    }
-                                                
-                                                </Select>
-                                            </FormControl>
-
-                                            <FormControl className={styles.formControl}>
-                                                <InputLabel className={styles.inputLabel}>Permission</InputLabel>
-                                                <Select
-                                                labelId="demo-simple-select-label"
-                                                className={styles.selectLabel}
-                                                value={permission}
-                                                onChange={(event) => {
-                                                    setPermission(event.target.value);
-                                                }}
-                                                >
-                                                    
-                                                            <MenuItem value="Admin">Admin</MenuItem>
-                                                            <MenuItem value="Triager">Triager</MenuItem>
-                                                            <MenuItem value="Viewer">Viewer</MenuItem>
-
-                                                    
-                                                
-                                                </Select>
-                                            </FormControl>
-
-                                            <button onClick={(e) => {
-                                                e.preventDefault();
-                                                addParticipant(participantName);
-                                                setChipData(() => [...chipData, participantName]);
-                                                setPermission('');
-                                                setParticipantName('');
-                                            }}>Add</button>*/}
-
-                                        </div>
-
-                                         <div className={styles.chipContainer}>
-                                                {
-                                                    chipData.map((each, key) => (
-                                                        <Chip
-                                                            key={key}
-                                                            label={each}
-                                                            onDelete={() => {
-                                                                each == username ? undefined : handleDelete(each)
-                                                                
-                                                            }}
-                                                            className={styles.chip}
-                                                        />
-                                                    ))
-                                                }
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className={styles.editParticipantsHeadContainer}>
+                                <h2 className={styles.editParticipantsHead}><GroupAddIcon className={styles.groupAddIcon} />Edit Participants</h2>
                             </div>
-                            {/*<div className={styles.allParticipants}>
-                                <div className={styles.allParticipantsHeadContainer}>
-                                    <h2>Available Participants</h2>
-                                </div>
+                            <div className={styles.participantsInfo}>
                                 {
-                                    usernameList.map(eachUser => (
-                                        <div onClick={(e) => {
-                                            console.log(e.target.innerText)
-                                            addParticipant(e.target.innerText);
-                                            setChipData(() => [...chipData, e.target.innerText]);
-                                            setParticipantName('');
-                                        }} key={eachUser} className={styles.eachUsernameContainer}>
-                                            <AddCircleOutlineIcon className={styles.circleOutlineIcon} />
-                                            <h4 className={styles.eachUsername}>{eachUser}</h4>
-                                        </div>
-                                    ))
+                                    participantState.map((person, index) => {
+                                        return (
+                                            <>
+                                                {
+                                                    (!isEmpty(person)) ? (
+                                                        <EachParticipant key={index} notifySuccess={notifySuccess} notifyError={notifyError} refreshData={refreshData} person={person} index={index} projectId={projectId} />
+                                                    ) : null
+                                                }
+                                            </>
+                                        )
+                                    })
                                 }
-                            </div>*/}
+                            </div>
+                            <div className={styles.addParticpantHeadContainer}>
+                                <h3>Add Participant</h3>
+                            </div>
+                            <div className={styles.addParticipantsBox}>
+
+                                <input className={styles.eachParticipantTextField} placeholder="EmailId" value={newPartName} onChange={(e) => {
+                                    setNewPartName(e.target.value);
+                                }} />
+
+                                <select className={styles.roleSelect} onChange={(e) => {
+                                    setNewPartPermission(e.target.value);
+                                }}>
+                                    {
+                                        roles.map(option => (
+                                            <option className={styles.roleSelect} value={option.value}>{option.label}</option>
+                                        ))
+                                    }
+                                </select>
+                                <button onClick={() => {
+                                    addParticipant(newPartName, newPartPermission);
+                                    setNewPartName('');
+                                }} disabled={newPartName ? false : true} style={{
+                                    display: 'flex',
+                                    cursor: 'pointer',
+                                    width: '120px',
+                                    borderRadius: '5px',
+                                    backgroundColor: newPartName ? 'blue' : 'gray',
+                                    color: newPartName ? 'white' : 'darkgray',
+                                    fontSize: '20px',
+                                    height: '35px',
+                                    outline: 'none',
+                                    border: 'none',
+                                    justifyContent: 'space-evenly',
+                                    alignItems: 'center'
+                                }}><AddIcon /> Add</button>
+                            </div>
 
                             <div className={styles.editParticipantButton}>
-                                <button onClick={editParticipants}>Save</button>
+                                <button onClick={() => {
+                                    setAddParticipantModal(false);
+                                }}>Save</button>
                             </div>
-
-
                         </>
-
                     }
 
                 </Modal>
@@ -458,7 +394,6 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                     }}
                 >
                     {
-
                         <>
                             <div className={styles.modalCloseIconContainer}>
                                 <div className={styles.previewTabContainer}>
@@ -479,7 +414,6 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                             </>
                                         )
                                     }
-
                                 </div>
                                 <div className={styles.modalCloseIcon} onClick={() => {
                                     setIsOpen(!modalIsOpen)
@@ -523,31 +457,31 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                             </textarea>
                                         </div>
                                         <div className={styles.createTicketButton}>
-                                            <button onClick={createNewTicket}>Create a new ticket</button>
+                                            <button onClick={() => {
+                                                createNewTicket();
+                                            }}>Create a new ticket</button>
                                         </div>
 
                                     </div>
                                 )
                             }
-
                         </>
-
                     }
 
                 </Modal>
                 <div className={styles.projectTicketContainer}>
                     <div className={styles.openpendingclosedContainer}>
                         <div className={styles.openpendingClosedInnerContainer}>
-                            <div className={ticketCatActive=='open' ? styles.ticketcategActive : styles.ticketcateg} onClick={(e) => {
+                            <div className={ticketCatActive == 'open' ? styles.ticketcategActive : styles.ticketcateg} onClick={(e) => {
                                 setTicketcatactive('open');
                             }}><h4>Open</h4></div>
-                            <div className={ticketCatActive=='closed' ? styles.ticketcategActive : styles.ticketcateg} onClick={(e) => {
+                            <div className={ticketCatActive == 'closed' ? styles.ticketcategActive : styles.ticketcateg} onClick={(e) => {
                                 setTicketcatactive('closed');
                             }}><h4>Closed</h4></div>
 
                         </div>
                     </div>
-                    
+
                     <div className={styles.ticketDetails}>
                         {
                             ticketCatActive === 'open' ? (
@@ -561,28 +495,28 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                                     router.push(
                                                         '/projects/[projectId]/ticket/[ticketId]',
                                                         `/projects/${each.projectId}/ticket/${each._id}`
-                                                        )
+                                                    )
                                                 }} key={id} className={styles.eachTicket}>
                                                     <div className={styles.ticketListUpper}>
                                                         <div className={styles.ticketHeading}>
                                                             <h3>{each.title}</h3>
                                                             <div className={styles.ticketTags}>
-                                                            <h5 style={{
-                                                                paddingLeft: '25px',
-                                                                paddingRight: '25px',
-                                                                display:'flex',
-                                                                alignItems: 'center',
-                                                                padding: '4px',
-                                                                border: 'black solid 1px',
-                                                                borderRadius: '10px',
-                                                                backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
-                                                                color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
-                                                            }}>{each.currentStatus}</h5>
+                                                                <h5 style={{
+                                                                    paddingLeft: '25px',
+                                                                    paddingRight: '25px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    padding: '4px',
+                                                                    border: 'black solid 1px',
+                                                                    borderRadius: '10px',
+                                                                    backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
+                                                                    color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
+                                                                }}>{each.currentStatus}</h5>
                                                                 {
                                                                     each.tags.map((each, keyId) => (
                                                                         <h5 key={keyId} style={{
                                                                             paddingLeft: '25px',
-                                                                            display:'flex',
+                                                                            display: 'flex',
                                                                             alignItems: 'center',
                                                                             paddingRight: '25px',
                                                                             padding: '3px',
@@ -621,7 +555,7 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                                     router.push(
                                                         '/projects/[projectId]/ticket/[ticketId]',
                                                         `/projects/${projectId}/ticket/${each._id}`
-                                                        );
+                                                    );
                                                 }} key={id} className={styles.eachTicket}>
                                                     <div className={styles.ticketListUpper}>
                                                         <div className={styles.ticketHeading}>
@@ -652,8 +586,6 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                             ) : (
                                                 null
                                             )
-
-
                                         ))
                                     }
                                 </div>
@@ -666,7 +598,7 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                                     router.push(
                                                         '/projects/[projectId]/ticket/[ticketId]',
                                                         `/projects/${projectId}/ticket/${each._id}`
-                                                        );
+                                                    );
                                                 }} key={id} className={styles.eachTicket}>
                                                     <div className={styles.ticketListUpper}>
                                                         <div className={styles.ticketHeading}>
@@ -688,8 +620,6 @@ function index({ data, participants, tickets, projectId, openTickets, closedTick
                                             ) : (
                                                 null
                                             )
-
-
                                         ))
                                     }
                                 </div>
@@ -746,7 +676,7 @@ export async function getServerSideProps(context) {
     data2.map(eachTicket => {
         if (eachTicket.currentStatus === 'closed') {
             closedTickets.push(eachTicket)
-        }else {
+        } else {
             openTickets.push(eachTicket)
         }
     });

@@ -13,7 +13,12 @@ const projectSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    participants: [String],
+    participants: [{
+        name: String,
+        email: String,
+        permission: String
+    }],
+    participant_names: [String],
     newTickets: {
         type: Number
     },
