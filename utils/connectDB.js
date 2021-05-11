@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-require('dotenv').config();
+//require('dotenv').config();
 
 const initDB = () => {
     if (mongoose.connections[0].readyState){
