@@ -14,7 +14,7 @@ function index() {
 
     const demoLogin = async () => {
         setisLoading(true);
-        const response = await fetch(`http://localhost:3000/api/login`, {
+        const response = await fetch(`https://ksissuetracker.herokuapp.com/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -37,7 +37,7 @@ function index() {
     }
 
     const register = async () => {
-        const response = await fetch(`http://localhost:3000/api/register`, {
+        const response = await fetch(`https://ksissuetracker.herokuapp.com/api/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
