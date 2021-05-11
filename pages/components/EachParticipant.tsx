@@ -12,20 +12,19 @@ function EachParticipant({ notifySuccess, notifyError, refreshData, projectId, p
   const [participantEdit, setParticipantEdit] = React.useState(false);
   const { myPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
 
-  console.log(participantState)
-
-  const roles = [{
+  const roles = [
+  {
+    value: 'triager',
+    label: 'Triager'
+  },
+    {
     value: 'engineer',
     label: 'Engineer'
   },
   {
     value: 'projectlead',
     label: 'Project Lead'
-  },
-  {
-    value: 'triager',
-    label: 'Triager'
-  },
+  }
   ]
 
   const editParticipants = async (user, newRole) => {

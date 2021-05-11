@@ -12,6 +12,30 @@ function index() {
     const [email, setEmail] = useState('');
 
 
+    const demoLogin = async () => {
+        setisLoading(true);
+        const response = await fetch(`http://localhost:3000/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: 'demo1@demo.com',
+                password: 'demo1',
+            })
+        });
+        const res = await response.json();
+        if (response.status === 403 || response.status === 500) {
+            alert(res.message);
+            setisLoading(false);
+        } else {  
+            const accessToken = res.tokenType + " " + res.accessToken;
+            window.localStorage.setItem('accessToken', accessToken);
+            router.push('/dashboard');
+        }
+        
+    }
+
     const register = async () => {
         const response = await fetch(`http://localhost:3000/api/register`, {
             method: 'POST',
@@ -97,7 +121,13 @@ function index() {
            }}>Register</button>
        </div>   
        <div className={styles.linkContainer}>
-           <a href="/login">Already have an account?</a>
+                    <a href="/login">Already have an account?</a>
+                    <h4 onClick={() => {
+                        demoLogin();
+                    }} style={{
+                        color: 'white',
+                        cursor: 'pointer'
+                    }}> <u>Demo?</u></h4>
        </div>           
    </div>
    </div>

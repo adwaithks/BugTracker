@@ -3,16 +3,19 @@
     top: 50%;
     transform: translate(-50%, -50%) !important;
     left: 50%;
-    height: 455px;
+    height: 485px;
     width: 350px;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    border: 1px solid rgba(255, 255, 255, 0.18);
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
 }
 
-.emailContainer, .buttonContainer, .pswdContainer, .usernameContainer {
+.emailContainer,
+.buttonContainer,
+.pswdContainer,
+.usernameContainer {
     width: 95%;
     margin-left: auto;
     margin-right: auto;
@@ -30,13 +33,16 @@
     width: 100%;
     margin-top: 10px;
     display: flex;
+    flex-direction: column;
     a {
         color: white !important;
+        margin-bottom: 5px;
         &:hover {
             opacity: 0.7;
         }
     }
-    justify-content:center;
+    justify-content: center;
+    align-items: center;
 }
 
 .registerhead {

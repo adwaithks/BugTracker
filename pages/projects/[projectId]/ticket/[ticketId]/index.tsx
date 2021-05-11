@@ -31,7 +31,7 @@ function index({ data }) {
     const [prevState, setPrevState] = React.useState('');
     const [reportCloseModal, setReportCloseModal] = React.useState(false);
     const [reportSelectionModal, setReportSelectionModal] = React.useState(false);
-    //const { myPermission, setMyPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
+    const { myPermission } = useContext(ParticipantsContext);
 
 
     const notifySuccess = (message) => toast.success(message, {
@@ -326,7 +326,6 @@ function index({ data }) {
                             <button onClick={() => { setReportSelectionModal(!reportSelectionModal) }} className={styles.cancel}>Cancel</button>
                         </div>
                     </div>
-
                 </>
             </Modal>
 
@@ -506,9 +505,14 @@ function index({ data }) {
                             <div className={styles.buttonContainer}>
                                 <button className={styles.labelButton} onClick={addLabel}>Add Labels</button>
                                 <button onClick={() => { submitReply(data._id, 0) }}>Comment</button>
-                                <button className={styles.ticketcloseButton} onClick={() => {
-                                    setReportCloseModal(true);
-                                }}>Close Ticket</button>
+                                {
+                                    myPermission.permission === 'triager' ? null : (
+                                        <button className={styles.ticketcloseButton} onClick={() => {
+                                            setReportCloseModal(true);
+                                        }}>Close Ticket</button>
+                                    )
+                                }
+                                
                             </div>
                         ) : (
                             null

@@ -16,21 +16,22 @@ import AddIcon from '@material-ui/icons/Add';
 
 const index = ({ data, participants, tickets, projectId, openTickets, closedTickets }) => {
 
-    const roles = [{
+    const roles = [
+        {
+            value: 'Triager',
+            label: 'Triager'
+        },    
+        {
         value: 'Engineer',
         label: 'Engineer'
-    },
-    {
-        value: 'Project Lead',
-        label: 'Project Lead'
-    },
-    {
-        value: 'Triager',
-        label: 'Triager'
-    }
+        },
+        {
+            value: 'Project Lead',
+            label: 'Project Lead'
+        },
     ]
 
-    const { setMyPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
+    const { myPermission, setMyPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
     const { email, setEmail } = useContext(UserContext);
 
     const searchHandler = (e) => {
@@ -310,7 +311,6 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
                         <>
                             <div className={styles.modalCloseIconContainer}>
                                 <div className={styles.modalCloseIcon} onClick={() => {
-                                    //setChipData(participants);
                                     setAddParticipantModal(!addParticipantModal);
                                 }}>
                                     <CloseIcon />
@@ -337,7 +337,9 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
                             <div className={styles.addParticpantHeadContainer}>
                                 <h3>Add Participant</h3>
                             </div>
-                            <div className={styles.addParticipantsBox}>
+                            {
+                                (myPermission.permission === 'projectlead' || myPermission.permission === 'admin') ? (
+                                    <div className={styles.addParticipantsBox}>
 
                                 <input className={styles.eachParticipantTextField} placeholder="EmailId" value={newPartName} onChange={(e) => {
                                     setNewPartName(e.target.value);
@@ -370,6 +372,10 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
                                     alignItems: 'center'
                                 }}><AddIcon /> Add</button>
                             </div>
+                                ) : <h3>You dont have the permission to add user to this project.</h3>
+
+                            }
+                            
 
                             <div className={styles.editParticipantButton}>
                                 <button onClick={() => {

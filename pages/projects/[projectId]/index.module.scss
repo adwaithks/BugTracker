@@ -5,7 +5,7 @@
     margin-left: auto;
     margin-right: auto;
     background-color: black;
-    scrollbar-width: none;  
+    scrollbar-width: none;
     height: fit-content;
     margin-bottom: 20px;
     display: flex;
@@ -14,12 +14,12 @@
 }
 
 .projectDetailsContainer::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
 }
 /* Optional: show position indicator in red */
 .projectDetailsContainer::-webkit-scrollbar-thumb {
-    background: #FF0000;
+    background: #ff0000;
 }
 
 .currentProject {
@@ -33,7 +33,7 @@
     align-items: center;
     justify-content: space-around;
     border-radius: 5px;
-    background-color: rgb(42,42,42);
+    background-color: rgb(42, 42, 42);
     font-size: larger;
     margin-left: auto;
     margin-right: auto;
@@ -62,26 +62,54 @@
     color: white;
     margin-top: 20px;
     margin-bottom: 20px;
+    height: 200px;
     width: 95%;
     margin-left: auto;
     margin-right: auto;
     h3 {
         font-weight: 400;
     }
+    p,
+    pre {
+        margin-bottom: 5px;
+        width: 95%;
+    }
+    p > code {
+        background-color: rgb(41, 41, 41);
+        border-radius: 5px;
+        width: fit-content;
+        padding: 1px;
+        line-height: 25px;
+    }
+    pre {
+        background-color: rgb(41, 41, 41);
+        border-radius: 5px;
+        padding: 10px;
+        white-space: pre-wrap;
+    }
+    pre > code {
+        width: fit-content;
+        overflow-wrap: break-word !important;
+
+        padding: 1px;
+    }
+    * {
+        color: white;
+        padding: 5px;
+    }
 }
 
 .ticketcategActive {
     cursor: pointer;
-    height: 90%;
+    height: 75%;
     width: fit-content;
     padding-left: 10px;
-    border-radius: 5px;
+    border-radius: 20px;
     padding-right: 10px;
     display: flex;
     align-items: center;
     background-color: white;
-        color: black;
-
+    color: black;
 }
 
 .projectParts {
@@ -117,8 +145,6 @@
     }
 }
 
-
-
 .createNewTicketContainer {
     width: 95%;
     margin-top: 40px;
@@ -143,7 +169,7 @@
             outline: none;
             color: white;
             font-size: 17px;
-            border:none;
+            border: none;
             &:hover {
                 opacity: 0.7;
             }
@@ -212,9 +238,9 @@
     font-size: 18px;
     height: 40px !important;
     outline: none;
-  }
-  
-  .eachParticipantTextField {
+}
+
+.eachParticipantTextField {
     width: 150px;
     background-color: rgb(255, 255, 255) !important;
     border-radius: 5px;
@@ -223,7 +249,7 @@
     font-size: 18px;
     padding: 10px;
     padding-left: 5px !important;
-  }
+}
 
 .addParticipantsBox {
     border-radius: 5px;
@@ -237,7 +263,7 @@
     margin-right: auto;
     justify-content: space-evenly;
     display: flex;
-  }
+}
 
 .projectTicketContainer {
     width: 95%;
@@ -250,8 +276,6 @@
     flex-direction: column;
     border-radius: 5px;
 }
-
-
 
 .editParticipantModal {
     width: 40%;
@@ -266,8 +290,6 @@
     outline: none;
 }
 
-
-
 .participantSelect {
     display: flex;
     justify-content: space-evenly;
@@ -281,7 +303,7 @@
         padding: 10px;
         font-size: 16px;
         border: none;
-        border-radius:  5px;
+        border-radius: 5px;
         margin-left: 3px;
         justify-content: flex-start;
         color: black;
@@ -315,7 +337,7 @@
 
 .eachUsernameContainer {
     background-color: white;
-    width:fit-content;
+    width: fit-content;
     padding-left: 8px;
     padding-right: 8px;
     padding-top: 2px;
@@ -354,7 +376,6 @@
 .circleOutlineIcon {
     color: black !important;
     font-size: 30px !important;
-    
 }
 
 .eachUsername {
@@ -369,7 +390,6 @@
     }
     margin-bottom: 20px;
 }
-
 
 .participantsContainer {
     width: 95%;
@@ -442,12 +462,13 @@
 
 .ticketcateg {
     cursor: pointer;
-    height: 90%;
+    height: 70%;
     width: fit-content;
     padding-left: 10px;
-    border-radius: 5px;
+    border-radius: 20px;
     padding-right: 10px;
     display: flex;
+    transition: ease-in 0.2s;
     align-items: center;
     &:hover {
         background-color: white;
@@ -480,7 +501,7 @@
 
 .modalCloseIcon {
     color: white;
-    margin-right: 10px; 
+    margin-right: 10px;
     * {
         font-size: 30px !important;
         &:hover {
@@ -508,7 +529,7 @@
     }
     textarea {
         width: 87%;
-        border:none;
+        border: none;
         outline: none;
         display: flex;
         justify-content: center;
@@ -551,7 +572,7 @@
     width: fit-content;
     margin-top: 5px;
     height: 30px;
-    border: solid 1px ;
+    border: solid 1px;
     align-items: center;
     display: flex;
     margin-left: 35px;
@@ -592,7 +613,6 @@
     height: 100%;
     background-color: blue;
     border-radius: 5px;
-
 }
 
 .ticketTitle {
@@ -632,22 +652,21 @@
     height: 100%;
     background-color: blue;
     border-radius: 5px;
-
 }
 
 .previewSection::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
 }
 /* Optional: show position indicator in red */
 .previewSection::-webkit-scrollbar-thumb {
-    background: #FF0000;
+    background: #ff0000;
 }
 
 .previewSection {
     width: 95%;
     height: 410px;
-    scrollbar-width: none;  
+    scrollbar-width: none;
     word-break: break-all;
     margin-left: auto;
     margin-bottom: 15px;
@@ -656,7 +675,8 @@
     border-radius: 5px;
     background-color: rgb(24, 24, 24);
 
-    p,pre {
+    p,
+    pre {
         margin-bottom: 5px;
         width: 95%;
         word-break: break-all;
@@ -666,8 +686,7 @@
         background-color: rgb(41, 41, 41);
         border-radius: 5px;
         padding: 1px;
-
-    }   
+    }
     pre {
         background-color: rgb(41, 41, 41);
         border-radius: 5px;
@@ -676,22 +695,21 @@
     * {
         color: white;
         padding: 5px;
-
     }
 }
 
 .ticketDetails {
     overflow-y: scroll;
-    scrollbar-width: none;  
+    scrollbar-width: none;
 }
 
 .ticketDetails::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
 }
 /* Optional: show position indicator in red */
 .ticketDetails::-webkit-scrollbar-thumb {
-    background: #FF0000;
+    background: #ff0000;
 }
 
 .ticketList {
@@ -730,7 +748,7 @@
 
 .ticketListLower {
     display: flex;
-    width: 95%;    
+    width: 95%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 8px;
@@ -753,7 +771,6 @@
         font-weight: 600;
     }
 }
-
 
 .ticketTags {
     width: fit-content;
@@ -801,7 +818,6 @@
     }
 }
 
-
 @media (max-width: 700px) {
     .newTicketModal {
         width: 80%;
@@ -826,7 +842,7 @@
         align-items: center;
         justify-content: space-around;
         border-radius: 5px;
-        background-color: rgb(42,42,42);
+        background-color: rgb(42, 42, 42);
         font-size: larger;
         margin-left: auto;
         margin-right: auto;
