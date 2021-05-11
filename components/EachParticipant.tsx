@@ -34,7 +34,7 @@ function EachParticipant({ notifySuccess, notifyError, refreshData, projectId, p
       newRole: newRole
     }
 
-    const res = await fetch('http://localhost:3000/api/editParticipants', {
+    const res = await fetch('https://ksissuetracker.herokuapp.com/api/editParticipants', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ function EachParticipant({ notifySuccess, notifyError, refreshData, projectId, p
         deleteid: deletePerson._id
       }
 
-      const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
+      const res = await fetch(`https://ksissuetracker.herokuapp.com/api/removeParticipant`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
