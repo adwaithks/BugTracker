@@ -129,7 +129,7 @@ function Sidebar() {
                     <h2>{username}</h2>
                     <h4 style={{
                         color: 'gray',
-                        fontWeight: '400'
+                        fontWeight: 400
                     }}>{email}</h4>
                 </div>
                 <div className={styles.navOptions}>
