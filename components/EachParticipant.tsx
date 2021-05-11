@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
-import { ParticipantsContext } from '../../context/ParticipantsContext';
+import { ParticipantsContext } from '../context/ParticipantsContext';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import styles from './EachParticipant.module.scss';
 

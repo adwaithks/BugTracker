@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import LayoutFrame from '../../components/LayoutFrame';
+import LayoutFrame from '../../../components/LayoutFrame';
 import styles from './index.module.scss';
 import { useRouter } from 'next/router';
 import Modal from 'react-modal';
@@ -10,7 +10,7 @@ import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import CloseIcon from '@material-ui/icons/Close';
 import { ToastContainer, toast, Id } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EachParticipant from '../../components/EachParticipant';
+import EachParticipant from '../../../components/EachParticipant';
 import SyncLoader from "react-spinners/SyncLoader";
 import AddIcon from '@material-ui/icons/Add';
 

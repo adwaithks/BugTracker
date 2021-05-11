@@ -5,7 +5,7 @@
     margin-right: auto;
     height: calc(100% - 100px);
     background-color: rgb(26, 26, 26);
-    border-radius: 5pxrgb(2, 2, 2)
+    border-radius: 5pxrgb (2, 2, 2);
 }
 .loader {
     position: absolute;
@@ -21,7 +21,7 @@
     margin-top: 5px;
     background-color: rgba(255, 255, 255, 0.075);
     box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
-    border: rgb(53, 53, 53) solid 1px;    
+    border: rgb(53, 53, 53) solid 1px;
     height: fit-content;
     padding-left: 15px;
     padding-bottom: 10px;
@@ -62,7 +62,6 @@
     font-size: 20px !important;
 }
 
-
 .descPart {
     width: 75%;
     height: fit-content;
@@ -72,7 +71,7 @@
         font-weight: 400;
     }
     h5 {
-            font-weight: 400;
+        font-weight: 400;
     }
 }
 
@@ -92,7 +91,7 @@
         width: 92%;
         background-color: rgba(255, 255, 255, 0.075);
         box-shadow: 0 8px 32px 0 rgba(27, 27, 27, 0.37);
-        border: rgb(53, 53, 53) solid 1px;    
+        border: rgb(53, 53, 53) solid 1px;
         height: fit-content;
         padding: 2px;
         padding-left: 5px;
@@ -113,7 +112,7 @@
             transform: scale(1.005);
         }
     }
-    
+
     .participants {
         display: flex;
         width: 100%;
@@ -129,14 +128,13 @@
             border-radius: 5px;
         }
     }
-    
+
     .participantsIcon {
         color: rgb(233, 233, 233) !important;
         margin-right: 5px;
         font-size: 20px !important;
     }
-    
-    
+
     .descPart {
         width: 95%;
         height: fit-content;
@@ -147,10 +145,10 @@
             font-weight: 400;
         }
         h5 {
-                font-weight: 400;
+            font-weight: 400;
         }
     }
-    
+
     .projectParticAvatar {
         height: 50px;
         border-radius: 50%;

@@ -24,7 +24,7 @@
     "**/*.tsx",
     "pages/projects/[projectId]/index.tsx",
     "context/ParticipantsContext.js"
-  ],
+, "components/EachParticipant.tsx"  ],
   "exclude": [
     "node_modules"
   ]

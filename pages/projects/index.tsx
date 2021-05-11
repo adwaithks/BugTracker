@@ -1,5 +1,5 @@
 import React from 'react';
-import LayoutFrame from '../components/LayoutFrame';
+import LayoutFrame from '../../components/LayoutFrame';
 import styles from './index.module.scss';
 import { useRouter } from 'next/router';
 import GroupIcon from '@material-ui/icons/Group';

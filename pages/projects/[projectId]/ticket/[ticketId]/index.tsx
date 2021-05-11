@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { UserContext } from '../../../../../context/UserContext';
 import { useRouter } from 'next/router';
 import { ParticipantsContext } from '../../../../../context/ParticipantsContext';
-import LayoutFrame from '../../../../components/LayoutFrame';
+import LayoutFrame from '../../../../../components/LayoutFrame';
 import styles from './index.module.scss';
 import Modal from 'react-modal';
 import Chip from '@material-ui/core/Chip';

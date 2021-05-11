@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import styles from './Navbar.module.scss';
 import MenuIcon from '@material-ui/icons/Menu';
 import {useRouter} from 'next/router';
-import {OtherContext} from '../../context/OtherContext';
+import {OtherContext} from '../context/OtherContext';
 
 function Navbar() {
 

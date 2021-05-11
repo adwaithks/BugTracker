@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styles from './index.module.scss';
 import { useRouter } from 'next/router';
 import Modal from 'react-modal';
-import LayoutFrame from '../components/LayoutFrame';
+import LayoutFrame from '../../components/LayoutFrame';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';

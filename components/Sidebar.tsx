@@ -4,8 +4,8 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import { useRouter } from 'next/router'
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import { UserContext } from '../../context/UserContext';
-import { OtherContext } from '../../context/OtherContext';
+import { UserContext } from '../context/UserContext';
+import { OtherContext } from '../context/OtherContext';
 import SyncLoader from "react-spinners/SyncLoader";
 
 function Sidebar() {
