@@ -95,7 +95,7 @@ const index = ({ data }) => {
 
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -108,7 +108,7 @@ const index = ({ data }) => {
             const res = await response.json();
             setMe(res);
 
-            const res2 = await fetch(`http://ksissuetracker.herokuapp.com/api/getAnalytics`, {
+            const res2 = await fetch(`https://ksissuetracker.herokuapp.com/api/getAnalytics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -117,6 +117,7 @@ const index = ({ data }) => {
             });
             const response2 = await res2.json();
             setAnalytics(response2);
+            console.log(response2);
             setEmail(res.email);
             setUsername(res.username);
             setChipData([res.username]);
@@ -163,7 +164,7 @@ const index = ({ data }) => {
         }
 
         setIsOpen(false);
-        await fetch(`http://ksissuetracker.herokuapp.com/api/createNewProject`, {
+        await fetch(`https://ksissuetracker.herokuapp.com/api/createNewProject`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -473,7 +474,7 @@ const index = ({ data }) => {
 
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`http://ksissuetracker.herokuapp.com/api/latestTickets`, {
+    const res = await fetch(`https://ksissuetracker.herokuapp.com/api/latestTickets`, {
         method: 'GET'
     });
     const response = await res.json();

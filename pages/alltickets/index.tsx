@@ -27,10 +27,10 @@ function index() {
         const main = async() => {
             const token = window.localStorage.getItem('accessToken');
 
-            const res = await fetch(`http://ksissuetracker.herokuapp.com/api/getAllTickets`)
+            const res = await fetch(`https://ksissuetracker.herokuapp.com/api/getAllTickets`)
             const data = await res.json();
 
-            const response = await fetch(`http://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token

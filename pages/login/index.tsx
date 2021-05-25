@@ -18,7 +18,7 @@ function index() {
 
 
     const login = async () => {
-        const response = await fetch(`http://ksissuetracker.herokuapp.com/api/login`, {
+        const response = await fetch(`https://ksissuetracker.herokuapp.com/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -17,14 +17,15 @@ export default async (req, res) => {
     } 
     var projects = [];
 
-
     const allProjects = await Project.find();
     allProjects.map(each => {
-        if (each.participants.includes(req.body.user.toString())) {
-            projects.push(each);
-        }
-        
+        each.participants.map(partic => {
+            if (partic.name === req.body.user) {
+                projects.push(each);
+            }
+        })       
     });
+
     projects.forEach(project => {
         analyticsMatch.newTickets += project.newTickets;
         analyticsMatch.triagedTickets += project.triagedTickets;

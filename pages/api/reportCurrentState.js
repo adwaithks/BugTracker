@@ -35,15 +35,19 @@ export default async(req, res) => {
         case 'Pending': project.pendingTickets += 1; break;
         case 'Unresolved': project.unresolvedTickets += 1; break;
         case 'Resolved': project.resolvedTickets += 1; break;
+        default:
+            console.log('No case detected !');
     }
 
     switch(prev) {
-        case 'New': project.newTickets -= 1; break;
+        case 'New': project.newTickets -= 1;break;
         case 'Triaged': project.triagedTickets -= 1; break;
         case 'Accepted': project.acceptedTickets -= 1; break;
         case 'Pending': project.pendingTickets -= 1; break;
         case 'Unresolved': project.unresolvedTickets -= 1; break;
         case 'Resolved': project.resolvedTickets -= 1; break;
+        default:
+            console.log('No case detected !');
     }
 
     await project.save().then().catch();
