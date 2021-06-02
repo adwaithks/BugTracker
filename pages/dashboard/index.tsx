@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styles from './index.module.scss';
 import { useRouter } from 'next/router';
 import Modal from 'react-modal';
@@ -6,10 +6,11 @@ import LayoutFrame from '../../components/LayoutFrame';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
-import { UserContext } from '../../context/UserContext';
 import SyncLoader from "react-spinners/SyncLoader";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector, useDispatch, RootStateOrAny } from 'react-redux';
+import { setUsername, setEmail, setBurgerIcon, setBurgerIconVisibility } from '../../actions';
 
 const index = ({ data }) => {
 
@@ -32,7 +33,12 @@ const index = ({ data }) => {
         draggable: true,
         progress: undefined,
     });
-    const { username, setUsername, letter, setLetter, email, setEmail } = useContext(UserContext);
+
+    const email = useSelector((state: RootStateOrAny) => state.email);
+    const username = useSelector((state: RootStateOrAny) => state.username);
+    const burgerIcon = useSelector((state: RootStateOrAny) => state.burgerIcon);
+    const burgerIconVisibility = useSelector((state: RootStateOrAny) => state.burgerIconVisibility);
+    const dispatch = useDispatch();
 
     interface analyticsInterface {
         acceptedTickets?: number,
@@ -67,8 +73,8 @@ const index = ({ data }) => {
     const [chipData, setChipData] = React.useState([]);
     const [analytics, setAnalytics] = React.useState<analyticsInterface>({});
     const [me, setMe] = React.useState<meInterface>({});
-    const [burgerIcon, setBurgerIcon] = React.useState(false); //false - not open
-    const [burgerIconVisibility, setBurgerIconVisibility] = React.useState(false); //false - not open
+    //const [burgerIcon, setBurgerIcon] = React.useState(false); //false - not open
+    //const [burgerIconVisibility, setBurgerIconVisibility] = React.useState(false); //false - not open
 
     const router = useRouter();
 
@@ -76,26 +82,26 @@ const index = ({ data }) => {
         setisLoading(true);
 
         if (window.innerWidth > 1101) {
-            setBurgerIconVisibility(false)
+            dispatch(setBurgerIconVisibility(false))
         }
 
         if (window.innerWidth < 950) {
-            setBurgerIconVisibility(true); //(true);
+            dispatch(setBurgerIconVisibility(true)); //(true);
         }
         const resizeListener = () => {
             if (window.innerWidth > 1101) {
-                setBurgerIconVisibility(false);
+                dispatch(setBurgerIconVisibility(false));
             }
 
             if (window.innerWidth < 950) {
-                setBurgerIconVisibility(true); //(true);
+                dispatch(setBurgerIconVisibility(true)); //(true);
             }
         };
         window.addEventListener('resize', resizeListener);
 
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -108,7 +114,7 @@ const index = ({ data }) => {
             const res = await response.json();
             setMe(res);
 
-            const res2 = await fetch(`https://ksissuetracker.herokuapp.com/api/getAnalytics`, {
+            const res2 = await fetch(`http://localhost:3000/api/getAnalytics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -118,8 +124,8 @@ const index = ({ data }) => {
             const response2 = await res2.json();
             setAnalytics(response2);
             console.log(response2);
-            setEmail(res.email);
-            setUsername(res.username);
+            dispatch(setEmail(res.email));
+            dispatch(setUsername(res.username));
             setChipData([res.username]);
             setisLoading(false);
         }
@@ -164,7 +170,7 @@ const index = ({ data }) => {
         }
 
         setIsOpen(false);
-        await fetch(`https://ksissuetracker.herokuapp.com/api/createNewProject`, {
+        await fetch(`http://localhost:3000/api/createNewProject`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -194,7 +200,7 @@ const index = ({ data }) => {
                         <div className={styles.burgerIconContainer}>
 
 
-                            <MenuIcon className={styles.burgerIcon} onClick={() => { setBurgerIcon(!burgerIcon) }} />
+                            <MenuIcon className={styles.burgerIcon} onClick={() => { dispatch(setBurgerIcon(!burgerIcon)) }} />
                             {
                                 (burgerIcon) ? (
                                     <div className={styles.burgerIconOptions}>
@@ -474,7 +480,7 @@ const index = ({ data }) => {
 
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`https://ksissuetracker.herokuapp.com/api/latestTickets`, {
+    const res = await fetch(`http://localhost:3000/api/latestTickets`, {
         method: 'GET'
     });
     const response = await res.json();

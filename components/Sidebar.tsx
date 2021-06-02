@@ -1,29 +1,30 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import styles from './Sidebar.module.scss';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { useRouter } from 'next/router'
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import { UserContext } from '../context/UserContext';
-import { OtherContext } from '../context/OtherContext';
 import SyncLoader from "react-spinners/SyncLoader";
+import { useSelector, useDispatch, RootStateOrAny } from 'react-redux';
+import { setExpanded, setActiveTab, setSidebarVisibility, setUsername, setLetter, setEmail } from '../actions';
 
 function Sidebar() {
 
-    const { username, setUsername, letter, setLetter, email, setEmail } = useContext(UserContext);
-    const {
-        activeTab, setActiveTab,
-        expanded, setExpanded,
-        sidebarVisibility, setSidebarVisibility
-    } = useContext(OtherContext);
+    const expanded = useSelector((state: RootStateOrAny) => state.expanded);
+    const email = useSelector((state: RootStateOrAny) => state.email);
+    const activeTab = useSelector((state: RootStateOrAny) => state.activeTab);
+    const username = useSelector((state: RootStateOrAny) => state.username);
+    const letter = useSelector((state: RootStateOrAny) => state.letter);
+    const sidebarVisibility = useSelector((state: RootStateOrAny) => state.sidebarVisibility);
+    const dispatch = useDispatch();
+    //const { username, setUsername, letter, setLetter, email, setEmail } = useContext(UserContext);
 
 
-    const [isLoading, setisLoading] = React.useState(false);    //const [expanded, setExpanded] = useState(true);
-    //const [sidebarVisibility, setSidebarVisibility] = React.useState(true);
 
+    const [isLoading, setisLoading] = React.useState(false);
     const router = useRouter();
     const pageRoute = (page) => {
-        setActiveTab(page);
+        dispatch(setActiveTab(page));
         router.push(`/${page}`, null, { shallow: true });
     }
 
@@ -36,35 +37,37 @@ function Sidebar() {
 
     useEffect(() => {
         if (window.innerWidth > 1101) {
-            setExpanded(true)
-            setSidebarVisibility(true)
+            dispatch(setExpanded(true));
+            dispatch(setSidebarVisibility(true));
         }
         if (window.innerWidth < 1100) {
-            setExpanded(false);
+            dispatch(setExpanded(false))
         }
         if (window.innerWidth < 950) {
-            setSidebarVisibility(false)
+            dispatch(setSidebarVisibility(false));
         }
         const resizeListener = () => {
             if (window.innerWidth > 1101) {
-                setExpanded(true)
-                setSidebarVisibility(true)
+                dispatch(setExpanded(true));
+                dispatch(setSidebarVisibility(true));
             }
             if (window.innerWidth < 1100) {
-                setExpanded(false);
+                dispatch(setExpanded(false))
             }
             if (window.innerWidth < 950) {
-                setSidebarVisibility(false)
+                dispatch(setSidebarVisibility(false));
             }
         };
         window.addEventListener('resize', resizeListener);
 
 
         const main = async () => {
-            setActiveTab(window.location.href.split("/")[3]);
+            let currentActiveTab = window.location.href.split("/")[3];
+            dispatch(setActiveTab(currentActiveTab));
             if (!window.localStorage.getItem("username") || !window.localStorage.getItem("letter")) {
+                console.log('called main');
                 const token = window.localStorage.getItem('accessToken');
-                const response = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
+                const response = await fetch(`http://localhost:3000/api/me`, {
                     method: 'GET',
                     headers: {
                         'accessToken': token
@@ -77,14 +80,20 @@ function Sidebar() {
                 window.localStorage.setItem("username", res.username);
                 window.localStorage.setItem("email", res.email);
                 window.localStorage.setItem("letter", res.username[0].toUpperCase());
-                setEmail(res.email);
+                dispatch(setEmail(res.email));
                 let firstLetter = res.username.substr(0, 1);
-                setUsername(firstLetter.toUpperCase() + res.username.substr(1));
-                setLetter(res.username[0].toUpperCase());
+                let usernameFromAPI = firstLetter.toUpperCase() + res.username.substr(1);
+                dispatch(setUsername(usernameFromAPI));
+                let letterFromAPI = res.username[0].toUpperCase();
+                console.log('letter: ' + letterFromAPI);
+                dispatch(setLetter(letterFromAPI));
             } else {
-                setUsername(window.localStorage.getItem("username"))
-                setEmail(window.localStorage.getItem("email"))
-                setLetter(window.localStorage.getItem("letter"))
+                let usernameFromLS = window.localStorage.getItem("username");
+                dispatch(setUsername(usernameFromLS));
+                let emailFromLS = window.localStorage.getItem("email");
+                dispatch(setEmail(emailFromLS));
+                let letterFromAPI = window.localStorage.getItem("letter")
+                dispatch(setLetter(letterFromAPI));
             }
         }
         main();
@@ -200,7 +209,7 @@ function Sidebar() {
                             }
                         `}
                 </style>
-                
+
                 <div className={styles.closedNavBtnGroup}>
                     {
                         activeTab == 'dashboard' ? (

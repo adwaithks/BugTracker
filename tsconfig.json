@@ -23,8 +23,10 @@
     "**/*.ts",
     "**/*.tsx",
     "pages/projects/[projectId]/index.tsx",
-    "context/ParticipantsContext.js"
-, "components/EachParticipant.tsx"  ],
+    "context/ParticipantsContext.js",
+    "components/EachParticipant.tsx",
+    "reducers/index.js"
+  ],
   "exclude": [
     "node_modules"
   ]
