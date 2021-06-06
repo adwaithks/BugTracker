@@ -5,7 +5,7 @@ import email from './emailReducer';
 import myPermission from './myPermissionReducer';
 import participantState from './participantStateReducer';
 import letter from './letterReducer';
-import username from './userNameReducer';
+import username from './usernameReducer';
 import sidebarVisibility from './sidebarVisibilityReducer';
 import burgerIconVisibility from './burgerIconVisibilityReducer';
 import burgerIcon from './burgerIconReducer';

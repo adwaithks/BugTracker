@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import LayoutFrame from '../../../components/LayoutFrame';
 import styles from './index.module.scss';
 import { useRouter } from 'next/router';
@@ -104,7 +104,7 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
         const main = async () => {
             setisLoading(true)
             const token = window.localStorage.getItem('accessToken');
-            const response3 = await fetch(`http://localhost:3000/api/me`, {
+            const response3 = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -127,7 +127,7 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
             })
             setMe(res);
 
-            const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
+            const response2 = await fetch(`https://ksissuetracker.herokuapp.com/api/getUsers`, {
                 method: 'POST',
                 headers: {
                     'accessToken': token
@@ -197,7 +197,7 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
             projectId: projectId,
         }
 
-        const res = await fetch(`http://localhost:3000/api/addParticipant`, {
+        const res = await fetch(`https://ksissuetracker.herokuapp.com/api/addParticipant`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -225,16 +225,21 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
         }
 
 
-        const res = await fetch(`http://localhost:3000/api/createNewTicket`, {
+        const res = await fetch(`https://ksissuetracker.herokuapp.com/api/createNewTicket`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bodyData)
         });
-        if (res.status === 200) {
+        const finalRes = await res.json();
+        if (finalRes) {
+            router.push(
+                '/projects/[projectId]/ticket/[ticketId]',
+                `/projects/${projectId}/ticket/${finalRes._id}`
+            )
             notifySuccess('New ticket created !');
-            refreshData();
+            //refreshData();
         }
         setIsOpen(false);
     }
@@ -656,7 +661,7 @@ export async function getServerSideProps(context) {
     var closedTickets = [];
     var openTickets = [];
     const projectId = context.req.__NEXT_INIT_QUERY.projectId ? context.req.__NEXT_INIT_QUERY.projectId : context.req.url.split('/')[2];
-    const response = await fetch(`http://localhost:3000/api/getProject`, {
+    const response = await fetch(`https://ksissuetracker.herokuapp.com/api/getProject`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -669,7 +674,7 @@ export async function getServerSideProps(context) {
     const data = await response.json();
     const participants = data.participants;
 
-    const response2 = await fetch(`http://localhost:3000/api/getProjectTickets`, {
+    const response2 = await fetch(`https://ksissuetracker.herokuapp.com/api/getProjectTickets`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

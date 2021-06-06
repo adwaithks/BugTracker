@@ -11,13 +11,7 @@ const store = createStore(allReducers);
 function App({ Component, pageProps }) {
     return (
         <Provider store={store}>
-            <UserProvider>
-                <OtherProvider>
-                    <ParticipantsProvider>
-                        <Component {...pageProps} />
-                    </ParticipantsProvider>
-                </OtherProvider>
-            </UserProvider>
+            <Component {...pageProps} />
         </Provider>
     )
 }
