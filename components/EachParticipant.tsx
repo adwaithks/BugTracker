@@ -1,30 +1,30 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
-import { ParticipantsContext } from '../context/ParticipantsContext';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import styles from './EachParticipant.module.scss';
-
+import { useSelector, RootStateOrAny } from 'react-redux';
 
 function EachParticipant({ notifySuccess, notifyError, refreshData, projectId, person, index }) {
 
+  const myPermission = useSelector((state: RootStateOrAny) => state.myPermission);
+  const participantState = useSelector((state: RootStateOrAny) => state.participantState);
   const [role, setRole] = React.useState(null);
   const [participantEdit, setParticipantEdit] = React.useState(false);
-  const { myPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
 
   const roles = [
-  {
-    value: 'triager',
-    label: 'Triager'
-  },
     {
-    value: 'engineer',
-    label: 'Engineer'
-  },
-  {
-    value: 'projectlead',
-    label: 'Project Lead'
-  }
+      value: 'triager',
+      label: 'Triager'
+    },
+    {
+      value: 'engineer',
+      label: 'Engineer'
+    },
+    {
+      value: 'projectlead',
+      label: 'Project Lead'
+    }
   ]
 
   const editParticipants = async (user, newRole) => {
@@ -34,7 +34,7 @@ function EachParticipant({ notifySuccess, notifyError, refreshData, projectId, p
       newRole: newRole
     }
 
-    const res = await fetch('https://ksissuetracker.herokuapp.com/api/editParticipants', {
+    const res = await fetch('http://localhost:3000/api/editParticipants', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ function EachParticipant({ notifySuccess, notifyError, refreshData, projectId, p
         deleteid: deletePerson._id
       }
 
-      const res = await fetch(`https://ksissuetracker.herokuapp.com/api/removeParticipant`, {
+      const res = await fetch(`http://localhost:3000/api/removeParticipant`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -24,28 +24,28 @@ function index() {
 
     React.useEffect(() => {
         setisLoading(true)
-        const main = async() => {
+        const main = async () => {
             const token = window.localStorage.getItem('accessToken');
 
-            const res = await fetch(`https://ksissuetracker.herokuapp.com/api/getAllTickets`)
+            const res = await fetch(`http://localhost:3000/api/getAllTickets`)
             const data = await res.json();
 
-            const response = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
                 }
             });
-            const res2 = await response.json();  
-            setMe(res2); 
-            setData(data);  
-            settempData(data);     
-            setisLoading(false);                          
+            const res2 = await response.json();
+            setMe(res2);
+            setData(data);
+            settempData(data);
+            setisLoading(false);
         }
         main();
     }, []);
 
-    const [me, setMe] =  React.useState<meInterface>({});
+    const [me, setMe] = React.useState<meInterface>({});
     const [data, setData] = React.useState([]);
     const [tempdata, settempData] = React.useState([]);
     const [isLoading, setisLoading] = React.useState(false);
@@ -71,8 +71,8 @@ function index() {
         'accepted': ['green', 'white']
     }
 
-    const searchHandler = (e) => {      
-        setData(tempdata.filter(function(each) {
+    const searchHandler = (e) => {
+        setData(tempdata.filter(function (each) {
             return each.title.toLowerCase().match(e.target.value.toLowerCase());
         }));
     }
@@ -80,8 +80,8 @@ function index() {
 
     return (
         <LayoutFrame>
-            <SyncLoader  color={'#fff9'} loading={isLoading} size={20} css={
-                    `position: absolute;
+            <SyncLoader color={'#fff9'} loading={isLoading} size={20} css={
+                `position: absolute;
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%, 50%);
@@ -97,65 +97,65 @@ function index() {
                 </div>
 
                 <div className={styles.ticketList}>
-                {
+                    {
                         data.map((each, id) => (
                             me.in_projects == undefined ? null : me.in_projects.includes(each.projectId) ? (
-                        <div onClick={() => {
-                            setisLoading(true)
-                                router.push(
-                                    '/projects/[projectId]/ticket/[ticketId]',
-                                    `/projects/${each.projectId}/ticket/${each._id}`
+                                <div onClick={() => {
+                                    setisLoading(true)
+                                    router.push(
+                                        '/projects/[projectId]/ticket/[ticketId]',
+                                        `/projects/${each.projectId}/ticket/${each._id}`
                                     )
-                            }} key={id} className={styles.eachTicket}>
-                                <div className={styles.ticketListUpper}>
-                                    <div className={styles.ticketHeading}>
-                                        <h3>{each.title}</h3>
-                                        <div className={styles.ticketTags}>
-                                        <h5 style={{
-                                            paddingLeft: '25px',
-                                            paddingRight: '25px',
-                                            display:'flex',
-                                            alignItems: 'center',
-                                            padding: '4px',
-                                            border: 'black solid 1px',
-                                            borderRadius: '10px',
-                                            backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
-                                            color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
-                                        }}>{each.currentStatus}</h5>
-                                            {
-                                                each.tags.map((each, keyId) => (
-                                                    <h5 key={keyId} style={{
-                                                        paddingLeft: '25px',
-                                                        display:'flex',
-                                                        alignItems: 'center',
-                                                        paddingRight: '25px',
-                                                        padding: '3px',
-                                                        borderRadius: '10px',
-                                                        marginRight: '5px',
-                                                        marginLeft: '5px',
-                                                        backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
-                                                        color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
-                                                    }}>{each}</h5>
-                                                ))
-                                            }
+                                }} key={id} className={styles.eachTicket}>
+                                    <div className={styles.ticketListUpper}>
+                                        <div className={styles.ticketHeading}>
+                                            <h3>{each.title}</h3>
+                                            <div className={styles.ticketTags}>
+                                                <h5 style={{
+                                                    paddingLeft: '25px',
+                                                    paddingRight: '25px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    padding: '4px',
+                                                    border: 'black solid 1px',
+                                                    borderRadius: '10px',
+                                                    backgroundColor: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][0] || 'orange',
+                                                    color: colors[each.currentStatus ? each.currentStatus.toLowerCase() : 'default'][1] || 'white'
+                                                }}>{each.currentStatus}</h5>
+                                                {
+                                                    each.tags.map((each, keyId) => (
+                                                        <h5 key={keyId} style={{
+                                                            paddingLeft: '25px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            paddingRight: '25px',
+                                                            padding: '3px',
+                                                            borderRadius: '10px',
+                                                            marginRight: '5px',
+                                                            marginLeft: '5px',
+                                                            backgroundColor: colors[each.toLowerCase()] ? colors[each.toLowerCase()][0] : 'orange',
+                                                            color: colors[each.toLowerCase()] ? colors[each.toLowerCase()][1] : 'black'
+                                                        }}>{each}</h5>
+                                                    ))
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={styles.ticketListLower}>
+                                        <div className={styles.ticketId}>
+                                            <h5>#{each._id}</h5>
+                                        </div>
+                                        <div className={styles.reportDate}>
+                                            <h5>Opened On {each.created_at} by {each.author}</h5>
                                         </div>
                                     </div>
                                 </div>
-                                <div className={styles.ticketListLower}>
-                                    <div className={styles.ticketId}>
-                                        <h5>#{each._id}</h5>
-                                    </div>
-                                    <div className={styles.reportDate}>
-                                        <h5>Opened On {each.created_at} by {each.author}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            ) : null 
+                            ) : null
                         ))
                     }
 
                 </div>
-                </div>
+            </div>
         </LayoutFrame>
     )
 }

@@ -14,10 +14,12 @@ import Markdown from 'markdown-to-jsx';
 import SyncLoader from "react-spinners/SyncLoader";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector, useDispatch, RootStateOrAny } from 'react-redux';
+import { setUsername } from '../../../../../actions';
 
 function index({ data }) {
 
-    const { username, setUsername } = useContext(UserContext);
+    const dispatch = useDispatch();
     const [isLoading, setisLoading] = React.useState(false);
     const [editorContent, setEditorContent] = React.useState('');
     const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -31,7 +33,8 @@ function index({ data }) {
     const [prevState, setPrevState] = React.useState('');
     const [reportCloseModal, setReportCloseModal] = React.useState(false);
     const [reportSelectionModal, setReportSelectionModal] = React.useState(false);
-    const { myPermission } = useContext(ParticipantsContext);
+    const username = useSelector((state: RootStateOrAny) => state.username);
+    const myPermission = useSelector((state: RootStateOrAny) => state.myPermission);
 
 
     const notifySuccess = (message) => toast.success(message, {
@@ -62,14 +65,14 @@ function index({ data }) {
         setisLoading(true)
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
                 }
             });
             const res = await response.json();
-            setUsername(res.username);
+            dispatch(setUsername(res.username));
             setisLoading(false);
         }
         main();
@@ -102,7 +105,7 @@ function index({ data }) {
     const setCurrentState = async () => {
         if (temp !== 'closed') {
 
-            await fetch(`https://ksissuetracker.herokuapp.com/api/reportCurrentState`, {
+            await fetch(`http://localhost:3000/api/reportCurrentState`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -142,7 +145,7 @@ function index({ data }) {
             prevState: selectValue
         }
 
-        await fetch(`https://ksissuetracker.herokuapp.com/api/closeTicket`, {
+        await fetch(`http://localhost:3000/api/closeTicket`, {
             method: 'POST',
             body: JSON.stringify(bodyData),
             headers: {
@@ -157,7 +160,7 @@ function index({ data }) {
             action: 2
         }
 
-        await fetch(`https://ksissuetracker.herokuapp.com/api/submitReply`, {
+        await fetch(`http://localhost:3000/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -190,14 +193,14 @@ function index({ data }) {
             reply: `${username} added label ` + tempString,
             tagData: chipData,
         }
-        await fetch(`https://ksissuetracker.herokuapp.com/api/setLabels`, {
+        await fetch(`http://localhost:3000/api/setLabels`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bodyData)
         });
-        await fetch(`https://ksissuetracker.herokuapp.com/api/submitReply`, {
+        await fetch(`http://localhost:3000/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -228,7 +231,7 @@ function index({ data }) {
             id: id
         }
 
-        await fetch(`https://ksissuetracker.herokuapp.com/api/submitReply`, {
+        await fetch(`http://localhost:3000/api/submitReply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -512,7 +515,7 @@ function index({ data }) {
                                         }}>Close Ticket</button>
                                     )
                                 }
-                                
+
                             </div>
                         ) : (
                             null
@@ -541,7 +544,7 @@ function index({ data }) {
 
 export async function getServerSideProps(context) {
     const ticketId = context.req.__NEXT_INIT_QUERY.ticketId ? context.req.__NEXT_INIT_QUERY.ticketId : context.req.url.split('/')[4];
-    const response = await fetch(`https://ksissuetracker.herokuapp.com/api/getTicket`, {
+    const response = await fetch(`http://localhost:3000/api/getTicket`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

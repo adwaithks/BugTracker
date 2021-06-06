@@ -4,32 +4,30 @@ import styles from './index.module.scss';
 import { useRouter } from 'next/router';
 import GroupIcon from '@material-ui/icons/Group';
 import SyncLoader from "react-spinners/SyncLoader";
-
+import { setUsername } from '../../actions';
+import { useSelector, useDispatch, RootStateOrAny } from 'react-redux';
 
 function index({ data }) {
 
     const router = useRouter();
+    const dispatch = useDispatch();
     const [isLoading, setisLoading] = React.useState(false);
-
-    const [username, setUsername] = React.useState('');
+    const username = useSelector((state: RootStateOrAny) => state.username);
 
 
     React.useEffect(() => {
         setisLoading(true)
         const main = async () => {
             const token = window.localStorage.getItem('accessToken');
-            const response = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
+            const response = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
                 }
             });
             const res = await response.json();
-            setUsername(res.username);
+            dispatch(setUsername(res.username));
             setisLoading(false)
-            console.log(res.username);
-            console.log(data)
-
         }
         main();
     }, []);
@@ -90,7 +88,7 @@ function index({ data }) {
 }
 
 export async function getServerSideProps(context) {
-    const res = await fetch(`https://ksissuetracker.herokuapp.com/api/getMyProjects`);
+    const res = await fetch(`http://localhost:3000/api/getMyProjects`);
     const data = await res.json();
 
     return {

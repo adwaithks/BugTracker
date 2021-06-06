@@ -1,83 +1,76 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import styles from './Navbar.module.scss';
 import MenuIcon from '@material-ui/icons/Menu';
-import {useRouter} from 'next/router';
-import {OtherContext} from '../context/OtherContext';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBurgerIcon, setBurgerIconVisibility, setSidebarVisibility, setExpanded } from '../actions';
 
 function Navbar() {
 
-    const {
-        burgerIcon, 
-        setBurgerIcon,
-        burgerIconVisibility, setBurgerIconVisibility,
-        expanded, setExpanded,
-        sidebarVisibility, setSidebarVisibility
-    } = useContext(OtherContext);
+    const dispatch = useDispatch();
+    const burgerIcon = useSelector(state => state.burgerIcon);
+    const burgerIconVisibility = useSelector(state => state.burgerIconVisibility);
 
-   // const [burgerIcon, setBurgerIcon] = React.useState(false); //false - not open
-    //const [expanded, setExpanded] = React.useState(true);
-    //const [sidebarVisibility, setSidebarVisibility] = React.useState(true);
-    //const [burgerIconVisibility, setBurgerIconVisibility] = React.useState(false); //false - not open
     const router = useRouter();
 
     React.useEffect(() => {
         if (window.innerWidth > 1101) {
-            setExpanded(true)
-            setSidebarVisibility(true)
-            setBurgerIconVisibility(false)
+            dispatch(setExpanded(true))
+            dispatch(setSidebarVisibility(true))
+            dispatch(setBurgerIconVisibility(false))
         }
         if (window.innerWidth < 1100) {
-            setExpanded(false);
+            dispatch(setExpanded(false));
         }
         if (window.innerWidth < 950) {
-            setSidebarVisibility(false);
-            setBurgerIconVisibility(true); //(true);
+            dispatch(setSidebarVisibility(false));
+            dispatch(setBurgerIconVisibility(true)); //(true);
         }
         const resizeListener = () => {
             if (window.innerWidth > 1101) {
-                setExpanded(true)
-                setSidebarVisibility(true)
-                setBurgerIconVisibility(false);
+                dispatch(setExpanded(true))
+                dispatch(setSidebarVisibility(true))
+                dispatch(setBurgerIconVisibility(false));
             }
             if (window.innerWidth < 1100) {
-                setExpanded(false);
+                dispatch(setExpanded(false));
             }
             if (window.innerWidth < 950) {
-                setSidebarVisibility(false)
+                dispatch(setSidebarVisibility(false))
             }
-          };
-          window.addEventListener('resize', resizeListener);
-            
+        };
+        window.addEventListener('resize', resizeListener);
+
     })
-    
+
 
     return (
         <div className={styles.navbar}>
             <div className={styles.newTicketContainer}>
-            {
-                        burgerIconVisibility ? (
-                            <div className={styles.burgerIconContainer}>
-                    
-                    <MenuIcon className={styles.burgerIcon} onClick={() => {setBurgerIcon(!burgerIcon)}} />   
-                    {
-                    burgerIcon ? (
-                    <div className={styles.burgerIconOptions}>
-                        <h4 onClick={() =>{router.push('/dashboard', null, {shallow: true})}}>Dashboard</h4>
-                        <h4 onClick={() =>{router.push('/alltickets', null, {shallow: true})}}>All Tickets</h4>
-                        <h4 onClick={() => {router.push('/projects', null, {shallow: true})}}>My Projects</h4>
-                        <h4 onClick={() => {
-                            window.localStorage.removeItem('accessToken');
-                            router.push('/login', null, {shallow: true});
-                            }}>Logout</h4>
-                    </div>
-                
-                        ) : null
-                                            }                        
-        </div>
-                        ) : null
-                            
-                                        }
-                
+                {
+                    burgerIconVisibility ? (
+                        <div className={styles.burgerIconContainer}>
+
+                            <MenuIcon className={styles.burgerIcon} onClick={() => { setBurgerIcon(!burgerIcon) }} />
+                            {
+                                burgerIcon ? (
+                                    <div className={styles.burgerIconOptions}>
+                                        <h4 onClick={() => { router.push('/dashboard', null, { shallow: true }) }}>Dashboard</h4>
+                                        <h4 onClick={() => { router.push('/alltickets', null, { shallow: true }) }}>All Tickets</h4>
+                                        <h4 onClick={() => { router.push('/projects', null, { shallow: true }) }}>My Projects</h4>
+                                        <h4 onClick={() => {
+                                            window.localStorage.removeItem('accessToken');
+                                            router.push('/login', null, { shallow: true });
+                                        }}>Logout</h4>
+                                    </div>
+
+                                ) : null
+                            }
+                        </div>
+                    ) : null
+
+                }
+
                 <div className={styles.newTicketBtn}>
                 </div>
             </div>

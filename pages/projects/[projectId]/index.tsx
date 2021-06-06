@@ -3,8 +3,6 @@ import LayoutFrame from '../../../components/LayoutFrame';
 import styles from './index.module.scss';
 import { useRouter } from 'next/router';
 import Modal from 'react-modal';
-import { ParticipantsContext } from '../../../context/ParticipantsContext';
-import { UserContext } from '../../../context/UserContext';
 import Markdown from 'markdown-to-jsx';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import CloseIcon from '@material-ui/icons/Close';
@@ -13,26 +11,29 @@ import 'react-toastify/dist/ReactToastify.css';
 import EachParticipant from '../../../components/EachParticipant';
 import SyncLoader from "react-spinners/SyncLoader";
 import AddIcon from '@material-ui/icons/Add';
+import { setEmail, setMyPermission, setParticipantState, setLetter } from '../../../actions'
+import { useDispatch, useSelector, RootStateOrAny } from 'react-redux';
 
 const index = ({ data, participants, tickets, projectId, openTickets, closedTickets }) => {
 
+    const dispatch = useDispatch();
     const roles = [
         {
             value: 'Triager',
             label: 'Triager'
-        },    
+        },
         {
-        value: 'Engineer',
-        label: 'Engineer'
+            value: 'Engineer',
+            label: 'Engineer'
         },
         {
             value: 'Project Lead',
             label: 'Project Lead'
         },
     ]
-
-    const { myPermission, setMyPermission, participantState, setParticipantState } = useContext(ParticipantsContext);
-    const { email, setEmail } = useContext(UserContext);
+    const myPermission = useSelector((state: RootStateOrAny) => state.myPermission);
+    const participantState = useSelector((state: RootStateOrAny) => state.participantState);
+    const email = useSelector((state: RootStateOrAny) => state.email);
 
     const searchHandler = (e) => {
         if (ticketCatActive == 'open') {
@@ -103,7 +104,7 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
         const main = async () => {
             setisLoading(true)
             const token = window.localStorage.getItem('accessToken');
-            const response3 = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
+            const response3 = await fetch(`http://localhost:3000/api/me`, {
                 method: 'GET',
                 headers: {
                     'accessToken': token
@@ -117,16 +118,16 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
                 window.alert('Unauthorised!')
             }
             setUsername(res.username);
-            setEmail(res.email);
-            setParticipantState(participants);
+            dispatch(setEmail(res.email));
+            dispatch(setParticipantState(participants));
             participants.map(each => {
                 if (each.name === res.username) {
-                    setMyPermission(each);
+                    dispatch(setMyPermission(each));
                 }
             })
             setMe(res);
 
-            const response2 = await fetch(`https://ksissuetracker.herokuapp.com/api/getUsers`, {
+            const response2 = await fetch(`http://localhost:3000/api/getUsers`, {
                 method: 'POST',
                 headers: {
                     'accessToken': token
@@ -196,7 +197,7 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
             projectId: projectId,
         }
 
-        const res = await fetch(`https://ksissuetracker.herokuapp.com/api/addParticipant`, {
+        const res = await fetch(`http://localhost:3000/api/addParticipant`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -207,7 +208,7 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
         if (res.status == 404) {
             notifyError(response_participant.message);
         } else if (res.status == 200) {
-            setParticipantState([...participantState, response_participant]);
+            dispatch(setParticipantState([...participantState, response_participant]));
             notifySuccess(particEmail + ' was added to the project !');
             refreshData();
         }
@@ -224,7 +225,7 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
         }
 
 
-        const res = await fetch(`https://ksissuetracker.herokuapp.com/api/createNewTicket`, {
+        const res = await fetch(`http://localhost:3000/api/createNewTicket`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -341,41 +342,41 @@ const index = ({ data, participants, tickets, projectId, openTickets, closedTick
                                 (myPermission.permission === 'projectlead' || myPermission.permission === 'admin') ? (
                                     <div className={styles.addParticipantsBox}>
 
-                                <input className={styles.eachParticipantTextField} placeholder="EmailId" value={newPartName} onChange={(e) => {
-                                    setNewPartName(e.target.value);
-                                }} />
+                                        <input className={styles.eachParticipantTextField} placeholder="EmailId" value={newPartName} onChange={(e) => {
+                                            setNewPartName(e.target.value);
+                                        }} />
 
-                                <select className={styles.roleSelect} onChange={(e) => {
-                                    setNewPartPermission(e.target.value);
-                                }}>
-                                    {
-                                        roles.map(option => (
-                                            <option className={styles.roleSelect} value={option.value}>{option.label}</option>
-                                        ))
-                                    }
-                                </select>
-                                <button onClick={() => {
-                                    addParticipant(newPartName, newPartPermission);
-                                    setNewPartName('');
-                                }} disabled={newPartName ? false : true} style={{
-                                    display: 'flex',
-                                    cursor: 'pointer',
-                                    width: '120px',
-                                    borderRadius: '5px',
-                                    backgroundColor: newPartName ? 'blue' : 'gray',
-                                    color: newPartName ? 'white' : 'darkgray',
-                                    fontSize: '20px',
-                                    height: '35px',
-                                    outline: 'none',
-                                    border: 'none',
-                                    justifyContent: 'space-evenly',
-                                    alignItems: 'center'
-                                }}><AddIcon /> Add</button>
-                            </div>
+                                        <select className={styles.roleSelect} onChange={(e) => {
+                                            setNewPartPermission(e.target.value);
+                                        }}>
+                                            {
+                                                roles.map(option => (
+                                                    <option className={styles.roleSelect} value={option.value}>{option.label}</option>
+                                                ))
+                                            }
+                                        </select>
+                                        <button onClick={() => {
+                                            addParticipant(newPartName, newPartPermission);
+                                            setNewPartName('');
+                                        }} disabled={newPartName ? false : true} style={{
+                                            display: 'flex',
+                                            cursor: 'pointer',
+                                            width: '120px',
+                                            borderRadius: '5px',
+                                            backgroundColor: newPartName ? 'blue' : 'gray',
+                                            color: newPartName ? 'white' : 'darkgray',
+                                            fontSize: '20px',
+                                            height: '35px',
+                                            outline: 'none',
+                                            border: 'none',
+                                            justifyContent: 'space-evenly',
+                                            alignItems: 'center'
+                                        }}><AddIcon /> Add</button>
+                                    </div>
                                 ) : <h3>You dont have the permission to add user to this project.</h3>
 
                             }
-                            
+
 
                             <div className={styles.editParticipantButton}>
                                 <button onClick={() => {
@@ -655,7 +656,7 @@ export async function getServerSideProps(context) {
     var closedTickets = [];
     var openTickets = [];
     const projectId = context.req.__NEXT_INIT_QUERY.projectId ? context.req.__NEXT_INIT_QUERY.projectId : context.req.url.split('/')[2];
-    const response = await fetch(`https://ksissuetracker.herokuapp.com/api/getProject`, {
+    const response = await fetch(`http://localhost:3000/api/getProject`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -668,7 +669,7 @@ export async function getServerSideProps(context) {
     const data = await response.json();
     const participants = data.participants;
 
-    const response2 = await fetch(`https://ksissuetracker.herokuapp.com/api/getProjectTickets`, {
+    const response2 = await fetch(`http://localhost:3000/api/getProjectTickets`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

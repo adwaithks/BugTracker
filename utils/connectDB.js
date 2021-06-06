@@ -6,7 +6,7 @@ const initDB = () => {
         console.log('Already Connected')
         return
     }
-    mongoose.connect(process.env.MONGO_URI, {
+    mongoose.connect('mongodb+srv://ruby:ruby@cluster0.pfsz5.mongodb.net/Cluster0?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => {
