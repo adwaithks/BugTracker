@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styles from './Navbar.module.scss';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, RootStateOrAny } from 'react-redux';
 import { setBurgerIcon, setBurgerIconVisibility, setSidebarVisibility, setExpanded } from '../actions';
 
 function Navbar() {
 
     const dispatch = useDispatch();
-    const burgerIcon = useSelector(state => state.burgerIcon);
-    const burgerIconVisibility = useSelector(state => state.burgerIconVisibility);
+    const burgerIcon = useSelector((state:RootStateOrAny) => state.burgerIcon);
+    const burgerIconVisibility = useSelector((state:RootStateOrAny) => state.burgerIconVisibility);
 
     const router = useRouter();
 
