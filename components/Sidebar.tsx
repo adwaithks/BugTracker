@@ -17,7 +17,6 @@ function Sidebar() {
     const letter = useSelector((state: RootStateOrAny) => state.letter);
     const sidebarVisibility = useSelector((state: RootStateOrAny) => state.sidebarVisibility);
     const dispatch = useDispatch();
-    //const { username, setUsername, letter, setLetter, email, setEmail } = useContext(UserContext);
 
 
 
@@ -67,7 +66,7 @@ function Sidebar() {
             if (!window.localStorage.getItem("username") || !window.localStorage.getItem("letter")) {
                 console.log('called main');
                 const token = window.localStorage.getItem('accessToken');
-                const response = await fetch(`http://localhost:3000/api/me`, {
+                const response = await fetch(`https://ksissuetracker.herokuapp.com/api/me`, {
                     method: 'GET',
                     headers: {
                         'accessToken': token
@@ -116,21 +115,6 @@ function Sidebar() {
                     }
                     `
                 } />
-                <div className={styles.expandBtnContainer}>
-                    {/*<div className={styles.expandBtn}>
-                        {
-                            expanded ? (
-                                <ArrowBackIcon onClick={() => {
-                                    setExpanded(!expanded)
-                                }} />
-                            ) : (
-                                <ArrowForwardIcon onClick={() => {
-                                    setExpanded(!expanded)
-                                }} />
-                            )
-                        }
-                    </div>*/}
-                </div>
                 <div className={styles.userGreet}>
                     <div className={styles.avatar}>
                         <h1>{letter}</h1>

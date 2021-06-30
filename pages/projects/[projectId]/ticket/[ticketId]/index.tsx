@@ -102,7 +102,6 @@ function index({ data }) {
 
     const setCurrentState = async () => {
         if (temp !== 'closed') {
-
             await fetch(`https://ksissuetracker.herokuapp.com/api/reportCurrentState`, {
                 method: 'POST',
                 headers: {
@@ -116,10 +115,7 @@ function index({ data }) {
             });
             refreshData();
             notifySuccess('New ticket state ' + temp + ' !');
-        } else {
-            closeTicket();
         }
-
     }
 
     const selectOnChange = (e) => {
@@ -357,8 +353,12 @@ function index({ data }) {
                         </div>
                         <div className={styles.reportSelectBtnGroup}>
                             <button onClick={() => {
-                                setReportCloseModal(!reportCloseModal)
-                                closeTicket()
+                                setReportCloseModal(!reportCloseModal);
+                                if (myPermission !== 'Triager') {
+                                    closeTicket();
+                                } else {
+                                    notifyError('You are not authorized to close the ticket!')
+                                }
                             }} className={styles.proceed}>Proceed</button>
                             <button onClick={() => { setReportCloseModal(!reportCloseModal) }} className={styles.cancel}>Cancel</button>
                         </div>
